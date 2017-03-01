@@ -1,4 +1,46 @@
 {% extends "game/base.html" %}
+
+{% block title %}
+	Index
+{% endblock %}
+
 {% block content %}
-Is Kepler here? {{ kepler }}
+<div class="content-center" id="content-index">
+	<span class="title">
+		Log in to play
+	</span>
+	<form action="/login" method="post">
+	<div class="inputfield">
+		<span class="left">
+			Username
+		</span>
+		<span class="right">
+			<input type="text" name="username" />
+		</span>
+	</div>
+	<div class="inputfield">
+		<span class="left">
+			Password
+		</span>
+		<span class="right">
+			<input type="password" name="password" />
+		</span>
+	</div>
+	<div class="inputfield">
+		<span class="center">
+			<input type="submit" value="Login" />
+		</span>
+	</div>
+	</form>
+	<span class="title">
+		or
+	</span>
+	<form action="/register" method="get">
+	<div class="inputfield">
+		<span class="center">
+			<input type="submit" value="Register" />
+		</span>
+	</div>
+	</form>
+</div>
 {% endblock %}

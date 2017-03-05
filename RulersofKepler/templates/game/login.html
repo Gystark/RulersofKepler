@@ -9,7 +9,13 @@
 	<span class="title">
 		Log in
 	</span>
-	<form action="/login" method="post">
+	
+	<!-- user unsuccessfully tried to log in -->
+	{% if not dict.invalid %}
+        <p>{{ invalid }}</p>
+    {% endif %}
+    
+	<form action="{% url 'login' %}" method="post">
         <div class="inputfield">
             <span class="left">
                 Username:
@@ -35,7 +41,7 @@
 	<span class="title">
 		Do not have an account yet?
 	</span>
-	<form action="/register" method="get">
+	<form action="{% url 'register' %}" method="get">
         <div class="inputfield">
             <span class="center">
                 <input type="submit" value="Register" />

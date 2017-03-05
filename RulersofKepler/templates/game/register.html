@@ -9,7 +9,7 @@
 	<span class="title">
 		Register
 	</span>
-	<form action="/login" method="post">
+	<form action="{% url 'register' %}" method="post">
 		<div class="inputfield">
 			<span class="left">
 				Username:
@@ -39,7 +39,7 @@
 				Confirm password:
 			</span>
 			<span class="right">
-				<input type="password" name="password"  />
+				<input type="password" name="confpassword"  />
 			</span>
 		</div>
 		<div class="inputfield">

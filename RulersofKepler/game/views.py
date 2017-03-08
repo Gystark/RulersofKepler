@@ -31,7 +31,7 @@ def user_login(request):
 
 def register(request):
     # for template
-    registered = false
+    registered = False
     
     if request.method == 'POST':
         user_name = request.POST.get("username")

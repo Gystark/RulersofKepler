@@ -1,46 +1,43 @@
 {% extends "game/base.html" %}
 
 {% block title %}
-	Index
+    Index
 {% endblock %}
 
 {% block content %}
-<div class="content-center" id="content-index">
-	<span class="title">
-		Log in to play
-	</span>
-	<form action="{% url 'login' %}" method="post">
-	<div class="inputfield">
-		<span class="left">
-			Username
-		</span>
-		<span class="right">
-			<input type="text" name="username" />
-		</span>
-	</div>
-	<div class="inputfield">
-		<span class="left">
-			Password
-		</span>
-		<span class="right">
-			<input type="password" name="password" />
-		</span>
-	</div>
-	<div class="inputfield">
-		<span class="center">
-			<input type="submit" value="Login" />
-		</span>
-	</div>
-	</form>
-	<span class="title">
-		or
-	</span>
-	<form action="{% url 'register' %}" method="get">
-	<div class="inputfield">
-		<span class="center">
-			<input type="submit" value="Register" />
-		</span>
-	</div>
-	</form>
-</div>
+    {% if user.is_authenticated %}
+        Hi there {{ user.username }}
+    {% else %}
+        <div class="content-center" id="content-index">
+            <span class="title">Log in to play</span>
+            <form action="{% url 'login' %}" method="post">
+                {% csrf_token %}
+                <div class="inputfield">
+                    <span class="left">Username</span>
+                    <span class="right">
+			            <input type="text" name="username" title="">
+                    </span>
+                </div>
+                <div class="inputfield">
+                    <span class="left">Password</span>
+                    <span class="right">
+			            <input type="password" name="password" title="">
+                    </span>
+                </div>
+                <div class="inputfield">
+		            <span class="center">
+                        <input type="submit" value="Login"/>
+                    </span>
+                </div>
+            </form>
+            <span class="title">or</span>
+            <form action="{% url 'register' %}" method="get">
+                <div class="inputfield">
+		            <span class="center">
+                        <input type="submit" value="Register"/>
+                    </span>
+                </div>
+            </form>
+        </div>
+    {% endif %}
 {% endblock %}

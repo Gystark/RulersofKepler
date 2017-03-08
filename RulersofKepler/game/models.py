@@ -31,9 +31,9 @@ class Territory(models.Model):
     - population: the size of the population held by the territory
     - army: the size of the army held by the territory
     """
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     description = models.CharField(max_length=250)
-    owner = models.ForeignKey(Session, on_delete=models.CASCADE)
+    owner = models.ForeignKey(Session, on_delete=models.CASCADE, blank=True, null=True)
     food = models.IntegerField()
     gold = models.IntegerField()
     population = models.IntegerField()
@@ -42,6 +42,8 @@ class Territory(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name_plural = "territories"
 
 class Lobby(models.Model):
     """

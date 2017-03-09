@@ -61,9 +61,38 @@ def populate():
                         "respect towards human rights. Severoslavians are also known for refusing to consume any form of alcoholic beverages.",
          "Food": def_food, "Army": def_army, "Gold": def_gold, "Population": def_pop,},
         {"Name": "Eucraine",
-         "Description": "This place has very close diplomatic ties with the political alliance known as the 'Eunion', however it's losest friend is certainly Severoslavia. " + \
+         "Description": "This place has very close diplomatic ties with the political alliance known as the 'Eunion', however it's closest friend is certainly Severoslavia. " + \
                         "In a famous recent event, Eucraine willingly offered to give Severoslavia one of its own territories, known as Dumbass, however Severoslavia politely refused.",
          "Food": def_food, "Army": def_army, "Gold": def_gold, "Population": def_pop,},
+        {"Name": "Arabia al Qadim",
+         "Description": "This prosperous desert land attracts many travelers from abroad, especially food pilgrims who come to taste the famous delicacies found in the holy city of Mydinner",
+         "Food": def_food, "Army": def_army, "Gold": def_gold, "Population": def_pop,},
+        {"Name": "Constantinopelis",
+         "Description": "The gateway between two worlds, this place was formerly known as Turkey, however its name was changed when emperor Constantine noticed that residents" + \
+                        "did not eat turkey too often.",
+         "Food": def_food, "Army": def_army, "Gold": def_gold, "Population": def_pop,},
+        {"Name": "Mess-a-potamia",
+         "Description": "A land with a rich culture and history, Mess-a-potamia has suffered from the violence of its tyrants and the greed of other nations." + \
+                        "Powerful people tried to profit as much as they could from this territory - and they made a huge mess",
+         "Food": def_food, "Army": def_army, "Gold": def_gold, "Population": def_pop,},
+        {"Name": "Thingystan",
+         "Description": "The rulers of a few countries from the centre of the continent agreed to join their forces and form a powerful union of nations. " + \
+                        "This initiative came from a local nobleman named Stan, who famously said 'Let's make a union thingy!'",
+         "Food": def_food, "Army": def_army, "Gold": def_gold, "Population": def_pop,},
+        {"Name": "Persia",
+         "Description": "A land with a rich cultural heritage, it is also known as I-ran, from the famous phrase 'I ran to Persia for some kebabs.'",
+         "Food": def_food, "Army": def_army, "Gold": def_gold, "Population": def_pop,},
+        {"Name": "Best Korea",
+         "Description": "There used to be two neighbouring nations called Korea - one of them was a free, modern democracy while the other was ruled by a " + \
+                        "chubby and powerful autocrat. Eventually, the two countries united when the best one of them took complete control of the other.",
+         "Food": def_food, "Army": def_army, "Gold": def_gold, "Population": def_pop,},
+        {"Name": "Cathay",
+         "Description": "One of the largest and most powerful nations in the world, it received its modern name when a former ruler, Rofl Mao, saw a cat playing in hay.",
+         "Food": def_food, "Army": def_army, "Gold": def_gold, "Population": def_pop,},
+        {"Name": "Endia",
+         "Description": "The land at the end of the map, Endia is known for exporting delicious spices and quality soap opera films all across the world",
+         "Food": def_food, "Army": def_army, "Gold": def_gold, "Population": def_pop,},
+
         ]
 
     for t in territories:
@@ -85,7 +114,7 @@ def add_territory(name, desc, food, gold, army, pop):
 
 def add_user(name):
     u = User.objects.get_or_create(username = name)[0]
-    u.is_staff = True
+    u.is_superuser = True
     u.set_password('testusrpwd')
     u.save()
     return u

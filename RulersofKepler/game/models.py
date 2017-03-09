@@ -34,10 +34,10 @@ class Territory(models.Model):
     name = models.CharField(max_length=50, unique=True)
     description = models.CharField(max_length=250)
     owner = models.ForeignKey(Session, on_delete=models.CASCADE, blank=True, null=True)
-    food = models.IntegerField()
-    gold = models.IntegerField()
-    population = models.IntegerField()
-    army = models.IntegerField()
+    food = models.IntegerField(default=100)
+    gold = models.IntegerField(default=100)
+    population = models.IntegerField(default=100)
+    army = models.IntegerField(default=100)
 
     def __str__(self):
         return self.name

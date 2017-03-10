@@ -9,44 +9,38 @@
 	<span class="title">
 		Log in
 	</span>
-	
-	<!-- user unsuccessfully tried to log in -->
-	{% if not dict.invalid %}
-        <p>{{ invalid }}</p>
+    {% if form.errors %}
+        <p>Invalid username or password.</p>
     {% endif %}
-    
-	<form action="{% url 'login' %}" method="post">
+	<form action="{% url 'auth_login' %}" method="post">{% csrf_token %}
         <div class="inputfield">
             <span class="left">
-                Username:
+                {{ form.username.label_tag }}
             </span>
             <span class="right">
-                <input type="text" name="username" />
+                {{ form.username }}
             </span>
         </div>
         <div class="inputfield">
             <span class="left">
-                Password:
+                {{ form.password.label_tag }}
             </span>
             <span class="right">
-                <input type="password" name="password" />
+                {{ form.password }}
             </span>
         </div>
         <div class="inputfield">
             <span class="center">
-                <input type="submit" value="Login" />
+                <input type="submit" value="Login">
             </span>
         </div>
 	</form>
+    <span class="title">
+        <a href="{% url "auth_password_reset" %}">Forgot your password?</a>
+    </span>
 	<span class="title">
 		Do not have an account yet?
+        <a href="{% url "registration_register" %}">Register</a>
 	</span>
-	<form action="{% url 'register' %}" method="get">
-        <div class="inputfield">
-            <span class="center">
-                <input type="submit" value="Register" />
-            </span>
-        </div>
-	</form>
 </div>
 {% endblock %}

@@ -6,38 +6,14 @@
 
 {% block content %}
     {% if user.is_authenticated %}
-        Hi there {{ user.username }}
+        Hi there {{ user.username }}, you are logged in
+        <a href="{% url "auth_logout" %}">Log out</a>
     {% else %}
         <div class="content-center" id="content-index">
-            <span class="title">Log in to play</span>
-            <form action="{% url 'login' %}" method="post">
-                {% csrf_token %}
-                <div class="inputfield">
-                    <span class="left">Username</span>
-                    <span class="right">
-			            <input type="text" name="username" title="">
-                    </span>
-                </div>
-                <div class="inputfield">
-                    <span class="left">Password</span>
-                    <span class="right">
-			            <input type="password" name="password" title="">
-                    </span>
-                </div>
-                <div class="inputfield">
-		            <span class="center">
-                        <input type="submit" value="Login"/>
-                    </span>
-                </div>
-            </form>
+            <span class="title">Log in or register to play</span>
+            <a href="{% url "auth_login" %}">Log in</a>
             <span class="title">or</span>
-            <form action="{% url 'register' %}" method="get">
-                <div class="inputfield">
-		            <span class="center">
-                        <input type="submit" value="Register"/>
-                    </span>
-                </div>
-            </form>
+            <a href="{% url "registration_register" %}">Register</a>
         </div>
     {% endif %}
 {% endblock %}

@@ -11,6 +11,11 @@
 		<script type="text/javascript" src="{% static 'game.js' %}"></script>
     </head>
 	<body>
+        {% if messages %}
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
 	    {% block content %}Default content text here.{% endblock %}
 		<div id="footer">
 			<span>&copy;2017 Rulers of Kepler</span>

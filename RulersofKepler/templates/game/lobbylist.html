@@ -1,29 +1,35 @@
 {% extends "game/base.html" %}
 
 {% block title %}
-	Lobby List
+    Join a lobby
 {% endblock %}
 
 {% block content %}
-<div class="content-center" id="content-lobbies">
+    <tr class="content-center" id="content-lobbies">
 	<span class="title">
-		Lobby List
+		Available lobbies
 	</span>
-	<div class="lobby">
-		<span class="left">Lobby #1</span>
-		<span class="right"><a href="/lobby/1/join/">Join</a></span>
-	</div>
-	<div class="lobby">
-		<span class="left">Lobby #2</span>
-		<span class="right"><a href="/lobby/2/join/">Join</a></span>
-	</div>
-	<div class="lobby">
-		<span class="left">Lobby #3</span>
-		<span class="right"><a href="/lobby/3/join/">Join</a></span>
-	</div>
-	<div class="lobby">
-		<span class="left">Lobby #4</span>
-		<span class="right"><a href="/lobby/4/join/">Join</a></span>
-	</div>
-</div>
+        {% if message %}
+            <strong>{{ message }}</strong>
+        {% endif %}
+        {% if lobbies %}
+            <table>
+            <tr>
+                <th>Name</th>
+                <th>Players</th>
+                <th></th>
+            </tr>
+            {% for lobby in lobbies %}
+                <tr>
+                    <td>{{ lobby.name }}</td>
+                    <td>{{ lobby.sessions.all.count }}/{{ max_sessions }}</td>
+                    <td><a href="{% url "lobbyjoin" lobby.id %}">Join</a></td>
+                </tr>
+            {% endfor %}
+            </table>
+        {% else %}
+            <span>No lobbies available.</span>
+        {% endif %}
+    <span><a href="{% url "lobbycreate" %}">Create a lobby</a></span>
+    </div>
 {% endblock %}

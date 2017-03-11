@@ -1,0 +1,12 @@
+{% extends "game/base.html" %}
+{% block title %}
+Create lobby
+{% endblock %}
+{% block content %}
+<span class="title">Create a lobby</span>
+    <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Create lobby">
+    </form>
+{% endblock %}

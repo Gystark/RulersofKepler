@@ -3,24 +3,61 @@ from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.views.generic import DetailView
 
+from .models import Lobby, Session
+from .forms import LobbyCreationForm
+
+# The maximum number of sessions that can join a lobby
+MAX_SESSIONS = 4
+
 
 def index(request):
-    return render(request, "game/index.html", {"kepler": "yess"})
+    return render(request, "game/index.html", {})
 
 
 def lobbylist(request):
-    return render(request, "game/lobbylist.html", {})
+    """
+    List all lobbies which have less than the maximum number of players.
+    """
+    lobbies = Lobby.objects.all().exclude(sessions=MAX_SESSIONS)
+
+    return render(request, "game/lobbylist.html", {'lobbies': lobbies, "max_sessions": MAX_SESSIONS})
 
 
-def lobbyjoin(request):
-    pass
+def lobbyjoin(request, lobby_id):
+    """
+    Join the lobby specified by lobby_id
+    """
+    try:
+        lobby = Lobby.objects.get(id=lobby_id)
+        session = Session.objects.create(user=request.user)
+        lobby.sessions.add(session)
+        return render(request, "game/game.html", {})
+    except Lobby.ObjectDoesNotExist:
+        return render(request, "game/lobbylist.html", {"message": "The requested lobby does not exist, try another one."})
 
 
 def lobbycreate(request):
-    return render(request, "game/lobbycreate.html", {})
+    """
+    Create a new lobby.
+    """
+    if request.method == "POST":
+        form = LobbyCreationForm(request.POST)
+
+        if form.is_valid() and request.user.is_authenticated():
+            lobby = Lobby.objects.create(name=form.cleaned_data.get("name"))
+            return lobbyjoin(request, lobby.id)
+        else:
+            message = "Failed to create the lobby, please try again."
+        return render(request, "game/lobbycreate.html", {"message": message, "form": form})
+    else:
+        form = LobbyCreationForm
+    return render(request, "game/lobbycreate.html", {"form": form})
 
 
 def about(request):
+    """
+    Render the static about us page.
+    """
     return render(request, "game/about.html", {})
 
 
@@ -29,7 +66,16 @@ def game(request):
 
 
 def leaderboard(request):
-    return render(request, "game/leaderboard.html", {})
+    """
+    Compute and return the top 10 players.
+    """
+    # TODO replace the dummy values when we've decided on scoring
+    stats = []
+    users = User.objects.all()
+    for user in users:
+        magic_value = Session.objects.filter(user=user).count()
+        stats.append({"name": user.username, "wins": magic_value, "losses": magic_value, "ratio": magic_value})
+    return render(request, "game/leaderboard.html", {"stats": stats})
 
 
 class ProfileView(LoginRequiredMixin, DetailView):
@@ -47,4 +93,4 @@ def accountview(request, accountid):
 
 
 def termsandconditions(request):
-    return render(request, "game/termsandconditions.html", {})
+    return render(request, "game/terms.html", {})

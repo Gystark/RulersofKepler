@@ -1,12 +1,13 @@
 {% extends "game/base.html" %}
 
 {% block title %}
-    Index
+    Rulers of Kepler
 {% endblock %}
 
 {% block content %}
     {% if user.is_authenticated %}
         Hi there {{ user.username }}, you are logged in
+        <a href="{% url "lobbylist" %}">Play</a> or
         <a href="{% url "auth_logout" %}">Log out</a>
     {% else %}
         <div class="content-center" id="content-index">

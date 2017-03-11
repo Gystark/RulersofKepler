@@ -5,7 +5,7 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index, name="index"),
     url(r'^lobby/list/$', views.lobbylist, name="lobbylist"),
-    url(r'^lobby/(?P<lobbyid>[0-9]+)/join/$', views.lobbyjoin, name="lobbyjoin"),
+    url(r'^lobby/(?P<lobby_id>[0-9]+)/join/$', views.lobbyjoin, name="lobbyjoin"),
     url(r'^lobby/create/$', views.lobbycreate, name="lobbycreate"),
     url(r'^about/$', views.about, name="about"),
     url(r'^game/(?P<gameid>[0-9]+)/$', views.game, name="game"),

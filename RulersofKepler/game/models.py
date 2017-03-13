@@ -16,7 +16,7 @@ class Session(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.id
+        return str(self.id)+' '+self.user.username
 
 
 class Territory(models.Model):
@@ -59,7 +59,7 @@ class Lobby(models.Model):
     sessions = models.ManyToManyField(Session)
 
     def __str__(self):
-        return self.id
+        return self.name
 
     def save(self, *args, **kwargs):
         """

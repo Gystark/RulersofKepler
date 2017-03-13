@@ -5,13 +5,10 @@
 {% endblock %}
 
 {% block content %}
-    <tr class="content-center" id="content-lobbies">
+    <div class="content-center" id="content-lobbies">
 	<span class="title">
 		Available lobbies
 	</span>
-        {% if message %}
-            <strong>{{ message }}</strong>
-        {% endif %}
         {% if lobbies %}
             <table>
             <tr>

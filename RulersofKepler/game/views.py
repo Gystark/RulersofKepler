@@ -1,6 +1,8 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.shortcuts import render
+from django.db.models import Q
+from django.shortcuts import render, redirect
 from django.views.generic import DetailView
 
 from .models import Lobby, Session
@@ -18,8 +20,7 @@ def lobbylist(request):
     """
     List all lobbies which have less than the maximum number of players.
     """
-    lobbies = Lobby.objects.all().exclude(sessions=MAX_SESSIONS)
-
+    lobbies = Lobby.objects.all().exclude(~Q(sessions__user=request.user), sessions=MAX_SESSIONS)
     return render(request, "game/lobbylist.html", {'lobbies': lobbies, "max_sessions": MAX_SESSIONS})
 
 
@@ -29,11 +30,16 @@ def lobbyjoin(request, lobby_id):
     """
     try:
         lobby = Lobby.objects.get(id=lobby_id)
+
+        if lobby.sessions.filter(user=request.user).count() != 0:
+            return redirect('game', gameid=lobby.id)
+
         session = Session.objects.create(user=request.user)
         lobby.sessions.add(session)
-        return render(request, "game/game.html", {})
+        return redirect('game', gameid=lobby.id)
     except Lobby.ObjectDoesNotExist:
-        return render(request, "game/lobbylist.html", {"message": "The requested lobby does not exist, try another one."})
+        messages.error(request, 'Error joining the lobby, please try again.')
+        return redirect('lobbylist')
 
 
 def lobbycreate(request):
@@ -43,12 +49,16 @@ def lobbycreate(request):
     if request.method == "POST":
         form = LobbyCreationForm(request.POST)
 
-        if form.is_valid() and request.user.is_authenticated():
-            lobby = Lobby.objects.create(name=form.cleaned_data.get("name"))
-            return lobbyjoin(request, lobby.id)
+        if form.is_valid():
+            if request.user.is_authenticated():
+                lobby = Lobby.objects.create(name=form.cleaned_data.get("name"))
+                return redirect('lobbyjoin', lobby_id=lobby.id)
+            else:
+                messages.error(request, "You mus be logged in to create a lobby.")
+                return redirect('index')
         else:
-            message = "Failed to create the lobby, please try again."
-        return render(request, "game/lobbycreate.html", {"message": message, "form": form})
+            messages.error(request, "Failed to create the lobby, please try again.")
+        return render(request, "game/lobbycreate.html", {"form": form})
     else:
         form = LobbyCreationForm
     return render(request, "game/lobbycreate.html", {"form": form})
@@ -61,7 +71,7 @@ def about(request):
     return render(request, "game/about.html", {})
 
 
-def game(request):
+def game(request, gameid):
     return render(request, "game/game.html", {})
 
 
@@ -70,12 +80,16 @@ def leaderboard(request):
     Compute and return the top 10 players.
     """
     # TODO replace the dummy values when we've decided on scoring
-    stats = []
-    users = User.objects.all()
-    for user in users:
-        magic_value = Session.objects.filter(user=user).count()
-        stats.append({"name": user.username, "wins": magic_value, "losses": magic_value, "ratio": magic_value})
-    return render(request, "game/leaderboard.html", {"stats": stats})
+    if request.user.is_authenticated():
+        stats = []
+        users = User.objects.all()
+        for user in users:
+            magic_value = Session.objects.filter(user=user).count()
+            stats.append({"name": user.username, "wins": magic_value, "losses": magic_value, "ratio": magic_value})
+        return render(request, "game/leaderboard.html", {"stats": stats})
+    else:
+        messages.error(request, "You must be logged in to view the leaderboard.")
+        return redirect('index')
 
 
 class ProfileView(LoginRequiredMixin, DetailView):

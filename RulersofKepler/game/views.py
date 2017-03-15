@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView
 
-from .models import Lobby, Session
+from .models import Lobby, Session, Territory, TerritorySession
 from .forms import LobbyCreationForm
 
 # The maximum number of sessions that can join a lobby
@@ -20,7 +20,7 @@ def lobbylist(request):
     """
     List all lobbies which have less than the maximum number of players.
     """
-    lobbies = Lobby.objects.all().exclude(~Q(sessions__user=request.user), sessions=MAX_SESSIONS)
+    lobbies = Lobby.objects.all().exclude(Q(session__user__username=request.user.username) | Q(session=MAX_SESSIONS))
     return render(request, "game/lobbylist.html", {'lobbies': lobbies, "max_sessions": MAX_SESSIONS})
 
 
@@ -31,11 +31,10 @@ def lobbyjoin(request, lobby_id):
     try:
         lobby = Lobby.objects.get(id=lobby_id)
 
-        if lobby.sessions.filter(user=request.user).count() != 0:
+        if lobby.session_set.filter(user=request.user).count() != 0:
             return redirect('game', gameid=lobby.id)
 
-        session = Session.objects.create(user=request.user)
-        lobby.sessions.add(session)
+        Session.objects.create(user=request.user, lobby=lobby)
         return redirect('game', gameid=lobby.id)
     except Lobby.ObjectDoesNotExist:
         messages.error(request, 'Error joining the lobby, please try again.')
@@ -52,6 +51,7 @@ def lobbycreate(request):
         if form.is_valid():
             if request.user.is_authenticated():
                 lobby = Lobby.objects.create(name=form.cleaned_data.get("name"))
+
                 return redirect('lobbyjoin', lobby_id=lobby.id)
             else:
                 messages.error(request, "You mus be logged in to create a lobby.")

@@ -102,6 +102,7 @@ def add_territory(name, desc, food, gold, army, pop):
 def add_user(name):
     u = User.objects.get_or_create(username=name)[0]
     u.is_superuser = True
+    u.is_staff = True
     u.set_password('testusrpwd')
     u.save()
     return u

@@ -7,13 +7,13 @@
 {% block content %}
     {% if user.is_authenticated %}
         <p>Hi there {{ user.username }}, you are logged in</p>
-        <p class="title">Go to the game: <a href="{% url "lobbylist" %}">Play here</a></p>
+        <p class="title">Go to the game: <a href="{% url 'lobbylist' %}">Play here</a></p>
     {% else %}
         <div class="content-center" id="content-index">
             <span class="title">Play now!</span>
-            <span class="title"><a href="{% url "auth_login" %}">Log in</a></span>
+            <span class="title"><a href="{% url 'auth_login' %}">Log in</a></span>
             <span class="title">or</span>
-            <span class="title"><a href="{% url "registration_register" %}">Register</a></span>
+            <span class="title"><a href="{% url 'registration_register' %}">Register</a></span>
         </div>
     {% endif %}
 {% endblock %}

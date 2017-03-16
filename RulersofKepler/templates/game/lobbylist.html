@@ -20,13 +20,13 @@
                 <tr>
                     <td>{{ lobby.name }}</td>
                     <td>{{ lobby.sessions.all.count }}/{{ max_sessions }}</td>
-                    <td><a href="{% url "lobbyjoin" lobby.id %}">Join</a></td>
+                    <td><a href="{% url 'lobbyjoin' lobby.id %}">Join</a></td>
                 </tr>
             {% endfor %}
             </table>
         {% else %}
             <span>No lobbies available.</span>
         {% endif %}
-    <span><a href="{% url "lobbycreate" %}">Create a lobby</a></span>
+    <span><a href="{% url 'lobbycreate' %}">Create a lobby</a></span>
     </div>
 {% endblock %}

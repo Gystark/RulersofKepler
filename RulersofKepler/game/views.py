@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView
+from django.contrib.auth.decorators import login_required
 
 from .models import Lobby, Session, Territory, TerritorySession
 from .forms import LobbyCreationForm
@@ -74,7 +75,7 @@ def about(request):
 def game(request, gameid):
     return render(request, "game/game.html", {})
 
-
+@login_required
 def leaderboard(request):
     """
     Compute and return the top 10 players.
@@ -92,18 +93,28 @@ def leaderboard(request):
         return redirect('index')
 
 
-class ProfileView(LoginRequiredMixin, DetailView):
-    """
-    View the current user's profile
-    """
-    model = User
-    template_name = "game/profile.html"
-    permission_denied_message = "Please log in to view your profile"
-    raise_exception = True
+# class ProfileView(LoginRequiredMixin, DetailView):
+#     """
+#     View the current user's profile
+#     """
+#     model = User
+#     template_name = "game/profile.html"
+#     permission_denied_message = "Please log in to view your profile"
+#     raise_exception = True
 
+@login_required
+def profile(request, username):
+    # get the user object or redirect to index page
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return redirect('index')
 
-def accountview(request, accountid):
-    return render(request, "game/profile.html", {})
+    context_dict = {'user': user}
+    return render(request, "game/profile.html", context_dict)
+
+# def accountview(request, accountid):
+#     return render(request, "game/profile.html", {})
 
 
 def termsandconditions(request):

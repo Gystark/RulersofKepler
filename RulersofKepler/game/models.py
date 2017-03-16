@@ -104,6 +104,18 @@ class TerritorySession(models.Model):
         self.save()
 
 
+# Extension to the User model
+class UserProfile(models.Model):
+    # link it to a User instance
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
+    # games statistics
+    games_played = models.IntegerField(default=0)
+    games_won = models.IntegerField(default=0)
+    games_lost = models.IntegerField(default=0)
+    won_percentage = models.FloatField(default=0)
+
+    def __str__(self):
+        return self.user.username
 
 

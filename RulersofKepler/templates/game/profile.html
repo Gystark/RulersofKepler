@@ -1,8 +1,23 @@
 {% extends "game/base.html" %}
+
 {% block title %}
-    Account
+    {{ selecteduser.username }} Profile
 {% endblock %}
 
 {% block content %}
-    Username: {{ user.username }}
+<h1>{{ selecteduser.username }} Profile</h1>
+<div>
+    <ul>
+        <li> Games played: <span class="badge">{{ userprofile.games_played }}</span></li>
+    </ul>
+    <ul>
+        <li> Games Won: <span class="badge">{{ userprofile.games_won }}</span></li>
+    </ul>
+    <ul>
+        <li> Games Lost: <span class="badge">{{ games_lost }}</span></li>
+    </ul>
+    <ul>
+        <li> Win percentage: <span class="badge">{{ win_percent }}</span></li>
+    </ul>
+</div>
 {% endblock %}

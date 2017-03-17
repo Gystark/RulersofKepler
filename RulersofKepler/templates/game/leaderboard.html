@@ -13,7 +13,7 @@
             </tr>
             {% for stat in stats %}
                <tr>
-               <td>{{ stat.name }}</td>
+                   <td><a href="{% url 'profile' stat.name %}">{{ stat.name }}</a></td>
                <td>{{ stat.wins }}</td>
                <td>{{ stat.losses }}</td>
                <td>{{ stats.ratio }}</td>

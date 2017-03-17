@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import DetailView
 from django.contrib.auth.decorators import login_required
 
-from .models import Lobby, Session, Territory, TerritorySession
+from .models import *
 from .forms import LobbyCreationForm
 
 # The maximum number of sessions that can join a lobby
@@ -75,6 +75,7 @@ def about(request):
 def game(request, gameid):
     return render(request, "game/game.html", {})
 
+
 @login_required
 def leaderboard(request):
     """
@@ -86,6 +87,7 @@ def leaderboard(request):
         users = User.objects.all()
         for user in users:
             magic_value = Session.objects.filter(user=user).count()
+
             stats.append({"name": user.username, "wins": magic_value, "losses": magic_value, "ratio": magic_value})
         return render(request, "game/leaderboard.html", {"stats": stats})
     else:
@@ -110,12 +112,29 @@ def profile(request, username):
     except User.DoesNotExist:
         return redirect('index')
 
-    context_dict = {'user': user}
-    return render(request, "game/profile.html", context_dict)
+    # get additional information about the user
+    userprofile = UserProfile.objects.get_or_create(user=user)[0]
 
-# def accountview(request, accountid):
-#     return render(request, "game/profile.html", {})
+    # calculate lost games
+    games_lost = get_user_games_lost(userprofile)
+    # calculate winning percentage
+    win_percentage = get_user_win_percentage(userprofile)
+
+    context_dict = {'selecteduser': user, "userprofile": userprofile, "games_lost": games_lost,
+                    "win_percent": win_percentage}
+    return render(request, "game/profile.html", context_dict)
 
 
 def termsandconditions(request):
     return render(request, "game/terms.html", {})
+
+
+def get_user_games_lost(userprofile):
+    return userprofile.games_played - userprofile.games_won
+
+
+def get_user_win_percentage(userprofile):
+    try:
+        return userprofile.games_won * 1.0 / userprofile.games_played
+    except ZeroDivisionError:
+        return 0

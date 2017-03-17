@@ -128,3 +128,8 @@ body {
 	width: 100%;
 	text-align: center;
 }
+.badge {
+  margin: 2px;
+  color: white;
+  background-color: grey;
+}

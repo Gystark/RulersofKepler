@@ -21,9 +21,12 @@ def lobbylist(request):
     """
     List all lobbies which have less than the maximum number of players.
     """
-    lobbies = Lobby.objects.all().exclude(session=MAX_SESSIONS)
-    return render(request, "game/lobbylist.html", {'lobbies': lobbies, "max_sessions": MAX_SESSIONS})
-
+    try:
+        sess=Session.objects.get(active=True, user=request.user)
+        return redirect('game',gameid=sess.lobby.id)
+    except Session.DoesNotExist:
+        lobbies = Lobby.objects.all().exclude(session=MAX_SESSIONS)
+        return render(request, "game/lobbylist.html", {'lobbies': lobbies, "max_sessions": MAX_SESSIONS})
 
 def lobbyjoin(request, lobby_id):
     """
@@ -35,9 +38,9 @@ def lobbyjoin(request, lobby_id):
         if lobby.session_set.filter(user=request.user).count() != 0:
             return redirect('game', gameid=lobby.id)
 
-        Session.objects.create(user=request.user, lobby=lobby)
+        Session.objects.create(user=request.user, lobby=lobby, active=True)
         return redirect('game', gameid=lobby.id)
-    except Lobby.ObjectDoesNotExist:
+    except Lobby.DoesNotExist:
         messages.error(request, 'Error joining the lobby, please try again.')
         return redirect('lobbylist')
 

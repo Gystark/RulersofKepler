@@ -2,3 +2,4 @@
 **/.idea
 RulersofKepler/**/__pycache__
 RulersofKepler/**/*.pyc
+RulersofKepler/game/migrations

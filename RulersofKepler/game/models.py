@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
 
+
 class Lobby(models.Model):
     """
     Lobby model, which consists of:
@@ -22,7 +23,8 @@ class Lobby(models.Model):
     def generate_territories(self):
         for t in Territory.objects.all():
             if self.territorysession_set.filter(territory=t).count() == 0:
-                TerritorySession.objects.create(territory=t, lobby=self)
+                TerritorySession.objects.create(territory=t, lobby=self, population=t.default_population,
+                                                army=t.default_army)
 
     def save(self, *args, **kwargs):
         """
@@ -48,7 +50,7 @@ class Session(models.Model):
     lobby = models.ForeignKey(Lobby, on_delete=models.CASCADE, default=None)
 
     def __str__(self):
-        return str(self.id)+' '+self.user.username
+        return str(self.id) + ' ' + self.user.username
 
 
 class Territory(models.Model):
@@ -67,15 +69,14 @@ class Territory(models.Model):
     description = models.CharField(max_length=250)
     food = models.IntegerField(default=100)
     gold = models.IntegerField(default=100)
-    population = models.IntegerField(default=100)
-    army = models.IntegerField(default=100)
+    default_population = models.IntegerField(default=100)
+    default_army = models.IntegerField(default=100)
 
     def __str__(self):
         return self.name
 
     class Meta:
         verbose_name_plural = "territories"
-
 
 
 class TerritorySession(models.Model):
@@ -86,9 +87,11 @@ class TerritorySession(models.Model):
     territory = models.ForeignKey(Territory, on_delete=models.CASCADE)
     lobby = models.ForeignKey(Lobby, on_delete=models.CASCADE)
     owner = models.OneToOneField(Session, on_delete=models.CASCADE, blank=True, null=True)
+    population = models.IntegerField()
+    army = models.IntegerField()
 
     def __str__(self):
-        return self.territory.name+' in '+self.lobby.name
+        return self.territory.name + ' in ' + self.lobby.name
 
     def change_owner(self, owner_session_id):
         # Change the owner of a territory in a session
@@ -114,5 +117,3 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.username
-
-

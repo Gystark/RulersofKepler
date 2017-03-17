@@ -1,9 +1,6 @@
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import User
-from django.db.models import Q
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from django.views.generic import DetailView
 from django.contrib.auth.decorators import login_required
 
 from .models import *
@@ -22,11 +19,12 @@ def lobbylist(request):
     List all lobbies which have less than the maximum number of players.
     """
     try:
-        sess=Session.objects.get(active=True, user=request.user)
-        return redirect('game',gameid=sess.lobby.id)
+        sess = Session.objects.get(active=True, user=request.user)
+        return redirect('game', lobby_id=sess.lobby.id)
     except Session.DoesNotExist:
         lobbies = Lobby.objects.all().exclude(session=MAX_SESSIONS)
         return render(request, "game/lobbylist.html", {'lobbies': lobbies, "max_sessions": MAX_SESSIONS})
+
 
 def lobbyjoin(request, lobby_id):
     """
@@ -36,10 +34,10 @@ def lobbyjoin(request, lobby_id):
         lobby = Lobby.objects.get(id=lobby_id)
 
         if lobby.session_set.filter(user=request.user).count() != 0:
-            return redirect('game', gameid=lobby.id)
+            return redirect('game', lobby_id=lobby.id)
 
         Session.objects.create(user=request.user, lobby=lobby, active=True)
-        return redirect('game', gameid=lobby.id)
+        return redirect('game', lobby_id=lobby.id)
     except Lobby.DoesNotExist:
         messages.error(request, 'Error joining the lobby, please try again.')
         return redirect('lobbylist')
@@ -75,8 +73,8 @@ def about(request):
     return render(request, "game/about.html", {})
 
 
-def game(request, gameid):
-    return render(request, "game/game.html", {})
+def game(request, lobby_id):
+    return render(request, "game/game.html", {'lobby': lobby_id, 'territory': 1})
 
 
 @login_required
@@ -132,3 +130,28 @@ def get_user_win_percentage(userprofile):
         return userprofile.games_won * 1.0 / userprofile.games_played
     except ZeroDivisionError:
         return 0
+
+
+@login_required
+def get_territory_data(request, lobby_id, territory_id):
+    if request.is_ajax() and request.method == 'GET':
+        lobby = Lobby.objects.get(id=lobby_id)
+
+        territory = Territory.objects.get(id=territory_id)
+
+        territory_session = TerritorySession.objects.get(territory=territory, lobby=lobby)
+
+        owner = territory_session.owner.username if territory_session.owner is not None else ''
+
+        return JsonResponse({
+            'name': territory.name,
+            'description': territory.description,
+            'population': territory_session.population,
+            'army': territory_session.army,
+            'food': territory.food,
+            'gold': territory.gold,
+            'owner': owner
+        })
+
+    messages.error(request, 'System error, please try again.')
+    return redirect('index')

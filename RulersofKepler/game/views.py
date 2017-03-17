@@ -21,7 +21,7 @@ def lobbylist(request):
     """
     List all lobbies which have less than the maximum number of players.
     """
-    lobbies = Lobby.objects.all().exclude(Q(session__user__username=request.user.username) | Q(session=MAX_SESSIONS))
+    lobbies = Lobby.objects.all().exclude(session=MAX_SESSIONS)
     return render(request, "game/lobbylist.html", {'lobbies': lobbies, "max_sessions": MAX_SESSIONS})
 
 
@@ -94,15 +94,6 @@ def leaderboard(request):
         messages.error(request, "You must be logged in to view the leaderboard.")
         return redirect('index')
 
-
-# class ProfileView(LoginRequiredMixin, DetailView):
-#     """
-#     View the current user's profile
-#     """
-#     model = User
-#     template_name = "game/profile.html"
-#     permission_denied_message = "Please log in to view your profile"
-#     raise_exception = True
 
 @login_required
 def profile(request, username):

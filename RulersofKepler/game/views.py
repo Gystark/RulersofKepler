@@ -14,6 +14,7 @@ def index(request):
     return render(request, "game/index.html", {})
 
 
+@login_required
 def lobbylist(request):
     """
     List all lobbies which have less than the maximum number of players.
@@ -26,23 +27,25 @@ def lobbylist(request):
         return render(request, "game/lobbylist.html", {'lobbies': lobbies, "max_sessions": MAX_SESSIONS})
 
 
+@login_required
 def lobbyjoin(request, lobby_id):
     """
     Join the lobby specified by lobby_id
     """
     try:
-        lobby = Lobby.objects.get(id=lobby_id)
-
-        if lobby.session_set.filter(user=request.user).count() != 0:
+        sess = Session.objects.get(active=True, user=request.user)
+        return redirect('game', lobby_id=sess.lobby.id)
+    except Session.DoesNotExist:
+        try:
+            lobby = Lobby.objects.get(id=lobby_id)
+            Session.objects.create(user=request.user, lobby=lobby, active=True)
             return redirect('game', lobby_id=lobby.id)
-
-        Session.objects.create(user=request.user, lobby=lobby, active=True)
-        return redirect('game', lobby_id=lobby.id)
-    except Lobby.DoesNotExist:
-        messages.error(request, 'Error joining the lobby, please try again.')
-        return redirect('lobbylist')
+        except Lobby.DoesNotExist:
+            messages.error(request, 'Error joining the lobby, please try again.')
+            return redirect('lobbylist')
 
 
+@login_required
 def lobbycreate(request):
     """
     Create a new lobby.
@@ -73,6 +76,7 @@ def about(request):
     return render(request, "game/about.html", {})
 
 
+@login_required
 def game(request, lobby_id):
     return render(request, "game/game.html", {'lobby': lobby_id, 'territory': 1})
 

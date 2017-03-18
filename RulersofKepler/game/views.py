@@ -54,13 +54,8 @@ def lobbycreate(request):
         form = LobbyCreationForm(request.POST)
 
         if form.is_valid():
-            if request.user.is_authenticated():
-                lobby = Lobby.objects.create(name=form.cleaned_data.get("name"))
-
-                return redirect('lobbyjoin', lobby_id=lobby.id)
-            else:
-                messages.error(request, "You mus be logged in to create a lobby.")
-                return redirect('index')
+            lobby = Lobby.objects.create(name=form.cleaned_data.get("name"))
+            return redirect('lobbyjoin', lobby_id=lobby.id)
         else:
             messages.error(request, "Failed to create the lobby, please try again.")
         return render(request, "game/lobbycreate.html", {"form": form})
@@ -78,7 +73,11 @@ def about(request):
 
 @login_required
 def game(request, lobby_id):
-    return render(request, "game/game.html", {'lobby': lobby_id, 'territory': 1})
+    try:
+        sess = Session.objects.get(user=request.user, active=True)
+        return render(request, "game/game.html", {'lobby': lobby_id})
+    except Session.DoesNotExist:
+        return redirect('lobbylist')
 
 
 @login_required
@@ -87,18 +86,13 @@ def leaderboard(request):
     Compute and return the top 10 players.
     """
     # TODO replace the dummy values when we've decided on scoring
-    if request.user.is_authenticated():
-        stats = []
-        users = User.objects.all()
-        for user in users:
-            magic_value = Session.objects.filter(user=user).count()
+    stats = []
+    users = User.objects.all()
+    for user in users:
+        magic_value = Session.objects.filter(user=user).count()
 
-            stats.append({"name": user.username, "wins": magic_value, "losses": magic_value, "ratio": magic_value})
-        return render(request, "game/leaderboard.html", {"stats": stats})
-    else:
-        messages.error(request, "You must be logged in to view the leaderboard.")
-        return redirect('index')
-
+        stats.append({"name": user.username, "wins": magic_value, "losses": magic_value, "ratio": magic_value})
+    return render(request, "game/leaderboard.html", {"stats": stats})
 
 @login_required
 def profile(request, username):

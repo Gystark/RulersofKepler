@@ -19,6 +19,9 @@ class Lobby(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name_plural = "lobbies"
+
     # A function to add all the territories to a lobby if not there already
     def generate_territories(self):
         for t in Territory.objects.all():
@@ -66,7 +69,7 @@ class Territory(models.Model):
     - army: the size of the army held by the territory
     """
     name = models.CharField(max_length=50, unique=True)
-    description = models.CharField(max_length=250)
+    description = models.CharField(max_length=2502)
     food = models.IntegerField(default=100)
     gold = models.IntegerField(default=100)
     default_population = models.IntegerField(default=100)
@@ -87,8 +90,8 @@ class TerritorySession(models.Model):
     territory = models.ForeignKey(Territory, on_delete=models.CASCADE)
     lobby = models.ForeignKey(Lobby, on_delete=models.CASCADE)
     owner = models.OneToOneField(Session, on_delete=models.CASCADE, blank=True, null=True)
-    population = models.IntegerField()
-    army = models.IntegerField()
+    population = models.IntegerField(default=100)
+    army = models.IntegerField(default=100)
 
     def __str__(self):
         return self.territory.name + ' in ' + self.lobby.name

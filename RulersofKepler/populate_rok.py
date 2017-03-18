@@ -17,7 +17,12 @@ def_army = 100
 
 def populate():
     users = [
-        {"Username": "TestUser", }
+        {"Username": "TestUser",},
+        {"Username": "Robag",},
+        {"Username": "Xela",},
+        {"Username": "Naitsirc",},
+        {"Username": "Ratep",},
+        {"Username": "Rotkiv",},
     ]
 
     territories = [
@@ -93,8 +98,8 @@ def add_territory(name, desc, food, gold, army, pop):
     t.description = desc
     t.food = food
     t.gold = gold
-    t.army = army
-    t.population = pop
+    t.default_army = army
+    t.default_population = pop
     t.save()
     return t
 

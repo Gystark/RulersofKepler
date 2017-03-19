@@ -74,6 +74,7 @@ class Territory(models.Model):
     gold = models.IntegerField(default=100)
     default_population = models.IntegerField(default=100)
     default_army = models.IntegerField(default=100)
+    coordinates = models.TextField(max_length=500,default="")
 
     def __str__(self):
         return self.name

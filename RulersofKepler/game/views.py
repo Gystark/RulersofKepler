@@ -148,6 +148,7 @@ def get_territory_data(request, lobby_id, territory_id):
             'army': territory_session.army,
             'food': territory.food,
             'gold': territory.gold,
+            'coordinates': territory.coordinates,
             'owner': owner
         })
 

@@ -1,7 +1,6 @@
 from django.conf.urls import url
 from . import views
 
-
 urlpatterns = [
     url(r'^$', views.index, name="index"),
     url(r'^lobby/list/$', views.lobbylist, name="lobbylist"),
@@ -13,5 +12,11 @@ urlpatterns = [
     url(r'^profile/(?P<username>[\w]+)/$', views.profile, name="profile"),
     url(r'^terms-and-conditions/$', views.termsandconditions, name="termsandconditions"),
 
-    url(r'^game-ajax/(?P<lobby_id>[0-9]+)/territory/(?P<territory_id>[0-9]+)/data/$', views.get_territory_data, name="get_territory_data")
+    # Ajax urls
+    url(r'game-ajax/(?P<lobby_id>[0-9]+)/territory/(?P<territory_id>[0-9]+)/data/$', views.get_territory_data,
+        name="get_territory_data"),
+    url(r'^game-ajax/territory/set-population/$', views.set_population, name="set_population"),
+    url(r'^game-ajax/territory/set-army/$', views.set_army, name="set_army"),
+    url(r'^game-ajax/army/move/$', views.move_army, name='move_army'),
+    url(r'^game-ajax/army/attack/$', views.attack, name="attack")
 ]

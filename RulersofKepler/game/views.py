@@ -138,6 +138,8 @@ def get_territory_data(request, lobby_id, territory_id):
     """
     if request.is_ajax() and request.method == 'GET':
         try:
+            sess = Session.objects.get(lobby__id=lobby_id, user=request.user, active=True)
+            
             territory = Territory.objects.get(id=territory_id)
 
             territory_session = TerritorySession.objects.get(territory=territory, lobby__id=lobby_id)
@@ -165,11 +167,11 @@ def get_territory_data(request, lobby_id, territory_id):
 
 
 @login_required
-def set_population(request):
+def set_population_army(request):
     """
     Set the population of the given territory in the given lobby.
     """
-    if request.is_ajax() and request.method == "POST":
+    if request.is_ajax() and request.method == "POST" and 'territory_id' in request.POST and 'lobby_id' in request.POST and 'new_population' in request.POST and 'new_army' in request.POST:
         territory_id = request.POST.get('territory_id')
         lobby_id = request.POST.get('lobby_id')
 
@@ -179,42 +181,13 @@ def set_population(request):
             try:
                 territory_session = TerritorySession.objects.get(territory__id=territory_id, lobby__id=lobby_id)
 
-                new_population = request.POST.get('new_population', 100)
+                new_population = request.POST.get('new_population')
+                new_army = request.POST.get('new_army')
+                new_total = new_population + new_army
+                old_total = territory_session.population + territory_session.army
 
-                if new_population != territory_session.population and territory_session.owner == request.user:
+                if new_total == old_total and territory_session.owner == request.user:
                     territory_session.population = new_population
-                    territory_session.save()
-                    response = "success"
-                else:
-                    response = "error"
-            except ObjectDoesNotExist:
-                response = 'error'
-
-        return JsonResponse({'response': response})
-
-    # If the request is not ajax and POST, show an error
-    messages.error(request, 'System error, please try again.')
-    return redirect('index')
-
-
-@login_required
-def set_army(request):
-    """
-    Set the army of the given territory in the given lobby.
-    """
-    if request.is_ajax() and request.method == "POST":
-        territory_id = request.POST.get('territory_id')
-        lobby_id = request.POST.get('lobby_id')
-
-        if territory_id is None or lobby_id is None:
-            response = 'error'
-        else:
-            try:
-                territory_session = TerritorySession.objects.get(territory__id=territory_id, lobby__id=lobby_id)
-
-                new_army = request.POST.get('new_army', 100)
-
-                if new_army != territory_session.army and territory_session.owner == request.user:
                     territory_session.army = new_army
                     territory_session.save()
                     response = "success"
@@ -228,7 +201,6 @@ def set_army(request):
     # If the request is not ajax and POST, show an error
     messages.error(request, 'System error, please try again.')
     return redirect('index')
-
 
 @login_required
 def move_army(request):

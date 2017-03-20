@@ -31,8 +31,11 @@ $(document).ready(function() {
                 el=document.createElement("div");
                 el.setAttribute("class","map-square");
                 el.setAttribute("id","square-"+this["name"]);
+                el.setAttribute("name",this["name"]);
                 el.style.left=centerx+"px";
                 el.style.top=centery+"px";
+                el.addEventListener("mouseover",mapMouseOver,true);
+                el.addEventListener("mouseout",mapMouseOut,true);
                 $("#map-squares")[0].append(el);
             });
             updateGameInfo(response);

@@ -130,6 +130,25 @@ def get_user_win_percentage(userprofile):
     except ZeroDivisionError:
         return 0
 
+@login_required
+def get_territory_all(request):
+    """
+    Return data for the given territory in the given lobby.
+    """
+    if request.method == 'GET':
+        territories = Territory.objects.all()
+        response={}
+        for territory in territories:
+            response.update({
+                territory.name:
+                    {'name': territory.name, 'coordinates': territory.coordinates}
+            })
+
+        return JsonResponse(response)
+
+    # If the request is not ajax and POST, show an error
+    messages.error(request, 'System error, please try again.')
+    return redirect('index')
 
 @login_required
 def get_territory_data(request, lobby_id, territory_id):

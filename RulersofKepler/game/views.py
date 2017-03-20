@@ -131,18 +131,36 @@ def get_user_win_percentage(userprofile):
         return 0
 
 @login_required
-def get_territory_all(request):
+def get_territory_all(request, lobby_id):
     """
     Return data for the given territory in the given lobby.
     """
-    if request.method == 'GET':
-        territories = Territory.objects.all()
-        response={}
-        for territory in territories:
-            response.update({
-                territory.name:
-                    {'name': territory.name, 'coordinates': territory.coordinates}
+    if request.is_ajax() and request.method == 'GET':
+        response = {}
+        try:
+            sess = Session.objects.get(lobby__id=lobby_id, user=request.user, active=True)
+            
+            territories = Territory.objects.all()
+            response={}
+            for territory in territories:
+                territory_session = TerritorySession.objects.get(territory=territory, lobby__id=lobby_id)
+                owner = territory_session.owner.username if territory_session.owner is not None else ''
+                response.update({
+                    territory.name:
+                        {
+                        'id': territory.id,
+                        'name': territory.name,
+                        'description': territory.description,
+                        'population': territory_session.population,
+                        'army': territory_session.army,
+                        'food': territory.food,
+                        'gold': territory.gold,
+                        'coordinates': territory.coordinates,
+                        'owner': owner
+                        }
             })
+        except ObjectDoesNotExist:
+            response = {'response': 'error'}
 
         return JsonResponse(response)
 
@@ -150,31 +168,34 @@ def get_territory_all(request):
     messages.error(request, 'System error, please try again.')
     return redirect('index')
 
+
 @login_required
-def get_territory_data(request, lobby_id, territory_id):
+def get_territory_reduced(request, lobby_id):
     """
     Return data for the given territory in the given lobby.
     """
     if request.is_ajax() and request.method == 'GET':
+        response = {}
         try:
             sess = Session.objects.get(lobby__id=lobby_id, user=request.user, active=True)
             
-            territory = Territory.objects.get(id=territory_id)
-
-            territory_session = TerritorySession.objects.get(territory=territory, lobby__id=lobby_id)
-
-            owner = territory_session.owner.username if territory_session.owner is not None else ''
-
-            response = {
-                'name': territory.name,
-                'description': territory.description,
-                'population': territory_session.population,
-                'army': territory_session.army,
-                'food': territory.food,
-                'gold': territory.gold,
-                'coordinates': territory.coordinates,
-                'owner': owner
-            }
+            territories = Territory.objects.all()
+            response={}
+            for territory in territories:
+                territory_session = TerritorySession.objects.get(territory=territory, lobby__id=lobby_id)
+                owner = territory_session.owner.username if territory_session.owner is not None else ''
+                response.update({
+                    territory.name:
+                        {
+                        'id': territory.id,
+                        'name': territory.name,
+                        'population': territory_session.population,
+                        'army': territory_session.army,
+                        'food': territory.food,
+                        'gold': territory.gold,
+                        'owner': owner
+                        }
+            })
         except ObjectDoesNotExist:
             response = {'response': 'error'}
 

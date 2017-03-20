@@ -1,28 +1,11 @@
-$(document).ready(function () {
-   $('#testButton').click(function () {
-
-       var game = $(this).text().split('///');
-
-       $.ajax({
-          'url': '/game-ajax/' + game[0] + '/territory/' + game[1] + '/data/',
-           'method': 'GET',
-           success: function (data) {
-
-              console.log(data);
-
-               var response = $.parseJSON(JSON.stringify(data));
-
-               $('#testid').text(response.owner);
-           }
-       });
-   });
-});
-
 $(document).ready(function() {
     if($("#map").length==0)
         return;
+    var url=window.location.toString();
+    url=url.split("/");
+    var lobby_id=url[url.length-2];
     $.ajax({
-        'url': '/game-ajax/territory/get-all',
+        'url': '/game-ajax/'+lobby_id+'/territory/get-all',
         'method': 'GET',
         success: function(data) {
             var response=$.parseJSON(JSON.stringify(data));
@@ -35,6 +18,7 @@ $(document).ready(function() {
                 el.addEventListener("mouseout",mapMouseOut,true);
                 $("#map-regions")[0].append(el);
             });
+            updateGameInfo(response);
         }
     });
 });
@@ -44,7 +28,7 @@ function mapMouseOver(e) {
 }
 
 function mapMouseOut(e) {
-    $("#map-hover-img")[0].src="";
+    $("#map-hover-img")[0].src="/static/map/map.png";
 }
 
 var mapX=0;
@@ -55,7 +39,7 @@ var mapW=2048;
 var mapH=2048;
 var moveByX=0;
 var moveByY=0;
-window.addEventListener("load",function() {
+$(document).ready(function() {
 	$("#map")[0].style.marginLeft="0px";
 	$("#map")[0].style.marginTop="0px";
 	$("#map")[0].style.width=mapW+"px";
@@ -67,7 +51,7 @@ window.addEventListener("load",function() {
 	windowW=parseInt(window.getComputedStyle($("#map-holder")[0],null).getPropertyValue("width"));
 	windowH=parseInt(window.getComputedStyle($("#map-holder")[0],null).getPropertyValue("height"));
 	setTimeout("moveMapListener();",50);
-},true);
+});
 function moveMapListener() {
 	var x,y;
 	x=parseInt($("#map")[0].style.marginLeft);
@@ -136,4 +120,10 @@ function mapMove(x,y) {
     }
 	$("#map")[0].style.marginLeft=x+"px";
 	$("#map")[0].style.marginTop=y+"px";
+}
+
+function updateGameInfo(data) {
+    $.each(data,function() {
+        console.log(this.name);
+    });
 }

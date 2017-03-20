@@ -1,11 +1,22 @@
 {% extends "game/base.html" %}
+{% load staticfiles %}
 {% block title %}
     Rulers of Kepler
 {% endblock %}
 {% block content %}
-    The awesome game is here.
+    <div id="content-map">
+        <div id="map-holder">
+            <div id="map">
+                <img src="{% static 'map/map.png' %}" alt="Base Map" />
+                <img src="{% static 'map/border-Lapland.png' %}" id="map-hover-img" alt="Map Hover" usemap="#map-regions" />
+                <map name="map-regions" id="map-regions">
+                </map>
+            </div>
+        </div>
+    </div>
+    <!--The awesome game is here.
     <button class="btn btn-info" id="testButton">{{ lobby }}///1</button>
     <div id="testid">
 
-    </div>
+    </div>-->
 {% endblock %}

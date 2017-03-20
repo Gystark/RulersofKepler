@@ -106,9 +106,8 @@ class TerritorySession(models.Model):
             borders.append(t.name)
         return borders
 
-    def change_owner(self, owner_session_id):
+    def change_owner(self, owner):
         # Change the owner of a territory in a session
-        owner = Session.objects.get(id=owner_session_id)
 
         # Check if the owner is part of the same lobby as the
         # territory session

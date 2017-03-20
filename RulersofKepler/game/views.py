@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from random import uniform
 
 from .models import *
 from .forms import LobbyCreationForm
@@ -285,6 +286,22 @@ def move_army(request):
     return redirect('index')
 
 
+def get_battle_winner(defend_terr, attack_terr):
+    """
+    Get the winner in a battle between two territories
+    Also change the territory owner accordingly
+    """
+    # TODO decide on battle algorithm
+    def_score = (defend_terr.army*1.0 + 0.1*defend_terr.population)*uniform(0.8,  1.2)
+    att_score = (attack_terr.army*1.0 + 0.1*attack_terr.population)*uniform(0.8, 1.2)
+    if att_score > def_score:
+        defend_terr.change_owner(attack_terr.owner)
+        defend_terr.army /= 2
+        return attack_terr.owner.user
+    attack_terr.army /= 2
+    return defend_terr.owner.user
+
+
 @login_required
 def attack(request):
     """
@@ -304,17 +321,16 @@ def attack(request):
 
                 if session_1.name in session_2.get_borders():
 
-                    if session_1.owner == request.user and session_2.owner != request.user:
-                        # TODO clarify attack modifiers
-                        if session_1.army > session_2.army:
-                            session_2.owner = request.user
-                            session_2.army = 0
-                            session_2.save()
+                    attacker = session_2.owner.user
+                    defender = session_1.owner.user
 
-                            session_1.army /= 2
-                            session_1.save()
+                    if attacker == request.user and defender != request.user:
 
+                        winner = get_battle_winner(session_1, session_2)
+
+                        if winner == request.user:
                             response = 'won'
+
                         else:
                             response = 'lost'
                     else:

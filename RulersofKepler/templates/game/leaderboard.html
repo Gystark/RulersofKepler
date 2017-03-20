@@ -3,7 +3,9 @@
     Leaderboard
 {% endblock %}
 {% block content %}
+    <div class="content-center" id="content-leaderboard">
     {% if stats %}
+        <span class="title">Leaderboard</span>
         <table>
             <tr>
                 <th>Username</th>
@@ -21,6 +23,7 @@
         {% endfor %}
         </table>
     {% else %}
-        <p>No statistics available</p>
+        <span class="title">No statistics available</span>
     {% endif %}
+    </div>
 {% endblock %}

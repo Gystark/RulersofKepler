@@ -3,10 +3,16 @@
 Create lobby
 {% endblock %}
 {% block content %}
-<span class="title">Create a lobby</span>
-    <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Create lobby">
-    </form>
+    <div class="content-center" id="content-lobbies">
+        <span class="title">Create a lobby</span>
+        <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="inputfield">
+            <span class="center">
+                <input type="submit" value="Create lobby">
+            </span>
+        </div>
+        </form>
+    </div>
 {% endblock %}

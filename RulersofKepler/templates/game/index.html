@@ -6,8 +6,10 @@
 
 {% block content %}
     {% if user.is_authenticated %}
-        <p>Hi there {{ user.username }}, you are logged in</p>
-        <p class="title">Go to the game: <a href="{% url 'lobbylist' %}">Play here</a></p>
+        <div class="content-center" id="content-index">
+            <span class="title">Hi there {{ user.username }}</span>
+            <span class="title"><a href="{% url 'lobbylist' %}">PLAY THE GAME</a></span>
+        </div>
     {% else %}
         <div class="content-center" id="content-index">
             <span class="title">Play now!</span>

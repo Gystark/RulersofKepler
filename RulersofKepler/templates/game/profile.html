@@ -5,19 +5,21 @@
 {% endblock %}
 
 {% block content %}
-<h1>{{ selecteduser.username }} Profile</h1>
-<div>
-    <ul>
-        <li> Games played: <span class="badge">{{ userprofile.games_played }}</span></li>
-    </ul>
-    <ul>
-        <li> Games Won: <span class="badge">{{ userprofile.games_won }}</span></li>
-    </ul>
-    <ul>
-        <li> Games Lost: <span class="badge">{{ games_lost }}</span></li>
-    </ul>
-    <ul>
-        <li> Win percentage: <span class="badge">{{ win_percent }}</span></li>
-    </ul>
-</div>
+    <div class="content-center" id="content-leaderboard">
+        <span class="title">{{ selecteduser.username }} Profile</span>
+        <div class="profile">
+            <ul>
+                <li> Games played: <span class="badge">{{ userprofile.games_played }}</span></li>
+            </ul>
+            <ul>
+                <li> Games Won: <span class="badge">{{ userprofile.games_won }}</span></li>
+            </ul>
+            <ul>
+                <li> Games Lost: <span class="badge">{{ games_lost }}</span></li>
+            </ul>
+            <ul>
+                <li> Win percentage: <span class="badge">{{ win_percent }}</span></li>
+            </ul>
+        </div>
+    </div>
 {% endblock %}

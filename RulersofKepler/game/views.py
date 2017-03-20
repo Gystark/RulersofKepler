@@ -156,7 +156,8 @@ def get_territory_all(request, lobby_id):
                         'food': territory.food,
                         'gold': territory.gold,
                         'coordinates': territory.coordinates,
-                        'owner': owner
+                        'owner': owner,
+                        'neighbours': territory_session.get_borders(),
                         }
             })
         except ObjectDoesNotExist:
@@ -260,14 +261,20 @@ def move_army(request):
                 session_1 = TerritorySession.objects.get(lobby__id=lobby_id, territory__id=t1_id)
                 session_2 = TerritorySession.objects.get(lobby__id=lobby_id, territory__id=t2_id)
 
-                if session_1.army >= amount and session_1.owner == request.user and session_2.owner == request.user:
-                    session_2.army += amount
-                    session_1.army -= amount
-                    session_1.save()
-                    session_2.save()
-                    response = 'success'
+                if session_1.territory.name in session_2.get_borders():
+
+                    if session_1.army >= amount and session_1.owner == request.user and session_2.owner == request.user:
+                        session_2.army += amount
+                        session_1.army -= amount
+                        session_1.save()
+                        session_2.save()
+                        response = 'success'
+                    else:
+                        response = 'error'
+
                 else:
                     response = 'error'
+
             except ObjectDoesNotExist:
                 response = 'error'
 
@@ -295,19 +302,24 @@ def attack(request):
                 session_1 = TerritorySession.objects.get(lobby__id=lobby_id, territory__id=t1_id)
                 session_2 = TerritorySession.objects.get(lobby__id=lobby_id, territory__id=t2_id)
 
-                if session_1.owner == request.user and session_2.owner != request.user:
-                    # TODO clarify attack modifiers
-                    if session_1.army > session_2.army:
-                        session_2.owner = request.user
-                        session_2.army = 0
-                        session_2.save()
+                if session_1.name in session_2.get_borders():
 
-                        session_1.army /= 2
-                        session_1.save()
+                    if session_1.owner == request.user and session_2.owner != request.user:
+                        # TODO clarify attack modifiers
+                        if session_1.army > session_2.army:
+                            session_2.owner = request.user
+                            session_2.army = 0
+                            session_2.save()
 
-                        response = 'won'
+                            session_1.army /= 2
+                            session_1.save()
+
+                            response = 'won'
+                        else:
+                            response = 'lost'
                     else:
-                        response = 'lost'
+                        response = 'error'
+
                 else:
                     response = 'error'
 

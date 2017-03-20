@@ -99,9 +99,6 @@ class TerritorySession(models.Model):
     def __str__(self):
         return self.territory.name + ' in ' + self.lobby.name
 
-    def get_borders(self):
-
-
     def change_owner(self, owner_session_id):
         # Change the owner of a territory in a session
         owner = Session.objects.get(id=owner_session_id)

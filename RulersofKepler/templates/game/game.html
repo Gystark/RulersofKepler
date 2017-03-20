@@ -8,8 +8,9 @@
         <div id="map-holder">
             <div id="map">
                 <img src="{% static 'map/map.png' %}" alt="Base Map" />
-                <img src="{% static 'map/border-Lapland.png' %}" id="map-hover-img" alt="Map Hover" usemap="#map-regions" />
+                <img src="" id="map-hover-img" alt="Map Hover" usemap="#map-regions" />
                 <map name="map-regions" id="map-regions">
+                    <area shape="poly" coords="243,264,287,250,325,179,308,138,329,77,288,119,182,128,107,174,68,245,150,227,156,268,248,260" onmouseover="$('#map-hover-img')[0].src='/static/map/border-Scotchland.png';" onmouseout="$('#map-hover-img')[0].src='';" />
                 </map>
             </div>
         </div>

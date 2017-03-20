@@ -105,8 +105,30 @@ def populate():
 
     ]
 
+    neighbours = {
+        "Scotchland": ["Na h-Eileanan an Siar", "Lapland"],
+        "Na h-Eileanan an Siar": ["Lapland", "Severoslavia"],
+        "Lapland": ["Gerfew"],
+        "Gerfew": ["Franz", "Hungry Ostrich", "Severoslavia", "Macarony", "Mess-a-donia"],
+        "Franz": ["Catalona", "Macarony"],
+        "Macarony": ["Mess-a-donia"],
+        "Catalona": ["Arabia al Qadim"],
+        "Hungry Ostrich": ["Severoslavia", "Eucraine", "Mess-a-donia"],
+        "Eucraine": ["Mess-a-donia", "Severoslavia"],
+        "Mess-a-donia": ["Constantinopelis"],
+        "Constantinopelis": ["Cathay", "Thingystan", "Mess-a-potamia"],
+        "Mess-a-potamia": ["Arabia al Qadim", "Endia", "Thingystan"],
+        "Endia": ["Thingystan", "Persia"],
+        "Persia": ["Thingystan", "Cathay"],
+        "Cathay": ["Thingystan", "Best Korea"],
+
+    }
+
     for t in territories:
         print(str(add_territory(t["Name"], t["Description"], t["Food"], t["Gold"], t["Army"], t["Population"],t["Coordinates"])))
+
+    for n in neighbours.keys():
+        add_borders(n, neighbours[n])
 
     for u in users:
         print(str(add_user(u["Username"])))
@@ -123,6 +145,16 @@ def add_territory(name, desc, food, gold, army, pop, coord):
     t.save()
     return t
 
+def add_borders(tname, borders):
+    t = Territory.objects.get(name=tname)
+    for bname in borders:
+        b = Territory.objects.get(name=bname)
+        if t.borders.filter(name=bname).count() == 0:
+            t.borders.add(b)
+        if b.borders.filter(name=tname).count() == 0:
+            b.borders.add(t)
+        print (t.name+" borders "+b.name)
+    t.save()
 
 def add_user(name):
     u = User.objects.get_or_create(username=name)[0]

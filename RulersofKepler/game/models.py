@@ -67,6 +67,7 @@ class Territory(models.Model):
     - gold: the amount of gold produced by the territory
     - population: the size of the population held by the territory
     - army: the size of the army held by the territory
+    - borders: many to many relationship to self - neighbouring territorries
     """
     name = models.CharField(max_length=50, unique=True)
     description = models.CharField(max_length=2502)
@@ -75,6 +76,7 @@ class Territory(models.Model):
     default_population = models.IntegerField(default=100)
     default_army = models.IntegerField(default=100)
     coordinates = models.TextField(max_length=500,default="")
+    borders = models.ManyToManyField('self')
 
     def __str__(self):
         return self.name
@@ -96,6 +98,9 @@ class TerritorySession(models.Model):
 
     def __str__(self):
         return self.territory.name + ' in ' + self.lobby.name
+
+    def get_borders(self):
+
 
     def change_owner(self, owner_session_id):
         # Change the owner of a territory in a session

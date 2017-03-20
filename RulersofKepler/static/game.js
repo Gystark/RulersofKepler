@@ -17,6 +17,23 @@ $(document).ready(function() {
                 el.addEventListener("mouseover",mapMouseOver,true);
                 el.addEventListener("mouseout",mapMouseOut,true);
                 $("#map-regions")[0].append(el);
+                var x=0,xn=0,y=0,yn=0;
+                var c=this["coordinates"].split(",");
+                for(i=0;i<c.length;i+=2) {
+                    x=x+parseInt(c[i]);
+                    y=y+parseInt(c[i+1]);
+                    xn=xn+1;
+                    yn=yn+1;
+                }
+                centerx=parseInt(x/xn);
+                centery=parseInt(y/yn);
+                console.log(centerx+" "+centery);
+                el=document.createElement("div");
+                el.setAttribute("class","map-square");
+                el.setAttribute("id","square-"+this["name"]);
+                el.style.left=centerx+"px";
+                el.style.top=centery+"px";
+                $("#map-squares")[0].append(el);
             });
             updateGameInfo(response);
         }

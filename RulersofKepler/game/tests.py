@@ -1,7 +1,6 @@
-from django.contrib.auth.models import User
 from django.test import TestCase
 
-from .models import Lobby, Session
+from .models import Lobby
 
 
 class ModelTests(TestCase):

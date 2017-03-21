@@ -17,12 +17,12 @@ def_army = 100
 
 def populate():
     users = [
-        {"Username": "TestUser",},
-        {"Username": "Robag",},
-        {"Username": "Xela",},
-        {"Username": "Naitsirc",},
-        {"Username": "Ratep",},
-        {"Username": "Rotkiv",},
+        {"Username": "TestUser", },
+        {"Username": "Robag", },
+        {"Username": "Xela", },
+        {"Username": "Naitsirc", },
+        {"Username": "Ratep", },
+        {"Username": "Rotkiv", },
     ]
 
     territories = [
@@ -125,7 +125,7 @@ def populate():
     }
 
     for t in territories:
-        print(str(add_territory(t["Name"], t["Description"], t["Food"], t["Gold"], t["Army"], t["Population"],t["Coordinates"])))
+        print(str(add_territory(t["Name"], t["Description"], t["Food"], t["Gold"], t["Army"], t["Population"], t["Coordinates"])))
 
     for n in neighbours.keys():
         add_borders(n, neighbours[n])
@@ -145,6 +145,7 @@ def add_territory(name, desc, food, gold, army, pop, coord):
     t.save()
     return t
 
+
 def add_borders(tname, borders):
     t = Territory.objects.get(name=tname)
     for bname in borders:
@@ -155,6 +156,7 @@ def add_borders(tname, borders):
             b.borders.add(t)
         print (t.name+" borders "+b.name)
     t.save()
+
 
 def add_user(name):
     u = User.objects.get_or_create(username=name)[0]

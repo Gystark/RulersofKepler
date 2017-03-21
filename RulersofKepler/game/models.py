@@ -70,6 +70,7 @@ class Session(models.Model):
     def get_colour(self):
         return json.loads(self.colour)
 
+
 class Territory(models.Model):
     """
     Territory model, which consists of:
@@ -89,7 +90,7 @@ class Territory(models.Model):
     gold = models.IntegerField(default=100)
     default_population = models.IntegerField(default=100)
     default_army = models.IntegerField(default=100)
-    coordinates = models.TextField(max_length=500,default="")
+    coordinates = models.TextField(max_length=500, default="")
     borders = models.ManyToManyField('self')
 
     def __str__(self):

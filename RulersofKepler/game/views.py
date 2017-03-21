@@ -75,7 +75,7 @@ def about(request):
 @login_required
 def game(request, lobby_id):
     try:
-        sess = Session.objects.get(user=request.user, active=True)
+        Session.objects.get(user=request.user, active=True)
         return render(request, "game/game.html", {'lobby': lobby_id})
     except Session.DoesNotExist:
         return redirect('lobbylist')
@@ -131,36 +131,34 @@ def get_user_win_percentage(userprofile):
     except ZeroDivisionError:
         return 0
 
+
 @login_required
 def get_territory_all(request, lobby_id):
     """
     Return data for the given territory in the given lobby.
     """
     if request.is_ajax() and request.method == 'GET':
-        response = {}
         try:
-            sess = Session.objects.get(lobby__id=lobby_id, user=request.user, active=True)
-            
             territories = Territory.objects.all()
-            response={}
+            response = {}
             for territory in territories:
                 territory_session = TerritorySession.objects.get(territory=territory, lobby__id=lobby_id)
                 owner = territory_session.owner.username if territory_session.owner is not None else ''
                 response.update({
                     territory.name:
                         {
-                        'id': territory.id,
-                        'name': territory.name,
-                        'description': territory.description,
-                        'population': territory_session.population,
-                        'army': territory_session.army,
-                        'food': territory.food,
-                        'gold': territory.gold,
-                        'coordinates': territory.coordinates,
-                        'owner': owner,
-                        'neighbours': territory_session.get_borders(),
+                            'id': territory.id,
+                            'name': territory.name,
+                            'description': territory.description,
+                            'population': territory_session.population,
+                            'army': territory_session.army,
+                            'food': territory.food,
+                            'gold': territory.gold,
+                            'coordinates': territory.coordinates,
+                            'owner': owner,
+                            'neighbours': territory_session.get_borders(),
                         }
-            })
+                })
         except ObjectDoesNotExist:
             response = {'response': 'error'}
 
@@ -177,27 +175,26 @@ def get_territory_reduced(request, lobby_id):
     Return data for the given territory in the given lobby.
     """
     if request.is_ajax() and request.method == 'GET':
-        response = {}
         try:
-            sess = Session.objects.get(lobby__id=lobby_id, user=request.user, active=True)
-            
+            Session.objects.get(lobby__id=lobby_id, user=request.user, active=True)
+
             territories = Territory.objects.all()
-            response={}
+            response = {}
             for territory in territories:
                 territory_session = TerritorySession.objects.get(territory=territory, lobby__id=lobby_id)
                 owner = territory_session.owner.username if territory_session.owner is not None else ''
                 response.update({
                     territory.name:
                         {
-                        'id': territory.id,
-                        'name': territory.name,
-                        'population': territory_session.population,
-                        'army': territory_session.army,
-                        'food': territory.food,
-                        'gold': territory.gold,
-                        'owner': owner
+                            'id': territory.id,
+                            'name': territory.name,
+                            'population': territory_session.population,
+                            'army': territory_session.army,
+                            'food': territory.food,
+                            'gold': territory.gold,
+                            'owner': owner
                         }
-            })
+                })
         except ObjectDoesNotExist:
             response = {'response': 'error'}
 
@@ -243,6 +240,7 @@ def set_population_army(request):
     # If the request is not ajax and POST, show an error
     messages.error(request, 'System error, please try again.')
     return redirect('index')
+
 
 @login_required
 def move_army(request):
@@ -292,8 +290,8 @@ def get_battle_winner(defend_terr, attack_terr):
     Also change the territory owner accordingly
     """
     # TODO decide on battle algorithm
-    def_score = (defend_terr.army*1.0 + 0.1*defend_terr.population)*uniform(0.8,  1.2)
-    att_score = (attack_terr.army*1.0 + 0.1*attack_terr.population)*uniform(0.8, 1.2)
+    def_score = (defend_terr.army * 1.0 + 0.1 * defend_terr.population) * uniform(0.8, 1.2)
+    att_score = (attack_terr.army * 1.0 + 0.1 * attack_terr.population) * uniform(0.8, 1.2)
     if att_score > def_score:
         defend_terr.change_owner(attack_terr.owner)
         defend_terr.army /= 2

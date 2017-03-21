@@ -4,6 +4,8 @@ Models for the game.
 from django.contrib.auth.models import User
 from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
+from random import randrange
+import json
 
 
 class Lobby(models.Model):
@@ -51,10 +53,22 @@ class Session(models.Model):
     active = models.BooleanField(default=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     lobby = models.ForeignKey(Lobby, on_delete=models.CASCADE, default=None)
+    colour = models.CharField(max_length=20, default='')
 
     def __str__(self):
         return str(self.id) + ' ' + self.user.username
 
+    def save(self, *args, **kwargs):
+        super(Session, self).save(*args, **kwargs)
+        if self.colour == '' or self.colour is None:
+            r = randrange(0, 255)
+            g = randrange(0, 255)
+            b = randrange(0, 255)
+            self.colour = '['+str(r)+', '+str(g)+', '+str(b)+']'
+            self.save()
+
+    def get_colour(self):
+        return json.loads(self.colour)
 
 class Territory(models.Model):
     """

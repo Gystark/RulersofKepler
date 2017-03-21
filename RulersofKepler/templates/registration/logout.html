@@ -4,6 +4,8 @@
 	Logout
 {% endblock %}
 {% block content %}
-    <p>You have logged out of the game.</p>
-    <a href="{% url 'index' %}">Back to the home page.</a>
+    <div class="content-center" id="content-index">
+        <span class="title">You have logged out of the game.</span>
+        <span class="title"><a href="{% url 'index' %}">Back to the home page.</a></span>
+    </div>
 {% endblock %}

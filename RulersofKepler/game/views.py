@@ -297,9 +297,14 @@ def get_battle_winner(defend_terr, attack_terr):
     if att_score > def_score:
         defend_terr.change_owner(attack_terr.owner)
         defend_terr.army /= 2
+        defend_terr.save()
         return attack_terr.owner.user
     attack_terr.army /= 2
-    return defend_terr.owner.user
+    attack_terr.save()
+    if defend_terr.owner != '' and defend_terr.owner is not None:
+        return defend_terr.owner.user
+    else:
+        return ''
 
 
 @login_required

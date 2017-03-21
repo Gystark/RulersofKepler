@@ -92,7 +92,7 @@ class TerritorySession(models.Model):
     """
     territory = models.ForeignKey(Territory, on_delete=models.CASCADE)
     lobby = models.ForeignKey(Lobby, on_delete=models.CASCADE)
-    owner = models.OneToOneField(Session, on_delete=models.CASCADE, blank=True, null=True)
+    owner = models.ForeignKey(Session, on_delete=models.CASCADE, blank=True, null=True)
     population = models.IntegerField(default=100)
     army = models.IntegerField(default=100)
 

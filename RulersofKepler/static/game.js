@@ -27,7 +27,6 @@ $(document).ready(function() {
                 }
                 centerx=parseInt(x/xn);
                 centery=parseInt(y/yn);
-                console.log(centerx+" "+centery);
                 el=document.createElement("div");
                 el.setAttribute("class","map-square");
                 el.setAttribute("id","square-"+this["name"]);
@@ -60,6 +59,8 @@ var mapH=2048;
 var moveByX=0;
 var moveByY=0;
 $(document).ready(function() {
+    if($("#map").length==0)
+        return;
 	$("#map")[0].style.marginLeft="0px";
 	$("#map")[0].style.marginTop="0px";
 	$("#map")[0].style.width=mapW+"px";

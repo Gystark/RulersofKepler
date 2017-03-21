@@ -183,3 +183,21 @@ nav {
     background: url(/static/background.png) repeat;
     background-position: 0px 500px;
 }
+#territory-information {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 150px;
+    background: white;
+    border-radius: 15px;
+    border: solid 1px black;
+    z-index: 9999;
+    padding: 15px;
+    display: none;
+}
+#territory-information.small {
+    height: 100px;
+}
+#territory-information.big {
+    height: 200px;
+}

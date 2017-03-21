@@ -16,7 +16,6 @@ $(document).ready(function() {
                 el.setAttribute("name",this["name"]);
                 el.addEventListener("mouseover",mapMouseOver,true);
                 el.addEventListener("mouseout",mapMouseOut,true);
-                el.addEventListener("click",mapClick,true);
                 $("#map-regions")[0].append(el);
                 var x=0,xn=0,y=0,yn=0;
                 var c=this["coordinates"].split(",");
@@ -54,7 +53,15 @@ function mapMouseOut(e) {
 
 function mapClick(e) {
     var name=e.target.getAttribute("name");
-    alert(name);
+    var tx,ty;
+	tx=event.pageX-parseInt($("#map")[0].style.marginLeft);
+    ty=event.pageY-35-parseInt($("#map")[0].style.marginTop);
+    $("#territory-information")[0].innerHTML="TEST";
+    $("#territory-information")[0].style.left=tx+"px";
+    $("#territory-information")[0].style.top=ty+"px";
+    $("#territory-information")[0].className="small";
+    $("#territory-information").show(); 
+    e.stopPropagation();
 }
 
 var mapX=0;
@@ -153,6 +160,13 @@ function mapMove(x,y) {
 
 function updateGameInfo(data) {
     $.each(data,function() {
-        console.log(this.name);
+        console.log(this["name"]+" "+this["population"]+" "+this["army"]);
     });
 }
+$(document).ready(function() {
+    if($("#map").length==0)
+        return;
+    document.body.addEventListener("click",function() {
+        $("#territory-information").hide();
+    },false);
+});

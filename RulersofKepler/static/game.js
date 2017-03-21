@@ -16,6 +16,7 @@ $(document).ready(function() {
                 el.setAttribute("name",this["name"]);
                 el.addEventListener("mouseover",mapMouseOver,true);
                 el.addEventListener("mouseout",mapMouseOut,true);
+                el.addEventListener("click",mapClick,true);
                 $("#map-regions")[0].append(el);
                 var x=0,xn=0,y=0,yn=0;
                 var c=this["coordinates"].split(",");
@@ -35,6 +36,7 @@ $(document).ready(function() {
                 el.style.top=centery+"px";
                 el.addEventListener("mouseover",mapMouseOver,true);
                 el.addEventListener("mouseout",mapMouseOut,true);
+                el.addEventListener("click",mapClick,true);
                 $("#map-squares")[0].append(el);
             });
             updateGameInfo(response);
@@ -48,6 +50,11 @@ function mapMouseOver(e) {
 
 function mapMouseOut(e) {
     $("#map-hover-img")[0].src="/static/map/map.png";
+}
+
+function mapClick(e) {
+    var name=e.target.getAttribute("name");
+    alert(name);
 }
 
 var mapX=0;
@@ -117,6 +124,7 @@ function mapMouseMove(event) {
 	mapMove(x,y);
 	mapX=mouseX;
 	mapY=mouseY;
+    event.stopPropagation();
 	return false;
 }
 function windowResize(event) {

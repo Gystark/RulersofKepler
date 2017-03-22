@@ -24,7 +24,7 @@ SECRET_KEY = '7t=*1%3waltrz@6)9c5(%vlz952sz8&gh9!q@jhj69=4t33$rv'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['rulersofkepler.pythonanywhere.com']
 
 # Application definition
 

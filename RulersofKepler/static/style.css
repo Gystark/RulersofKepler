@@ -387,3 +387,16 @@ a:hover {
     border-radius: 15px;
     display: none;
 }
+
+#logoHolder {
+    padding: 0;
+}
+
+#logoHolder:hover {
+    background-color: #5bc0de;
+}
+
+#logoHolder img {
+    width: 274px;
+    height: 40px;
+}

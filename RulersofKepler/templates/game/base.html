@@ -26,11 +26,7 @@
 <body>
 <div id="map-background"></div>
 <ul class="nav nav-pills navbar-fixed-top" role="navigation">
-    {% if user.is_authenticated %}
-        <li><a>{{ user.username }}</a></li>
-    {% else %}
-        <li><a>Unknown</a></li>
-    {% endif %}
+    <li><a id="logoHolder"><img src="{% static "images/navy2.png" %}"></a></li>
     <li><a href="{% url 'index' %}">Home</a></li>
     <li><a href="{% url 'about' %}">About</a></li>
     {% if user.is_authenticated %}

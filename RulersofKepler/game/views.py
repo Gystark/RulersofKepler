@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from random import uniform
+from random import uniform, randrange
 
 from .models import *
 from .forms import LobbyCreationForm
@@ -28,6 +28,16 @@ def lobbylist(request):
         return render(request, "game/lobbylist.html", {'lobbies': lobbies, "max_sessions": MAX_SESSIONS})
 
 
+def get_initial_territory(lobby):
+    """
+    Get a random territory that doesn't have an owner
+    """
+    while True:
+        terr_id = randrange(1, 19)
+        ts = TerritorySession.objects.get(lobby=lobby, territory__id=terr_id)
+        if not ts.owner:
+            return ts
+
 @login_required
 def lobbyjoin(request, lobby_id):
     """
@@ -39,7 +49,10 @@ def lobbyjoin(request, lobby_id):
     except Session.DoesNotExist:
         try:
             lobby = Lobby.objects.get(id=lobby_id)
-            Session.objects.create(user=request.user, lobby=lobby, active=True)
+            sess = Session.objects.create(user=request.user, lobby=lobby, active=True)
+            print (lobby.territorysession_set.all())
+            initial_terr = get_initial_territory(lobby)
+            sess.territorysession_set.add(initial_terr)
             return redirect('game', lobby_id=lobby.id)
         except Lobby.DoesNotExist:
             messages.error(request, 'Error joining the lobby, please try again.')
@@ -144,7 +157,7 @@ def get_territory_all(request, lobby_id):
             response = {}
             for territory in territories:
                 territory_session = TerritorySession.objects.get(territory=territory, lobby__id=lobby_id)
-                owner = territory_session.owner.username if territory_session.owner is not None else ''
+                owner = territory_session.owner.user.username if territory_session.owner is not None else ''
                 colour = 'rgb' + territory_session.owner.colour if territory_session.owner is not None else 'rgb(0, 0, 0)'
                 response.update({
                     territory.name:

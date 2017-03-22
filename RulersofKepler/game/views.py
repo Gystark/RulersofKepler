@@ -25,6 +25,11 @@ def lobbylist(request):
         return redirect('game', lobby_id=sess.lobby.id)
     except Session.DoesNotExist:
         lobbies = Lobby.objects.all().exclude(session=MAX_SESSIONS)
+
+        # Add player count to each lobby
+        for lobby in lobbies:
+            lobby.players = Session.objects.filter(lobby=lobby).count()
+
         return render(request, "game/lobbylist.html", {'lobbies': lobbies, "max_sessions": MAX_SESSIONS})
 
 
@@ -38,6 +43,7 @@ def get_initial_territory(lobby):
         if not ts.owner:
             return ts
 
+
 @login_required
 def lobbyjoin(request, lobby_id):
     """
@@ -50,7 +56,7 @@ def lobbyjoin(request, lobby_id):
         try:
             lobby = Lobby.objects.get(id=lobby_id)
             sess = Session.objects.create(user=request.user, lobby=lobby, active=True)
-            print (lobby.territorysession_set.all())
+            print(lobby.territorysession_set.all())
             initial_terr = get_initial_territory(lobby)
             sess.territorysession_set.add(initial_terr)
             return redirect('game', lobby_id=lobby.id)

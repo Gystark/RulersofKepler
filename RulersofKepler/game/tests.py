@@ -118,7 +118,7 @@ class TerritorySessionMethodTests(TestCase):
         self.territory_session_test.save()
         self.assertGreaterEqual(self.territory_session_test.army, 0, "TerrytorySession army cannot be negative!")
 
-    # TODO
+        # TODO
         # test change owner function
 
 

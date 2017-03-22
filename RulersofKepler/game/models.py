@@ -64,7 +64,7 @@ class Session(models.Model):
             r = randrange(0, 255)
             g = randrange(0, 255)
             b = randrange(0, 255)
-            self.colour = '('+str(r)+', '+str(g)+', '+str(b)+')'
+            self.colour = '(' + str(r) + ', ' + str(g) + ', ' + str(b) + ')'
             self.save()
 
     def get_colour(self):

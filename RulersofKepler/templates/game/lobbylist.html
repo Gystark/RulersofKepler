@@ -10,23 +10,23 @@
 		Available lobbies
 	</span>
         {% if lobbies %}
-            <table>
-            <tr>
-                <th>Name</th>
-                <th>Players</th>
-                <th></th>
-            </tr>
-            {% for lobby in lobbies %}
+            <table class="table table-bordered text-center">
                 <tr>
-                    <td>{{ lobby.name }}</td>
-                    <td>{{ lobby.sessions.all.count }}/{{ max_sessions }}</td>
-                    <td><a href="{% url 'lobbyjoin' lobby.id %}">Join</a></td>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Players</th>
+                    <th></th>
                 </tr>
-            {% endfor %}
+                {% for lobby in lobbies %}
+                    <tr>
+                        <td>{{ lobby.name }}</td>
+                        <td>{{ lobby.players }}/{{ max_sessions }}</td>
+                        <td><a href="{% url 'lobbyjoin' lobby.id %}">Join</a></td>
+                    </tr>
+                {% endfor %}
             </table>
         {% else %}
             <span>No lobbies available.</span>
         {% endif %}
-    <span><a href="{% url 'lobbycreate' %}">Create a lobby</a></span>
+        <span><a href="{% url 'lobbycreate' %}">Create a lobby</a></span>
     </div>
 {% endblock %}

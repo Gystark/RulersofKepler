@@ -125,7 +125,8 @@ def populate():
     }
 
     for t in territories:
-        print(str(add_territory(t["Name"], t["Description"], t["Food"], t["Gold"], t["Army"], t["Population"], t["Coordinates"])))
+        print(str(add_territory(t["Name"], t["Description"], t["Food"], t["Gold"], t["Army"], t["Population"],
+                                t["Coordinates"])))
 
     for n in neighbours.keys():
         add_borders(n, neighbours[n])
@@ -154,7 +155,7 @@ def add_borders(tname, borders):
             t.borders.add(b)
         if b.borders.filter(name=tname).count() == 0:
             b.borders.add(t)
-        print (t.name+" borders "+b.name)
+        print(t.name + " borders " + b.name)
     t.save()
 
 

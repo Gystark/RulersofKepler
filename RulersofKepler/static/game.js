@@ -66,7 +66,7 @@ function mapClick(e) {
     $("#territory-information").append('<span class="element">Food: ' + territory_information[name]["food"] + '</span>');
     $("#territory-information").append('<span class="element">Gold: ' + territory_information[name]["gold"] + '</span>');
     if (territory_information[name]["owner"] == request_user)
-        $("#territory-information").append('<span class="button"><a href="javascript:void(0);">Change population/army<a></span>');
+        $("#territory-information").append('<span class="button"><a href="javascript:changePopulationArmy(\''+name+'\');">Change population/army<a></span>');
     if (territory_information[name]["owner"] != request_user && name in territory_neighbours)
         $("#territory-information").append('<span class="button"><a href="javascript:void(0);">Attack</a></span>');
     $("#territory-information")[0].style.left = tx + "px";
@@ -223,3 +223,17 @@ $(document).ready(function () {
         $("#territory-information").text("");
     }, false);
 });
+$(document).ready(function() {
+    $("#population_value")[0].addEventListener("input",function(e) {
+        $("#population_output").text(e.target.value);
+    },true);
+    $("#army_value")[0].addEventListener("input",function(e) {
+        $("#army_output").text(e.target.value);
+    },true);
+});
+function changePopulationArmy(name) {
+    if(territory_information[name]==undefined)
+        return;
+    $("#population_output").text(territory_information[name]["population"]);
+    $("#change-dialog").show();
+}

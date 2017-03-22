@@ -206,7 +206,7 @@ function updateGameInfo(data) {
             territory_information[this["name"]]["owner"] = this["owner"];
         if (this["neighbours"] != undefined) {
             territory_information[this["name"]]["neighbours"] = this["neighbours"];
-            if (this["name"] == request_user) {
+            if (this["owner"] == request_user) {
                 for (i = 0; i < this["neighbours"].length; i++)
                     territory_neighbours[this["neighbours"][i]] = this["neighbours"][i];
             }

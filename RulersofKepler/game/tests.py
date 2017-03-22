@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from .models import Lobby, UserProfile
+from .models import *
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 
@@ -33,13 +33,93 @@ class LobbyMethodTests(TestCase):
         self.lobby_test.save()
         self.assertEqual(self.lobby_test.name, "test_name")
 
+    def test_if_territories_are_generated_from_generate_function(self):
+        """
+        When a Lobby is created/saved, the number of territories associated with it should equal to
+        the total number of Territory objects in the database.
+        """
+        # get all territories associated with a lobby
+        generated_territories_size = TerritorySession.objects.filter(lobby=self.lobby_test).count()
+        # and compare them to the total number of those in the db
+        all_territories_size = Territory.objects.all().count()
+        self.assertEqual(generated_territories_size, all_territories_size)
 
+
+"""
+    # TODO
+        # test the active field when user enters a game and after they finish one
+        
 class SessionMethodTests(TestCase):
-    pass
+    def setUp(self):
+        self.user_test = User.objects.create_user(username="user", email="user@user.user", password="Useruser17")
+        self.lobby_test = Lobby.objects.create(name="RandomName")
+        self.session_test = Session.objects.create(user=self.user_test, lobby=self.lobby_test)
+
+    def tearDown(self):
+        self.user_test.delete()
+        self.lobby_test.delete()
+        self.session_test.delete()
+"""
 
 
 class TerritoryMethodTests(TestCase):
-    pass
+    def setUp(self):
+        self.ter1 = Territory.objects.create(name="Territory_name", description="Some description")
+
+    def tearDown(self):
+        self.ter1.delete()
+
+    def test_ensure_food_is_not_negative(self):
+        self.ter1.food = -5
+        self.ter1.save()
+        self.assertGreaterEqual(self.ter1.food, 0, "Food cannot be negative!")
+
+    def test_ensure_gold_is_not_negative(self):
+        self.ter1.gold = -5
+        self.ter1.save()
+        self.assertGreaterEqual(self.ter1.gold, 0, "Gold cannot be negative!")
+
+    def test_ensure_population_is_not_negative(self):
+        self.ter1.default_population = -5
+        self.ter1.save()
+        self.assertGreaterEqual(self.ter1.default_population, 0, "Population cannot be negative!")
+
+    def test_ensure_army_is_not_negative(self):
+        self.ter1.default_army = -5
+        self.ter1.save()
+        self.assertGreaterEqual(self.ter1.default_army, 0, "Army cannot be negative!")
+
+
+class TerritorySessionMethodTests(TestCase):
+    def setUp(self):
+        self.user_test = User.objects.create_user(username="user", email="user@user.user", password="Useruser17")
+        self.lobby_test = Lobby.objects.create(name="RandomName")
+        self.session_test = Session.objects.create(user=self.user_test, lobby=self.lobby_test)
+        self.territory_test = Territory.objects.create(name="Territory_name", description="Some description")
+        self.territory_session_test = TerritorySession.objects.create(territory=self.territory_test,
+                                                                      lobby=self.lobby_test,
+                                                                      owner=self.session_test)
+
+    def tearDown(self):
+        self.user_test.delete()
+        self.lobby_test.delete()
+        self.session_test.delete()
+        self.territory_test.delete()
+        self.territory_session_test.delete()
+
+    def test_ensure_population_is_not_negative(self):
+        self.territory_session_test.population = -5
+        self.territory_session_test.save()
+        self.assertGreaterEqual(self.territory_session_test.population, 0,
+                                "TerritorySession population cannot be negative!")
+
+    def test_ensure_army_is_not_negative(self):
+        self.territory_session_test.army = -5
+        self.territory_session_test.save()
+        self.assertGreaterEqual(self.territory_session_test.army, 0, "TerrytorySession army cannot be negative!")
+
+    # TODO
+        # test change owner function
 
 
 class UserProfileMethodTests(TestCase):

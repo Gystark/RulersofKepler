@@ -74,7 +74,7 @@ def populate():
          "Description": "This prosperous desert land attracts many travelers from abroad, especially food pilgrims who come to taste the famous delicacies found in the holy city of Mydinner",
          "Food": def_food, "Army": def_army, "Gold": def_gold, "Population": def_pop,
          "Coordinates": "154,1859,228,1819,281,1848,305,1794,322,1740,530,1744,544,1796,599,1796,625,1632,593,1445,524,1469,505,1533,488,1516,427,1529,367,1410,343,1423,324,1474,312,1465,279,1481,214,1539,141,1634,92,1648,122,1695,79,1714,80,1782,124,1830,146,1856"},
-        {"Name": "Constantinopelis",
+        {"Name": "Constantinopolis",
          "Description": "The gateway between two worlds, this place was formerly known as Turkey, however its name was changed when emperor Constantine noticed that residents did not eat turkey too often.",
          "Food": def_food, "Army": def_army, "Gold": def_gold, "Population": def_pop,
          "Coordinates": "1139,1060,1279,951,1398,989,1431,1010,1600,926,1664,876,1651,824,1671,883,1590,938,1613,1007,1667,1025,1665,1113,1601,1110,1482,1254,1401,1248,1250,1338,1147,1181,1212,1145,1287,1104,1248,1073,1150,1063"},

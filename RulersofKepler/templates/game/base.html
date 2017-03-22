@@ -33,7 +33,6 @@
             {% if user.is_authenticated %}
                 <a href="{% url 'profile' user.username %}">Profile</a>
                 <a href="{% url 'leaderboard' %}">Leaderboard</a>
-                <a href="{% url 'lobbylist' %}">Lobby list</a>
                 <a href="{% url 'auth_logout' %}">Log out</a>
             {% else %}
                 <a href="{% url 'registration_register' %}">Register Here</a>

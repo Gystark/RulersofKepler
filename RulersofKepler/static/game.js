@@ -1,3 +1,4 @@
+var territory_information={};
 $(document).ready(function() {
     if($("#map").length==0)
         return;
@@ -160,7 +161,32 @@ function mapMove(x,y) {
 
 function updateGameInfo(data) {
     $.each(data,function() {
-        console.log(this["name"]+" "+this["population"]+" "+this["army"]);
+        if(this["name"]==undefined)
+            return;
+        //console.log(this["name"]+" "+this["population"]+" "+this["army"]+" "+this["colour"]);
+        $("div[name*='"+this["name"]+"']")[0].style.background=this["colour"];
+        if(territory_information[this["name"]]==undefined)
+            territory_information[this["name"]]={}
+        if(this["id"]!=undefined)
+            territory_information[this["name"]]["id"]=this["id"];
+        if(this["population"]!=undefined)
+            territory_information[this["name"]]["population"]=this["population"];
+        if(this["army"]!=undefined)
+            territory_information[this["name"]]["army"]=this["army"];
+        if(this["description"]!=undefined)
+            territory_information[this["name"]]["description"]=this["description"];
+        if(this["food"]!=undefined)
+            territory_information[this["name"]]["food"]=this["food"];
+        if(this["gold"]!=undefined)
+            territory_information[this["name"]]["gold"]=this["gold"];
+        if(this["coordinates"]!=undefined)
+            territory_information[this["name"]]["coordinates"]=this["coordinates"];
+        if(this["owner"]!=undefined)
+            territory_information[this["name"]]["owner"]=this["owner"];
+        if(this["neighbours"]!=undefined)
+            territory_information[this["name"]]["neighbours"]=this["neighbours"];
+        if(this["colour"]!=undefined)
+            territory_information[this["name"]]["colour"]=this["colour"];
     });
 }
 $(document).ready(function() {

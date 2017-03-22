@@ -184,7 +184,7 @@ nav {
     position: absolute;
     left: 0;
     top: 0;
-    width: 150px;
+    width: 250px;
     background: white;
     border-radius: 15px;
     border: solid 1px black;
@@ -192,9 +192,21 @@ nav {
     padding: 15px;
     display: none;
 }
-#territory-information.small {
-    height: 100px;
+#territory-information span {
+    float: left;
+    width: 220px;
 }
-#territory-information.big {
-    height: 200px;
+#territory-information .element {
+    margin: 5px 0;
+}
+#territory-information .button {
+    margin: 5px;
+    padding: 5px;
+    text-align: center;
+    border: solid 1px #888888;
+    border-radius: 5px;
+    width: 200px;
+}
+#territory-information .button a {
+    text-decoration: none;
 }

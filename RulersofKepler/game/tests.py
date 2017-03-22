@@ -48,7 +48,7 @@ class LobbyMethodTests(TestCase):
 """
     # TODO
         # test the active field when user enters a game and after they finish one
-        
+
 class SessionMethodTests(TestCase):
     def setUp(self):
         self.user_test = User.objects.create_user(username="user", email="user@user.user", password="Useruser17")

@@ -1,28 +1,29 @@
 {% extends "game/base.html" %}
 
 {% block title %}
-	Register
+    Register
 {% endblock %}
 
 {% block content %}
-<div class="content-center" id="content-index">
+    <div class="content-center" id="content-index">
 	<span class="title">
 		Register
 	</span>
-	<form action="{% url 'registration_register' %}" method="post">{% csrf_token %}
-        <span>{{ form.non_field_errors }}</span>
-        {% for field in form %}
+        <form action="{% url 'registration_register' %}" method="post">{% csrf_token %}
+            <span>{{ form.non_field_errors }}</span>
+            {% for field in form %}
+                <div class="inputfield">
+                    <span>{{ field.errors }}</span>
+                    <span class="left">{{ field.label_tag }}</span>
+                    <span class="right">{{ field }}</span>
+                </div>
+            {% endfor %}
+            <span>By registering you accept our <a href="{% url "termsandconditions" %}" target="_blank">Terms of Service</a></span>
             <div class="inputfield">
-                <span>{{ field.errors }}</span>
-                <span class="left">{{ field.label_tag }}</span>
-                <span class="right">{{ field }}</span>
-            </div>
-        {% endfor %}
-		<div class="inputfield">
 			<span class="center">
 				<input type="submit" value="Register">
 			</span>
-		</div>
-	</form>
-</div>
+            </div>
+        </form>
+    </div>
 {% endblock %}

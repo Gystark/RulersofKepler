@@ -2,53 +2,53 @@
 {% load staticfiles %}
 
 <html>
-    <head>
-        <title>
-            Rulers of Kepler - {% block title %}{% endblock %}
-        </title>
-        <link rel="shortcut icon" href="{%  static 'favicon.ico' %}"/>
+<head>
+    <title>
+        Rulers of Kepler - {% block title %}{% endblock %}
+    </title>
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}"/>
 
-        <link rel="stylesheet" href="{% static 'style.css' %}"/>
-        <!-- Bootstrap core CSS -->
-        <link href="{% static 'base_bootstrap_files/bootstrap.css' %}" rel="stylesheet">
-        <!-- Custom styles for this template -->
-        <!--<link href="{% static 'base_bootstrap_files/dashboard.css' %}" rel="stylesheet">-->
+    <link rel="stylesheet" href="{% static 'style.css' %}"/>
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <!--<link href="{% static 'dashboard.css' %}" rel="stylesheet">-->
 
-        <script type="text/javascript" src="{% static 'jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jquery.min.js' %}"></script>
 
-        <script type="text/javascript" src="{% static 'tether.min.js' %}"></script>
-        <script type="text/javascript" src="{% static 'bootstrap.min.js' %}"></script>
-        <script type="text/javascript" src="{% static 'ie10-viewport-bug-workaround.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tether.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'ie10-viewport-bug-workaround.js' %}"></script>
 
-        <script type="text/javascript" src="{% static 'js.cookie.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js.cookie.js' %}"></script>
 
-        <script type="text/javascript" src="{% static 'game.js' %}"></script>
-    </head>
-    <body>
-        <div id="map-background"></div>
-        <nav>
-            <a>LOGO HERE</a>
-            <a href="{% url 'index' %}">Home</a>
-            <a href="{% url 'about' %}">About</a>
-            {% if user.is_authenticated %}
-                <a href="{% url 'profile' user.username %}">Profile</a>
-                <a href="{% url 'leaderboard' %}">Leaderboard</a>
-                <a href="{% url 'lobbylist' %}">Lobby list</a>
-                <a href="{% url 'auth_logout' %}">Log out</a>
-            {% else %}
-                <a href="{% url 'registration_register' %}">Register Here</a>
-                <a href="{% url 'auth_login' %}">Login</a>
-            {% endif %}
+    <script type="text/javascript" src="{% static 'game.js' %}"></script>
+</head>
+<body>
+<div id="map-background"></div>
+<nav>
+    <a>LOGO HERE</a>
+    <a href="{% url 'index' %}">Home</a>
+    <a href="{% url 'about' %}">About</a>
+    {% if user.is_authenticated %}
+        <a href="{% url 'profile' user.username %}">Profile</a>
+        <a href="{% url 'leaderboard' %}">Leaderboard</a>
+        <a href="{% url 'lobbylist' %}">Lobby list</a>
+        <a href="{% url 'auth_logout' %}">Log out</a>
+    {% else %}
+        <a href="{% url 'registration_register' %}">Register Here</a>
+        <a href="{% url 'auth_login' %}">Login</a>
+    {% endif %}
 
-        </nav>
-        {% if messages %}
-            {% for message in messages %}
-                <p>{{ message }}</p>
-            {% endfor %}
-        {% endif %}
-        {% block content %}Default content text here.{% endblock %}
-        <div id="footer">
-            <span>&copy;2017 Rulers of Kepler <a href="{% url 'termsandconditions' %}">Terms of Service</a></span>
-        </div>
-    </body>
+</nav>
+{% if messages %}
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+{% endif %}
+{% block content %}Default content text here.{% endblock %}
+<div id="footer">
+    <span>&copy;2017 Rulers of Kepler <a href="{% url 'termsandconditions' %}">Terms of Service</a></span>
+</div>
+</body>
 </html>

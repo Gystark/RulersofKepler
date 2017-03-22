@@ -22,7 +22,7 @@ class Lobby(models.Model):
         return self.name
 
     class Meta:
-        verbose_name_plural = "lobbies"
+        verbose_name_plural = "Lobbies"
 
     # A function to add all the territories to a lobby if not there already
     def generate_territories(self):
@@ -97,7 +97,20 @@ class Territory(models.Model):
         return self.name
 
     class Meta:
-        verbose_name_plural = "territories"
+        verbose_name_plural = "Territories"
+
+    # ensure some fields are non-negative
+    def save(self, *args, **kwargs):
+        if self.food < 0:
+            self.food = 0
+        if self.gold < 0:
+            self.gold = 0
+        if self.default_population < 0:
+            self.default_population = 0
+        if self.default_army < 0:
+            self.default_army = 0
+        # save the instance with possibly normalized fields
+        super(Territory, self).save(*args, **kwargs)
 
 
 class TerritorySession(models.Model):
@@ -128,9 +141,17 @@ class TerritorySession(models.Model):
         # territory session
         if owner.lobby != self.lobby:
             raise ObjectDoesNotExist('Intended owner is not part of this lobby')
-
         self.owner = owner
         self.save()
+
+    # ensure fields are non-negative
+    def save(self, *args, **kwargs):
+        if self.population < 0:
+            self.population = 0
+        if self.army < 0:
+            self.army = 0
+        # save the instance with possibly normalized fields
+        super(TerritorySession, self).save(*args, **kwargs)
 
 
 # Extension to the User model
@@ -153,5 +174,4 @@ class UserProfile(models.Model):
         if self.games_won < 0:
             self.games_won = 0
         # save the instance with possibly normalized fields
-        super(UserProfile, self).save(* args, **kwargs)
-
+        super(UserProfile, self).save(*args, **kwargs)

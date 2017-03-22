@@ -142,5 +142,16 @@ class UserProfile(models.Model):
     games_played = models.IntegerField(default=0)
     games_won = models.IntegerField(default=0)
 
+    # toString representation
     def __str__(self):
         return self.user.username
+
+    # ensure fields are non-negative
+    def save(self, *args, **kwargs):
+        if self.games_played < 0:
+            self.games_played = 0
+        if self.games_won < 0:
+            self.games_won = 0
+        # save the instance with possibly normalized fields
+        super(UserProfile, self).save(* args, **kwargs)
+

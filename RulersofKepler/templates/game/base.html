@@ -26,21 +26,23 @@
 </head>
 <body>
 <div id="map-background"></div>
-<nav>
-    <a>LOGO HERE</a>
-    <a href="{% url 'index' %}">Home</a>
-    <a href="{% url 'about' %}">About</a>
+<ul class="nav nav-pills navbar-fixed-top">
     {% if user.is_authenticated %}
-        <a href="{% url 'profile' user.username %}">Profile</a>
-        <a href="{% url 'leaderboard' %}">Leaderboard</a>
-        <a href="{% url 'lobbylist' %}">Lobby list</a>
-        <a href="{% url 'auth_logout' %}">Log out</a>
+        <li role="navigation"><a>{{ user.username }}</a></li>
     {% else %}
-        <a href="{% url 'registration_register' %}">Register Here</a>
-        <a href="{% url 'auth_login' %}">Login</a>
+        <li role="navigation"><a>Unknown</a></li>
     {% endif %}
-
-</nav>
+    <li role="navigation"><a href="{% url 'index' %}">Home</a></li>
+    <li role="navigation"><a href="{% url 'about' %}">About</a></li>
+    {% if user.is_authenticated %}
+        <li role="navigation"><a href="{% url 'profile' user.username %}">Profile</a></li>
+        <li role="navigation"><a href="{% url 'leaderboard' %}">Leaderboard</a></li>
+        <li role="navigation"><a href="{% url 'auth_logout' %}">Log out</a></li>
+    {% else %}
+        <li role="navigation"><a href="{% url 'auth_login' %}">Login</a></li>
+        <li role="navigation"><a href="{% url 'registration_register' %}">Register Here</a></li>
+    {% endif %}
+</ul>
 {% if messages %}
     {% for message in messages %}
         <p>{{ message }}</p>

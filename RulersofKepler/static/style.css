@@ -1,91 +1,160 @@
 body {
-	margin: 0;
-	padding: 0;
+    margin: 0;
+    padding: 0;
 }
+
 .content-center {
-	position: absolute;
-	left: 50%;
-	top: 50%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
     background: #ffffff;
 }
+
 #content-index {
-	width: 270px;
-	height: 270px;
-	margin-left: -150px;
-	margin-top: -150px;
-	border: solid 1px #888888;
-	border-radius: 15px;
-	padding: 0 15px 15px;
-	font-family: "Comic Sans MS";
+    width: 270px;
+    height: 270px;
+    margin-left: -150px;
+    margin-top: -150px;
+    border: solid 1px #888888;
+    border-radius: 15px;
+    padding: 0 15px 15px;
+    font-family: "Comic Sans MS";
 }
+
 .content-center .title {
-	width: 100%;
-	text-align: center;
-	float: left;
-	margin-top: 15px;
-	margin-bottom: 15px;
-	font-size: 20px;
-	font-weight: bold;
+    width: 100%;
+    text-align: center;
+    float: left;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 20px;
+    font-weight: bold;
 }
+
 .content-center .inputfield {
-	float: left;
-	width: 100%;
-	margin-top: 5px;
+    float: left;
+    width: 100%;
+    margin-top: 5px;
 }
+
 .content-center .inputfield .left {
-	float: left;
-	width: 35%;
+    float: left;
+    width: 35%;
 }
+
 .content-center .inputfield .right {
-	float: left;
-	width: 65%;
+    float: left;
+    width: 65%;
 }
+
 .content-center .inputfield .right input {
-	width: 100%;
-	height: 20px;
-	font-size: 16px;
-	font-family: "Comic Sans MS";
-	border: solid 1px black;
-	box-sizing: border-box;
-	border-radius: 7px;
+    width: 100%;
+    height: 20px;
+    font-size: 16px;
+    font-family: "Comic Sans MS";
+    border: solid 1px black;
+    box-sizing: border-box;
+    border-radius: 7px;
 }
+
 .content-center .inputfield .center {
-	float: left;
-	width: 30%;
-	margin-left: 35%;
+    float: left;
+    width: 30%;
+    margin-left: 35%;
 }
+
 .content-center .inputfield .center input {
-	width: 100%;
-	height: 25px;
-	font-size: 16px;
-	padding: 0;
-	font-family: "Comic Sans MS";
-	border: solid 1px black;
-	box-sizing: border-box;
-	border-radius: 7px;
-	background: white;
+    width: 100%;
+    height: 25px;
+    font-size: 16px;
+    padding: 0;
+    font-family: "Comic Sans MS";
+    border: solid 1px black;
+    box-sizing: border-box;
+    border-radius: 7px;
+    background: white;
 }
+
+.content-center .inputfield .center input.log_in {
+    height: 32px;
+    color: #fff;
+    background-color: #5cb85c;
+    border-color: #5cb85c;
+}
+
+.content-center .inputfield .center input.register {
+    height: 32px;
+    color: #fff;
+    background-color: #5bc0de;
+    border-color: #5bc0de;
+}
+
+.content-center .inputfield .center input.register:hover {
+    background: #31b0d5;
+    cursor: pointer;
+}
+
 .content-center .inputfield .center input:hover {
-	background: #888888;
-	cursor: pointer;
+    background: #888888;
+    cursor: pointer;
 }
+
 .content-center .profile {
     float: left;
     margin-top: 20px;
 }
+
 #content-lobbies {
-	width: 470px;
-	height: 470px;
-	margin-left: -250px;
-	margin-top: -250px;
-	border: solid 1px #888888;
-	border-radius: 15px;
-	padding: 15px;
-	font-family: "Comic Sans MS";
+    width: 470px;
+    height: 470px;
+    margin-left: -250px;
+    margin-top: -250px;
+    border: solid 1px #888888;
+    border-radius: 15px;
+    padding: 15px;
+    font-family: "Comic Sans MS";
 }
+
 #content-lobbies .title {
+    width: 100%;
+    text-align: center;
+    float: left;
     margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 20px;
+    font-weight: bold;
 }
+
+#content-lobbies .lobby {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    float: left;
+    width: 100%;
+}
+
+#content-lobbies .lobby .left {
+    width: 80%;
+    float: left;
+}
+
+#content-lobbies .lobby .right {
+    width: 20%;
+    float: left;
+}
+
+#content-lobbies .lobby .right a {
+    color: #444444;
+    text-decoration: none;
+    padding: 5px 10px;
+    border: solid 1px black;
+    border-radius: 10px;
+    font-size: 15px;
+    width: 100%;
+    float: left;
+    box-sizing: border-box;
+    text-align: center;
+}
+
 #content-leaderboard {
     width: 470px;
     height: 470px;
@@ -96,25 +165,43 @@ body {
     padding: 15px;
     font-family: "Comic Sans MS";
 }
+
+.leaderboard {
+    position: absolute;
+    left: 25%;
+    width: 50% !important;
+}
+
+.content-center .title {
+    color: #5bc0de !important;
+}
+
+span label {
+    color: #5bc0de !important;
+}
+
 #footer {
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	width: 100%;
-	height: 20px;
-	border-top: solid 1px black;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    border-top: solid 1px black;
     background: #ffffff;
 }
+
 #footer span {
-	float: left;
-	width: 100%;
-	text-align: center;
+    float: left;
+    width: 100%;
+    text-align: center;
 }
+
 .badge {
-  margin: 2px;
-  color: white;
-  background-color: grey;
+    margin: 2px;
+    color: white;
+    background-color: grey;
 }
+
 nav {
     position: fixed;
     top: 0;
@@ -124,6 +211,65 @@ nav {
     height: 35px;
     border-bottom: solid 1px #000000;
 }
+
+.nav > li > a {
+    color: #fff;
+    background-color: #5bc0de;
+}
+
+.nav > li > a:hover {
+    /*background-color: transparent;*/
+    background-color: #31b0d5;
+    color: #fff;
+}
+
+a {
+    color: #5bc0de;
+}
+
+a:hover {
+    background-color: transparent;
+    color: #7de2ff;
+}
+
+.terms {
+    margin: 10px
+}
+
+.logo {
+    transform: translate(-50%, -50%);
+    margin-top: -230px;
+
+    width: 100%;
+}
+
+@media only screen and (min-width: 768px)  and (max-width: 980px) {
+    .logo {
+        width: 130%;
+        transition: width 2s;
+    }
+}
+
+@media only screen and (min-width: 569px) and (max-width: 767px) {
+    .logo {
+        width: 150%;
+        transition: width 2s;
+    }
+}
+
+@media only screen and (min-width: 240px) and (max-width: 568px) {
+    .logo {
+        width: 200%;
+        transition: width 2s;
+    }
+}
+
+@media only screen and (min-width: 240px) and (max-width: 501px) {
+    .under_nav {
+        margin-bottom: 80px;
+    }
+}
+
 #content-map {
     position: relative;
     left: 0;
@@ -131,34 +277,39 @@ nav {
     bottom: 20px;
     right: 0;
 }
+
 #map-holder {
-	position: fixed;
-	top: 35px;
-	left: 0;
-	right: 0;
-	bottom: 20px;
-	overflow: hidden;
-	background: #44447A;
+    position: fixed;
+    top: 35px;
+    left: 0;
+    right: 0;
+    bottom: 20px;
+    overflow: hidden;
+    background: #44447A;
 }
+
 #map {
-	position: absolute;
-	transform: scale(1);
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
+    position: absolute;
+    transform: scale(1);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
+
 #map img {
-	position: absolute;
-	width: 2048px;
-	height: 2048px;
-	left: 0;
-	top: 0;
+    position: absolute;
+    width: 2048px;
+    height: 2048px;
+    left: 0;
+    top: 0;
     z-index: 1;
 }
+
 #map #map-hover-img {
     z-index: 1000;
 }
+
 #map .map-square {
     position: absolute;
     width: 25px;
@@ -169,17 +320,20 @@ nav {
     z-index: 2000;
     border: solid 2px #888888;
 }
+
 #map .map-square:hover {
     cursor: pointer;
 }
+
 #map-background {
     position: fixed;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-	background: url(/static/background.png) repeat 0 500px;
+    background: url(/static/background.png) repeat 0 500px;
 }
+
 #territory-information {
     position: absolute;
     left: 0;
@@ -192,13 +346,16 @@ nav {
     padding: 15px;
     display: none;
 }
+
 #territory-information span {
     float: left;
     width: 220px;
 }
+
 #territory-information .element {
     margin: 5px 0;
 }
+
 #territory-information .button {
     margin: 5px;
     padding: 5px;
@@ -207,6 +364,7 @@ nav {
     border-radius: 5px;
     width: 200px;
 }
+
 #territory-information .button a {
     text-decoration: none;
 }

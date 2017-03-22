@@ -1,10 +1,15 @@
 {% extends "game/base.html" %}
-
+{% load staticfiles %}
 {% block title %}
     Rulers of Kepler
 {% endblock %}
 
 {% block content %}
+    <div class="content-center">
+        <div class="logo">
+            <img src="{% static 'images/navy2.png' %}" class="img-responsive" alt="logo"/>
+        </div>
+    </div>
     {% if user.is_authenticated %}
         <div class="content-center" id="content-index">
             <span class="title">Hi there {{ user.username }}</span>

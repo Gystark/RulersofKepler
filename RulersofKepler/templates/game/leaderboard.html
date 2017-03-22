@@ -4,26 +4,26 @@
 {% endblock %}
 {% block content %}
     <div class="content-center" id="content-leaderboard">
-    {% if stats %}
-        <span class="title">Leaderboard</span>
-        <table>
-            <tr>
-                <th>Username</th>
-                <th>Games won</th>
-                <th>Games lost</th>
-                <th>Win/loss ratio</th>
-            </tr>
-            {% for stat in stats %}
-               <tr>
-                   <td><a href="{% url 'profile' stat.name %}">{{ stat.name }}</a></td>
-               <td>{{ stat.wins }}</td>
-               <td>{{ stat.losses }}</td>
-               <td>{{ stats.ratio }}</td>
-               </tr>
-        {% endfor %}
-        </table>
-    {% else %}
-        <span class="title">No statistics available</span>
-    {% endif %}
+        {% if stats %}
+            <span class="title">Leaderboard</span>
+            <table class="table table-hover table-bordered leaderboard">
+                <tr>
+                    <th>Username</th>
+                    <th>Games won</th>
+                    <th>Games lost</th>
+                    <th>Win/loss ratio</th>
+                </tr>
+                {% for stat in stats %}
+                    <tr>
+                        <td><a href="{% url 'profile' stat.name %}">{{ stat.name }}</a></td>
+                        <td>{{ stat.wins }}</td>
+                        <td>{{ stat.losses }}</td>
+                        <td>{{ stats.ratio }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No statistics available</p>
+        {% endif %}
     </div>
 {% endblock %}

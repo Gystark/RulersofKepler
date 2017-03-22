@@ -1,10 +1,15 @@
 {% extends "game/base.html" %}
-
+{% load staticfiles %}
 {% block title %}
     Register
 {% endblock %}
 
 {% block content %}
+    <div class="content-center">
+        <div class="logo">
+            <img src="{% static 'images/navy2.png' %}" class="img-responsive" alt="logo"/>
+        </div>
+    </div>
     <div class="content-center" id="content-index">
 	<span class="title">
 		Register
@@ -21,7 +26,7 @@
             <span>By registering you accept our <a href="{% url "termsandconditions" %}" target="_blank">Terms of Service</a></span>
             <div class="inputfield">
 			<span class="center">
-				<input type="submit" value="Register">
+				<input class="register" type="submit" value="Register">
 			</span>
             </div>
         </form>

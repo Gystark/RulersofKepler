@@ -1,43 +1,50 @@
 {% extends "game/base.html" %}
-
+{% load staticfiles %}
 {% block title %}
-	Login
+    Login
 {% endblock %}
 
 {% block content %}
-<div class="content-center" id="content-index">
+    <div class="content-center">
+        <div class="logo">
+            <img src="{% static 'images/navy2.png' %}" class="img-responsive" alt="logo"/>
+        </div>
+    </div>
+    <div class="content-center" id="content-index">
 	<span class="title">
 		Log in
 	</span>
-    {% if form.errors %}
-        <p>Invalid username or password.</p>
-    {% endif %}
-	<form action="{% url 'auth_login' %}" method="post">{% csrf_token %}
-        <div class="inputfield">
+        {% if form.errors %}
+            <p>Invalid username or password.</p>
+        {% endif %}
+        <form action="{% url 'auth_login' %}" method="post">{% csrf_token %}
+            <div class="inputfield">
             <span class="left">
                 {{ form.username.label_tag }}
             </span>
-            <span class="right">
+                <span class="right">
                 {{ form.username }}
             </span>
-        </div>
-        <div class="inputfield">
+            </div>
+            <div class="inputfield">
             <span class="left">
                 {{ form.password.label_tag }}
             </span>
-            <span class="right">
+                <span class="right">
                 {{ form.password }}
             </span>
-        </div>
-        <div class="inputfield">
+            </div>
+            <div class="inputfield">
             <span class="center">
-                <input type="submit" value="Login">
+                <input class="log_in" type="submit" value="Login">
             </span>
-        </div>
-	</form>
-	<span class="title">
+            </div>
+        </form>
+        <span class="title">
 		Do not have an account yet?
-        <a href="{% url 'registration_register' %}">Register</a>
+        		<span class="title">
+			<a href="{% url 'registration_register' %}" class="btn btn-info" role="button">Register</a>
+		</span>
 	</span>
-</div>
+    </div>
 {% endblock %}

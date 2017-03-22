@@ -1,4 +1,5 @@
 var territory_information={};
+var request_user="pe60";
 $(document).ready(function() {
     if($("#map").length==0)
         return;
@@ -57,13 +58,29 @@ function mapClick(e) {
     var tx,ty;
 	tx=event.pageX-parseInt($("#map")[0].style.marginLeft);
     ty=event.pageY-35-parseInt($("#map")[0].style.marginTop);
-    $("#territory-information")[0].innerHTML="TEST";
+    $("#territory-information").text("");
+    $("#territory-information").append('<span class="element">'+name+'</span>');
+    $("#territory-information").append('<span class="element">Population: '+territory_information[name]["population"]+'</span>');
+    $("#territory-information").append('<span class="element">Army: '+territory_information[name]["army"]+'</span>');
+    $("#territory-information").append('<span class="element">Food: '+territory_information[name]["food"]+'</span>');
+    $("#territory-information").append('<span class="element">Gold: '+territory_information[name]["gold"]+'</span>');
+    if(territory_information[name]["owner"]==request_user)
+        $("#territory-information").append('<span class="button"><a href="javascript:void(0);">Change population/army<a></span>');
+    if(territory_information[name]["owner"]!=request_user)
+        $("#territory-information").append('<span class="button"><a href="javascript:void(0);">Attack</a></span>');
     $("#territory-information")[0].style.left=tx+"px";
     $("#territory-information")[0].style.top=ty+"px";
-    $("#territory-information")[0].className="small";
     $("#territory-information").show(); 
     e.stopPropagation();
 }
+
+$(document).ready(function() {
+    if($("#map").length==0)
+        return;
+    $("#territory-information")[0].addEventListener("click",function(e) {
+        e.stopPropagation();
+    },true);
+});
 
 var mapX=0;
 var mapY=0;
@@ -163,7 +180,6 @@ function updateGameInfo(data) {
     $.each(data,function() {
         if(this["name"]==undefined)
             return;
-        //console.log(this["name"]+" "+this["population"]+" "+this["army"]+" "+this["colour"]);
         $("div[name*='"+this["name"]+"']")[0].style.background=this["colour"];
         if(territory_information[this["name"]]==undefined)
             territory_information[this["name"]]={}
@@ -194,5 +210,6 @@ $(document).ready(function() {
         return;
     document.body.addEventListener("click",function() {
         $("#territory-information").hide();
+        $("#territory-information").text("");
     },false);
 });

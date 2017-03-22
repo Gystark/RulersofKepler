@@ -55,10 +55,11 @@ def lobbyjoin(request, lobby_id):
     except Session.DoesNotExist:
         try:
             lobby = Lobby.objects.get(id=lobby_id)
-            sess = Session.objects.create(user=request.user, lobby=lobby, active=True)
-            print(lobby.territorysession_set.all())
+            Session.objects.create(user=request.user, lobby=lobby, active=True)
+            sess = Session.objects.get(user=request.user, lobby=lobby, active=True)
             initial_terr = get_initial_territory(lobby)
-            sess.territorysession_set.add(initial_terr)
+            initial_terr.owner = sess
+            initial_terr.save()
             return redirect('game', lobby_id=lobby.id)
         except Lobby.DoesNotExist:
             messages.error(request, 'Error joining the lobby, please try again.')

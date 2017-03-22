@@ -25,21 +25,21 @@
 </head>
 <body>
 <div id="map-background"></div>
-<ul class="nav nav-pills navbar-fixed-top">
+<ul class="nav nav-pills navbar-fixed-top" role="navigation">
     {% if user.is_authenticated %}
-        <li role="navigation"><a>{{ user.username }}</a></li>
+        <li><a>{{ user.username }}</a></li>
     {% else %}
-        <li role="navigation"><a>Unknown</a></li>
+        <li><a>Unknown</a></li>
     {% endif %}
-    <li role="navigation"><a href="{% url 'index' %}">Home</a></li>
-    <li role="navigation"><a href="{% url 'about' %}">About</a></li>
+    <li><a href="{% url 'index' %}">Home</a></li>
+    <li><a href="{% url 'about' %}">About</a></li>
     {% if user.is_authenticated %}
-        <li role="navigation"><a href="{% url 'profile' user.username %}">Profile</a></li>
-        <li role="navigation"><a href="{% url 'leaderboard' %}">Leaderboard</a></li>
-        <li role="navigation"><a href="{% url 'auth_logout' %}">Log out</a></li>
+        <li><a href="{% url 'profile' user.username %}">Profile</a></li>
+        <li><a href="{% url 'leaderboard' %}">Leaderboard</a></li>
+        <li><a href="{% url 'auth_logout' %}">Log out</a></li>
     {% else %}
-        <li role="navigation"><a href="{% url 'auth_login' %}">Login</a></li>
-        <li role="navigation"><a href="{% url 'registration_register' %}">Register Here</a></li>
+        <li><a href="{% url 'auth_login' %}">Login</a></li>
+        <li><a href="{% url 'registration_register' %}">Register Here</a></li>
     {% endif %}
 </ul>
 {% if messages %}
@@ -48,8 +48,10 @@
     {% endfor %}
 {% endif %}
 {% block content %}Default content text here.{% endblock %}
-<div id="footer">
-    <span>&copy;2017 Rulers of Kepler <a href="{% url 'termsandconditions' %}">Terms of Service</a></span>
-</div>
+<footer id="footer">
+    <div class="container">
+        <span>&copy;2017 Rulers of Kepler <a href="{% url 'termsandconditions' %}">Terms of Service</a></span>
+    </div>
+</footer>
 </body>
 </html>

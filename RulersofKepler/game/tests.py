@@ -218,23 +218,84 @@ class UserProfileMethodTests(TestCase):
 
 
 class IndexAboutTermsViewsTests(TestCase):
+    """
+    This class tests the index, the about, and the Terms and conditions views.
+    They are basic with not much information to be tested, hence, they are combined.
+    """
+
     def test_ensure_about_loads(self):
+        """
+        Ensure the about page loads - status code 200.
+        """
         response = self.client.get(reverse('about'))
         self.assertEqual(response.status_code, 200)
 
     def test_ensure_index_loads(self):
+        """
+        Ensure the index page loads - status code 200.
+        """
         response = self.client.get(reverse('index'))
         self.assertEqual(response.status_code, 200)
 
     def test_ensure_terms_and_conditions_loads(self):
+        """
+        Ensure the terms and conditions page loads - status code 200.
+        """
         response = self.client.get(reverse('termsandconditions'))
         self.assertEqual(response.status_code, 200)
 
 
 class LeaderBoardViewTests(TestCase):
     def test_ensure_login_required(self):
-        response = self.client.get(reverse('leaderboard'), follow=True)
+        """
+        Ensure anonymous users cannot access the leader board and get redirected to the login page.
+        """
+        response = self.client.get(reverse('leaderboard'))
         self.assertRedirects(response, reverse('auth_login') + "?next=/leaderboard/", status_code=302,
                              target_status_code=200)
-    # TODO
-        #
+
+    def test_ensure_user_is_logged_in(self):
+        pass
+
+    def test_ensure_leader_board_is_empty(self):
+        pass
+
+    def test_ensure_leader_board_is_not_empty(self):
+        pass
+
+    def test_ensure_users_are_sorted(self):
+        pass
+
+
+class CreateLobbyViewTests(TestCase):
+    def test_ensure_login_required(self):
+        """
+        Ensure anonymous users cannot access the Create Lobby view and get redirected to the login page.
+        """
+        response = self.client.get(reverse('lobbycreate'))
+        self.assertRedirects(response, reverse('auth_login') + "?next=/lobby/create/", status_code=302,
+                             target_status_code=200)
+
+    def test_ensure_user_is_logged_in(self):
+        """
+        Ensure registered users can access the Create Lobby view.
+        """
+        # create a user so we can access the page
+        self.user_test = User.objects.create_user(username="user", email="user@user.user", password="Iamjustauser17")
+        self.client.login(username="user", password="Iamjustauser17")
+        response = self.client.get(reverse('lobbycreate'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_ensure_logged_in_user_creates_lobby(self):
+        """
+        Ensure registered users can access the Create Lobby view and create a lobby.
+        """
+        # create a user so we can create a lobby
+        self.user_test = User.objects.create_user(username="user", email="user@user.user", password="Iamjustauser17")
+        self.client.login(username="user", password="Iamjustauser17")
+        # make mock-up post request and create the lobby with the given name
+        self.client.post(reverse('lobbycreate'), {"name": "FCBarcelona"})
+        # make sure the lobby is created by getting it from the data base, if not it throws an exception
+        Lobby.objects.get(name="FCBarcelona")
+        # if code gets here, the lobby was created and an exception was not thrown
+        self.assertTrue(True)

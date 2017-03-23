@@ -73,7 +73,6 @@ def lobbycreate(request):
     """
     if request.method == "POST":
         form = LobbyCreationForm(request.POST)
-
         if form.is_valid():
             lobby = Lobby.objects.create(name=form.cleaned_data.get("name"))
             return redirect('lobbyjoin', lobby_id=lobby.id)

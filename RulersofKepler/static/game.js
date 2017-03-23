@@ -1,6 +1,4 @@
 var territory_information = {};
-var request_user = "pe60";
-var lobby_id=1;
 var territory_neighbours = {};
 $(document).ready(function () {
     if ($("#map").length == 0)
@@ -69,7 +67,7 @@ function mapClick(e) {
     if (territory_information[name]["owner"] == request_user)
         $("#territory-information").append('<span class="button"><a href="javascript:changePopulationArmy(\''+name+'\');">Change population/army<a></span>');
     if (territory_information[name]["owner"] != request_user && name in territory_neighbours)
-        $("#territory-information").append('<span class="button"><a href="javascript:void(0);">Attack</a></span>');
+        $("#territory-information").append('<span class="button"><a href="javascript:attack(\''+name+'\');">Attack</a></span>');
     $("#territory-information")[0].style.left = tx + "px";
     $("#territory-information")[0].style.top = ty + "px";
     $("#territory-information").show();
@@ -252,7 +250,8 @@ $(document).ready(function() {
                 "csrfmiddlewaretoken": csrf_token
             },
             success: function(data) {
-                console.log(data);
+                if(data.response=="error")
+                    alert("There was an error while doing the request");
             }
         });
                 
@@ -277,4 +276,35 @@ function changePopulationArmy(name) {
     $("#army_value").val(territory_information[name]["army"]);
     $("#total_pop_army").val(totalPopulationArmy);
     $("#change-dialog").show();
+}
+function attack(name) {
+    var attack_from="";
+    var army=-1;
+    for(i=0;i<territory_information[name]["neighbours"].length;i++) {
+        var terr=territory_information[name]["neighbours"][i];
+        if(territory_information[terr]["owner"]==request_user && territory_information[terr]["army"]>army) {
+            attack_from=terr;
+            army=territory_information[terr]["army"];
+        }
+    }
+    var t1_id=territory_information[name]["id"];
+    var t2_id=territory_information[attack_from]["id"];
+    $.ajax({
+        method: "POST",
+        url: "/game-ajax/army/attack/",
+        data: {
+            "lobby_id": lobby_id,
+            "t1_id": t1_id,
+            "t2_id": t2_id,
+            "csrfmiddlewaretoken": csrf_token
+        },
+        success: function(data) {
+            if(data.response=="error")
+                alert("There was an error while doing the request");
+            else if(data.response=="won")
+                alert("You won!");
+            else if(data.response=="lost")
+                alert("You lost!");
+        }
+    });
 }

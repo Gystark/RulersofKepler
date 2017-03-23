@@ -4,6 +4,11 @@
     Rulers of Kepler
 {% endblock %}
 {% block content %}
+    <script type="text/javascript">
+    csrf_token="{{ csrf_token }}";
+    lobby_id="{{ lobby }}";
+    request_user="{{ request_user }}";
+    </script>
     <div id="content-map">
         <div id="map-holder">
             <div id="map">

@@ -5,7 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
-from utils import get_initial_territory, get_user_games_lost, get_user_win_percentage, get_endgame, get_battle_winner
+from .utils import get_initial_territory, get_user_games_lost, get_user_win_percentage, get_endgame, get_battle_winner
 from .forms import LobbyCreationForm
 from .models import Session, Lobby, Territory, TerritorySession, UserProfile
 
@@ -43,7 +43,7 @@ def lobbyjoin(request, lobby_id):
     try:
         sess = Session.objects.get(active=True, user=request.user)
         return redirect('game', lobby_id=sess.lobby.id)
-    except Session.DoesNotExist:
+    except ObjectDoesNotExist:
         try:
             lobby = Lobby.objects.get(id=lobby_id)
             Session.objects.create(user=request.user, lobby=lobby, active=True)

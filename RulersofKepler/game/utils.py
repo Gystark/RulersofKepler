@@ -1,6 +1,6 @@
 from random import randrange, uniform
 
-from models import TerritorySession, UserProfile, Session
+from .models import TerritorySession, UserProfile, Session
 
 
 def get_initial_territory(lobby):
@@ -15,10 +15,16 @@ def get_initial_territory(lobby):
 
 
 def get_user_games_lost(userprofile):
+    """
+    Return the number of games lost by the given user. 
+    """
     return userprofile.games_played - userprofile.games_won
 
 
 def get_user_win_percentage(userprofile):
+    """
+    Return the win/loss ratio of the given user.
+    """
     try:
         return userprofile.games_won * 1.0 / userprofile.games_played
     except ZeroDivisionError:
@@ -30,14 +36,20 @@ def get_battle_winner(defend_terr, attack_terr):
     Get the winner in a battle between two territories
     Also change the territory owner accordingly
     """
-    def_score = (defend_terr.army * 1.0 + 0.1 * defend_terr.population) * uniform(0.8, 1.2)
-    att_score = (attack_terr.army * 1.0 + 0.1 * attack_terr.population) * uniform(0.8, 1.2)
+    def_score = (defend_terr.army * 1.0 + 0.15 * (
+        defend_terr.food + defend_terr.gold) + 0.1 * defend_terr.population) * uniform(0.9, 1.1)
+    att_score = (attack_terr.army * 1.0 + 0.15 * (
+        attack_terr.food + attack_terr.gold) + 0.1 * attack_terr.population) * uniform(0.9, 1.1)
     if att_score > def_score:
         defend_terr.change_owner(attack_terr.owner)
         defend_terr.army /= 2
+        defend_terr.food *= 0.9
+        defend_terr.gold *= 0.85
         defend_terr.save()
         return attack_terr.owner.user
     attack_terr.army /= 2
+    defend_terr.food *= 0.85
+    defend_terr.gold *= 0.83
     attack_terr.save()
     if defend_terr.owner != '' and defend_terr.owner is not None:
         return defend_terr.owner.user

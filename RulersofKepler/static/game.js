@@ -1,5 +1,6 @@
 var territory_information = {};
 var request_user = "pe60";
+var lobby_id=1;
 var territory_neighbours = {};
 $(document).ready(function () {
     if ($("#map").length == 0)
@@ -224,16 +225,56 @@ $(document).ready(function () {
     }, false);
 });
 $(document).ready(function() {
+    if($("#map").length==0)
+        return;
     $("#population_value")[0].addEventListener("input",function(e) {
         $("#population_output").text(e.target.value);
+        $("#army_value").val($("#total_pop_army").val()-e.target.value);
+        $("#army_output").text($("#army_value").val());
     },true);
     $("#army_value")[0].addEventListener("input",function(e) {
         $("#army_output").text(e.target.value);
+        $("#population_value").val($("#total_pop_army").val()-e.target.value);
+        $("#population_output").text($("#population_value").val());
+    },true);
+    $("#change_dialog_submit")[0].addEventListener("click",function(e) {
+        var territory_id=$("#territory_id").val();
+        var population=$("#population_value").val();
+        var army=$("#army_value").val();
+        $.ajax({
+            method: "POST",
+            url: "/game-ajax/territory/set-population-army/",
+            data: {
+                "lobby_id": lobby_id,
+                "territory_id": territory_id,
+                "new_population": population,
+                "new_army": army,
+                "csrfmiddlewaretoken": csrf_token
+            },
+            success: function(data) {
+                console.log(data);
+            }
+        });
+                
+        $("#change-dialog").hide();
+    },true);
+    $("#change_dialog_cancel")[0].addEventListener("click",function(e) {
+        $("#change-dialog").hide();
     },true);
 });
 function changePopulationArmy(name) {
     if(territory_information[name]==undefined)
         return;
+    var totalPopulationArmy=territory_information[name]["population"]+territory_information[name]["army"]
+    $("#territory_id").val(territory_information[name]["id"]);
     $("#population_output").text(territory_information[name]["population"]);
+    $("#army_output").text(territory_information[name]["army"]);
+    $("#population_value")[0].setAttribute("min","0");
+    $("#population_value")[0].setAttribute("max",totalPopulationArmy);
+    $("#population_value").val(territory_information[name]["population"]);
+    $("#army_value")[0].setAttribute("min","0");
+    $("#army_value")[0].setAttribute("max",totalPopulationArmy);
+    $("#army_value").val(territory_information[name]["army"]);
+    $("#total_pop_army").val(totalPopulationArmy);
     $("#change-dialog").show();
 }

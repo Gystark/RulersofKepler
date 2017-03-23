@@ -245,18 +245,18 @@ def set_population_army(request):
             try:
                 territory_session = TerritorySession.objects.get(territory__id=territory_id, lobby__id=lobby_id)
 
-                new_population = request.POST.get('new_population')
-                new_army = request.POST.get('new_army')
+                new_population = int(request.POST.get('new_population'))
+                new_army = int(request.POST.get('new_army'))
                 new_total = new_population + new_army
                 old_total = territory_session.population + territory_session.army
-
-                if new_total == old_total and territory_session.owner == request.user:
+                
+                if new_total == old_total and territory_session.owner.user == request.user:
                     territory_session.population = new_population
                     territory_session.army = new_army
                     territory_session.save()
-                    response = "success"
+                    response = 'success'
                 else:
-                    response = "error"
+                    response = 'error'
             except ObjectDoesNotExist:
                 response = 'error'
 

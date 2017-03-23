@@ -21,6 +21,10 @@
 
     <script type="text/javascript" src="{% static 'js.cookie.js' %}"></script>
 
+    <script type="text/javascript">
+    csrf_token="{{ csrf_token }}";
+    </script>
+    
     <script type="text/javascript" src="{% static 'game.js' %}"></script>
 </head>
 <body>

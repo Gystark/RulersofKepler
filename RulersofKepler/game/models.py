@@ -82,7 +82,7 @@ class Territory(models.Model):
     - gold: the amount of gold produced by the territory
     - population: the size of the population held by the territory
     - army: the size of the army held by the territory
-    - borders: many to many relationship to self - neighbouring territorries
+    - borders: many to many relationship to self - neighbouring territories
     """
     name = models.CharField(max_length=50, unique=True)
     description = models.CharField(max_length=2502)

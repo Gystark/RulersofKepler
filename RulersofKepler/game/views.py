@@ -89,8 +89,7 @@ def about(request):
     """
     Render the static about us page.
     """
-    context_dict = {"name": "kepler"}
-    return render(request, "game/about.html", context=context_dict)
+    return render(request, "game/about.html", {})
 
 
 @login_required

@@ -7,7 +7,16 @@ from django.core.urlresolvers import reverse
 
 class LobbyMethodTests(TestCase):
     def setUp(self):
+        """
+        Create needed instances of models.
+        """
         self.lobby_test = Lobby.objects.create(name="RandomName")
+
+    def tearDown(self):
+        """
+        Delete created instances after a test.
+        """
+        self.lobby_test.delete()
 
     def test_default_lobby_name_none(self):
         """
@@ -45,46 +54,51 @@ class LobbyMethodTests(TestCase):
         self.assertEqual(generated_territories_size, all_territories_size)
 
 
-"""
-    # TODO
-        # test the active field when user enters a game and after they finish one
-
-class SessionMethodTests(TestCase):
-    def setUp(self):
-        self.user_test = User.objects.create_user(username="user", email="user@user.user", password="Useruser17")
-        self.lobby_test = Lobby.objects.create(name="RandomName")
-        self.session_test = Session.objects.create(user=self.user_test, lobby=self.lobby_test)
-
-    def tearDown(self):
-        self.user_test.delete()
-        self.lobby_test.delete()
-        self.session_test.delete()
-"""
-
-
 class TerritoryMethodTests(TestCase):
     def setUp(self):
+        """
+        Create needed instances of models.
+        """
         self.ter1 = Territory.objects.create(name="Territory_name", description="Some description")
 
     def tearDown(self):
+        """
+        Delete created instances after a test.
+        """
         self.ter1.delete()
 
     def test_ensure_food_is_not_negative(self):
+        """
+        Ensures the food is always non-negative. Checks if the value is normalized
+        when a negative one has been set.
+        """
         self.ter1.food = -5
         self.ter1.save()
         self.assertGreaterEqual(self.ter1.food, 0, "Food cannot be negative!")
 
     def test_ensure_gold_is_not_negative(self):
+        """
+        Ensures the gold is always non-negative. Checks if the value is normalized
+        when a negative one has been set.
+        """
         self.ter1.gold = -5
         self.ter1.save()
         self.assertGreaterEqual(self.ter1.gold, 0, "Gold cannot be negative!")
 
     def test_ensure_population_is_not_negative(self):
+        """
+        Ensures the population is always non-negative. Checks if the value is normalized
+        when a negative one has been set.
+        """
         self.ter1.default_population = -5
         self.ter1.save()
         self.assertGreaterEqual(self.ter1.default_population, 0, "Population cannot be negative!")
 
     def test_ensure_army_is_not_negative(self):
+        """
+        Ensures the army is always non-negative. Checks if the value is normalized
+        when a negative one has been set.
+        """
         self.ter1.default_army = -5
         self.ter1.save()
         self.assertGreaterEqual(self.ter1.default_army, 0, "Army cannot be negative!")
@@ -92,7 +106,10 @@ class TerritoryMethodTests(TestCase):
 
 class TerritorySessionMethodTests(TestCase):
     def setUp(self):
-        self.user_test = User.objects.create_user(username="user", email="user@user.user", password="Useruser17")
+        """
+        Create needed instances of models.
+        """
+        self.user_test = User.objects.create_user(username="user", email="user@user.user", password="Iamjustauser17")
         self.lobby_test = Lobby.objects.create(name="RandomName")
         self.session_test = Session.objects.create(user=self.user_test, lobby=self.lobby_test)
         self.territory_test = Territory.objects.create(name="Territory_name", description="Some description")
@@ -101,6 +118,9 @@ class TerritorySessionMethodTests(TestCase):
                                                                       owner=self.session_test)
 
     def tearDown(self):
+        """
+        Delete created instances after a test.
+        """
         self.user_test.delete()
         self.lobby_test.delete()
         self.session_test.delete()
@@ -108,24 +128,61 @@ class TerritorySessionMethodTests(TestCase):
         self.territory_session_test.delete()
 
     def test_ensure_population_is_not_negative(self):
+        """
+        Ensures the population is always non-negative. Checks if the value is normalized
+        when a negative one has been set.
+        """
         self.territory_session_test.population = -5
         self.territory_session_test.save()
         self.assertGreaterEqual(self.territory_session_test.population, 0,
                                 "TerritorySession population cannot be negative!")
 
     def test_ensure_army_is_not_negative(self):
+        """
+        Ensures the army is always non-negative. Checks if the value is normalized
+        when a negative one has been set.
+        """
         self.territory_session_test.army = -5
         self.territory_session_test.save()
         self.assertGreaterEqual(self.territory_session_test.army, 0, "TerrytorySession army cannot be negative!")
 
-        # TODO
-        # test change owner function
+    def test_change_territory_owner_user_in_lobby(self):
+        """
+        Ensures the territory session's owner can be a user that is in the associated game. Another user
+        in the same game is created. Returns True if the ownership can be changed.
+        """
+        # create another user and associated session - the lobby is the same
+        self.another_user = User.objects.create_user(username="another_user", email="another@ano.ano",
+                                                     password="IamsecondUser18")
+        self.another_session = Session.objects.create(user=self.another_user, lobby=self.lobby_test)
+
+        self.territory_session_test.change_owner(self.another_session)
+        self.assertEquals(self.territory_session_test.owner, self.another_session)
+
+    def test_change_territory_owner_user_not_in_lobby_throws_exception(self):
+        """
+        Ensures the territory session's owner can be a user that is in the associated game. Another user
+        from another game/session is created. Throws ObjectDoesNotExist exception if the ownership
+        cannot be changed i.e. the "new" owner is not part of the same game.
+        """
+
+        from django.core.exceptions import ObjectDoesNotExist
+
+        # create third user that is not in the same lobby
+        self.outsider_user = User.objects.create_user(username="outsider", email="outsider@out.out",
+                                                      password="IamthirdUser19")
+        # create a different lobby
+        self.outsider_another_lobby = Lobby.objects.create(name="AnotherLobby")
+        self.outsider_another_session = Session.objects.create(user=self.outsider_user,
+                                                               lobby=self.outsider_another_lobby)
+        # raise if there is no such user in this game
+        self.assertRaises(ObjectDoesNotExist, self.territory_session_test.change_owner, self.outsider_another_session)
 
 
 class UserProfileMethodTests(TestCase):
     def setUp(self):
         """
-        set up some users and their profiles
+        Create needed instances of models.
         """
         self.user1 = User.objects.create_user(username="user", email="user@user.user", password="Useruser17")
         self.user1_profile = UserProfile.objects.get_or_create(user=self.user1)[0]
@@ -134,7 +191,7 @@ class UserProfileMethodTests(TestCase):
 
     def tearDown(self):
         """
-        delete previously created users
+        Delete created instances after a test.
         """
         self.user1.delete()
         self.user2.delete()
@@ -160,9 +217,24 @@ class UserProfileMethodTests(TestCase):
         self.assertEqual(self.user1_profile.games_won >= 0, True)
 
 
-class AboutViewTests(TestCase):
+class IndexAboutTermsViewsTests(TestCase):
     def test_ensure_about_loads(self):
         response = self.client.get(reverse('about'))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "This is the 'about' page")
-        self.assertEqual(response.context["name"], "kepler")
+
+    def test_ensure_index_loads(self):
+        response = self.client.get(reverse('index'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_ensure_terms_and_conditions_loads(self):
+        response = self.client.get(reverse('termsandconditions'))
+        self.assertEqual(response.status_code, 200)
+
+
+class LeaderBoardViewTests(TestCase):
+    def test_ensure_login_required(self):
+        response = self.client.get(reverse('leaderboard'), follow=True)
+        self.assertRedirects(response, reverse('auth_login') + "?next=/leaderboard/", status_code=302,
+                             target_status_code=200)
+    # TODO
+        #

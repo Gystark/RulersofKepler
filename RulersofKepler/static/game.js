@@ -194,6 +194,10 @@ function mapMove(x, y) {
 }
 
 function updateGameInfo(data) {
+    if(data["response"]=="won")
+        window.location="/game-won/";
+    if(data["response"]=="lost")
+        window.location="/game-over/";
     territory_neighbours = {};
     player_colours = {};
     $.each(data, function () {

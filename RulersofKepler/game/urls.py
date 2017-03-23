@@ -11,6 +11,8 @@ urlpatterns = [
     url(r'^leaderboard/$', views.leaderboard, name="leaderboard"),
     url(r'^profile/(?P<username>[\w]+)/$', views.profile, name="profile"),
     url(r'^terms-and-conditions/$', views.termsandconditions, name="termsandconditions"),
+    url(r'^game-won/$', views.gamewon, name="gamewon"),
+    url(r'^game-over/$', views.gameover, name="gameover"),
 
     # Ajax urls
     url(r'game-ajax/(?P<lobby_id>[0-9]+)/territory/get-all', views.get_territory_all, name="get_territory_all"),

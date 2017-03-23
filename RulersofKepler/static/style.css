@@ -416,3 +416,54 @@ a:hover {
     width: 274px;
     height: 40px;
 }
+
+#player-menu {
+    position: fixed;
+    right: 50px;
+    top: 50px;
+    width: 200px;
+    background: #ffffff;
+    padding: 15px;
+    box-sizing: border-box;
+    border: solid 1px #000000;
+    border-radius: 15px;
+}
+
+#player-colours .colour {
+    height: 20px;
+    width: 100%;
+    margin-top: 5px;
+}
+
+#player-colours .colour span {
+    float: left;
+}
+
+#player-colours .colour .square {
+    width: 20px;
+    height: 20px;
+    border: solid 1px #000000;
+}
+
+#player-colours .colour .element {
+    margin-left: 10px;
+}
+
+#notifications {
+    position: fixed;
+    left: 50px;
+    top: 50px;
+    width: 300px;
+    box-sizing: border-box;
+}
+
+#notifications .notification {
+    width: 300px;
+    margin-top: 20px;
+    padding: 20px;
+    background: #880000;
+    opacity: 0.85;
+    color: #ffffff;
+    border: solid 1px #000000;
+    border-radius: 15px;
+}

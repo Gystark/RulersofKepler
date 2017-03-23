@@ -1,5 +1,7 @@
 var territory_information = {};
 var territory_neighbours = {};
+var player_colours={};
+var total_player_colours=0;
 $(document).ready(function () {
     if ($("#map").length == 0)
         return;
@@ -192,6 +194,7 @@ function mapMove(x, y) {
 
 function updateGameInfo(data) {
     territory_neighbours = {};
+    player_colours = {};
     $.each(data, function () {
         if (this["name"] == undefined)
             return;
@@ -221,9 +224,12 @@ function updateGameInfo(data) {
                     territory_neighbours[this["neighbours"][i]] = this["neighbours"][i];
             }
         }
-        if (this["colour"] != undefined)
+        if (this["colour"] != undefined) {
             territory_information[this["name"]]["colour"] = this["colour"];
+            player_colours[this["owner"]]=this["colour"];
+        }
     });
+    updateColours();
 }
 $(document).ready(function () {
     if ($("#map").length == 0)
@@ -356,4 +362,33 @@ function moveArmy(from_name,to_name) {
     $("#move_army_value").val(0);
     $("#move_army_output").text("0");
     $("#move-dialog").show();
+}
+function updateColours() {
+    var keys=Object.keys(player_colours);
+    if(keys.length!=total_player_colours) {
+        addNotification("A new player has joined!");
+        total_player_colours=keys.length;
+        for(i=0;i<keys.length;i++) {
+            $("#player-colours").append('<div class="colour"><span class="square" style="background: '+player_colours[keys[i]]+';"></span><span class="element">'+keys[i]+'</span></div>');
+        }
+    }
+}
+function addNotification(text) {
+    var el=document.createElement("div");
+    el.innerHTML=text;
+    el.setAttribute("class","notification");
+    $("#notifications")[0].appendChild(el);
+    setTimeout(function() {
+        fadeAway(el,0.85);
+    },2000);
+}
+function fadeAway(element,opacity) {
+    if(opacity<=0) {
+        element.parentNode.removeChild(element);
+        return;
+    }
+    element.style.opacity=opacity;
+    setTimeout(function() {
+        fadeAway(element,opacity-0.05);
+    },50);
 }

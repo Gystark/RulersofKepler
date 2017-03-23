@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from random import uniform, randrange
+from django.core.exceptions import ObjectDoesNotExist
 
 from .models import *
 from .forms import LobbyCreationForm
@@ -306,7 +307,7 @@ def move_army(request):
             else:
                 response = 'error'
 
-        except ObjectDoesNotExist:
+        except Session.ObjectDoesNotExist:
             response = 'error'
 
         return JsonResponse({'response': response})
@@ -335,6 +336,13 @@ def get_battle_winner(defend_terr, attack_terr):
     else:
         return ''
 
+
+def get_endgame(session):
+    if session.territory_set.all().count()==0:
+        return 'loser'
+    elif session.territory_set.all().count()==19:
+        return 'winner'
+    return False
 
 @login_required
 def attack(request):
@@ -365,13 +373,14 @@ def attack(request):
 
                     else:
                         response = 'lost'
+
                 else:
                     response = 'error'
 
             else:
                 response = 'error'
 
-        except ObjectDoesNotExist:
+        except Session.ObjectDoesNotExist:
             response = 'error'
 
         return JsonResponse({'response': response})

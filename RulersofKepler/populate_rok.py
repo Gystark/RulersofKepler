@@ -111,7 +111,7 @@ def populate():
         "Lapland": ["Gerfew"],
         "Gerfew": ["Franz", "Hungry Ostrich", "Severoslavia", "Macarony", "Mess-a-donia"],
         "Franz": ["Catalona", "Macarony"],
-        "Macarony": ["Mess-a-donia"],
+        "Macarony": ["Mess-a-donia", "Catalona"],
         "Catalona": ["Arabia al Qadim"],
         "Hungry Ostrich": ["Severoslavia", "Eucraine", "Mess-a-donia"],
         "Eucraine": ["Mess-a-donia", "Severoslavia"],

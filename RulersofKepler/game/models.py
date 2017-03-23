@@ -29,7 +29,7 @@ class Lobby(models.Model):
         for t in Territory.objects.all():
             if self.territorysession_set.filter(territory=t).count() == 0:
                 TerritorySession.objects.create(territory=t, lobby=self, population=t.default_population,
-                                                army=t.default_army)
+                                                army=t.default_army, food=t.default_food, gold=t.default_gold)
 
     def save(self, *args, **kwargs):
         """
@@ -83,8 +83,8 @@ class Territory(models.Model):
     """
     name = models.CharField(max_length=50, unique=True)
     description = models.CharField(max_length=2502)
-    food = models.IntegerField(default=100)
-    gold = models.IntegerField(default=100)
+    default_food = models.IntegerField(default=100)
+    default_gold = models.IntegerField(default=100)
     default_population = models.IntegerField(default=100)
     default_army = models.IntegerField(default=100)
     coordinates = models.TextField(max_length=500, default="")
@@ -98,10 +98,10 @@ class Territory(models.Model):
 
     # ensure some fields are non-negative
     def save(self, *args, **kwargs):
-        if self.food < 0:
-            self.food = 0
-        if self.gold < 0:
-            self.gold = 0
+        if self.default_food < 0:
+            self.default_food = 0
+        if self.default_gold < 0:
+            self.default_gold = 0
         if self.default_population < 0:
             self.default_population = 0
         if self.default_army < 0:
@@ -120,6 +120,8 @@ class TerritorySession(models.Model):
     owner = models.ForeignKey(Session, on_delete=models.CASCADE, blank=True, null=True)
     population = models.IntegerField(default=100)
     army = models.IntegerField(default=100)
+    food = models.IntegerField(default=100)
+    gold = models.IntegerField(default=100)
 
     def __str__(self):
         return self.territory.name + ' in ' + self.lobby.name
@@ -147,6 +149,10 @@ class TerritorySession(models.Model):
             self.population = 0
         if self.army < 0:
             self.army = 0
+        if self.gold < 0:
+            self.gold = 0
+        if self.food < 0:
+            self.food = 0
         # save the instance with possibly normalized fields
         super(TerritorySession, self).save(*args, **kwargs)
 

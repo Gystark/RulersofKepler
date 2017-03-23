@@ -216,19 +216,21 @@ function updateGameInfo(data) {
             territory_information[this["name"]]["gold"] = this["gold"];
         if (this["coordinates"] != undefined)
             territory_information[this["name"]]["coordinates"] = this["coordinates"];
-        if (this["owner"] != undefined)
-            territory_information[this["name"]]["owner"] = this["owner"];
         if (this["neighbours"] != undefined) {
             territory_information[this["name"]]["neighbours"] = this["neighbours"];
-            if (this["owner"] == request_user) {
-                for (i = 0; i < this["neighbours"].length; i++)
-                    territory_neighbours[this["neighbours"][i]] = this["neighbours"][i];
+        }
+        if (this["owner"] != undefined) {
+            if(this["owner"] == request_user) {
+                for (i = 0; i < territory_information[this["name"]]["neighbours"].length; i++)
+                    territory_neighbours[territory_information[this["name"]]["neighbours"][i]] = territory_information[this["name"]]["neighbours"][i];
             }
+            territory_information[this["name"]]["owner"] = this["owner"];
         }
         if (this["colour"] != undefined) {
             territory_information[this["name"]]["colour"] = this["colour"];
             player_colours[this["owner"]]=this["colour"];
         }
+        
     });
     updateColours();
 }
@@ -321,6 +323,7 @@ function changePopulationArmy(name) {
     $("#army_value").val(territory_information[name]["army"]);
     $("#total_pop_army").val(totalPopulationArmy);
     $("#change-dialog").show();
+    $("#territory-information").hide();
 }
 function attack(name) {
     var attack_from="";
@@ -352,6 +355,7 @@ function attack(name) {
                 alert("You lost!");
         }
     });
+    $("#territory-information").hide();
 }
 function moveArmy(from_name,to_name) {
     if(territory_information[from_name]==undefined || territory_information[to_name]==undefined)
@@ -363,11 +367,13 @@ function moveArmy(from_name,to_name) {
     $("#move_army_value").val(0);
     $("#move_army_output").text("0");
     $("#move-dialog").show();
+    $("#territory-information").hide();
 }
 function updateColours() {
     var keys=Object.keys(player_colours);
     if(keys.length!=total_player_colours) {
         addNotification("A new player has joined!");
+        $("#player-colours").text("");
         total_player_colours=keys.length;
         for(i=0;i<keys.length;i++) {
             $("#player-colours").append('<div class="colour"><span class="square" style="background: '+player_colours[keys[i]]+';"></span><span class="element">'+keys[i]+'</span></div>');

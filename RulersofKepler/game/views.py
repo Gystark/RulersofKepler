@@ -203,7 +203,7 @@ def get_territory_reduced(request, lobby_id):
             response = {}
             for territory in territories:
                 territory_session = TerritorySession.objects.get(territory=territory, lobby__id=lobby_id)
-                owner = territory_session.owner.username if territory_session.owner is not None else ''
+                owner = territory_session.owner.user.username if territory_session.owner is not None else ''
                 colour = 'rgb' + territory_session.owner.colour if territory_session.owner is not None else 'rgb(0, 0, 0)'
                 response.update({
                     territory.name:

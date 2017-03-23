@@ -5,9 +5,6 @@ var total_player_colours=0;
 $(document).ready(function () {
     if ($("#map").length == 0)
         return;
-    var url = window.location.toString();
-    url = url.split("/");
-    var lobby_id = url[url.length - 2];
     $.ajax({
         'url': '/game-ajax/' + lobby_id + '/territory/get-all',
         'method': 'GET',
@@ -43,6 +40,10 @@ $(document).ready(function () {
                 $("#map-squares")[0].appendChild(el);
             });
             updateGameInfo(response);
+            setTimeout(updateEverything,1000);
+        },
+        error: function() {
+            setTimeout(updateEverything,1000);
         }
     });
 });
@@ -391,4 +392,18 @@ function fadeAway(element,opacity) {
     setTimeout(function() {
         fadeAway(element,opacity-0.05);
     },50);
+}
+function updateEverything() {
+    $.ajax({
+        'url': '/game-ajax/' + lobby_id + '/territory/get-reduced',
+        'method': 'GET',
+        success: function (data) {
+            var response = $.parseJSON(JSON.stringify(data));
+            updateGameInfo(response);
+            setTimeout(updateEverything,1000);
+        },
+        error: function() {
+            setTimeout(updateEverything,1000);
+        }
+    });
 }

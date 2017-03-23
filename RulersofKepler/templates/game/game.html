@@ -31,7 +31,16 @@
         <span>Army</span>
         <span><input type="range" id="army_value" /></span>
         <span id="army_output"></span>
-        <input type="button" id="change_dialog_submit" value="Change" />
-        <input type="button" id="change_dialog_cancel" value="Cancel" />
+        <span><input type="button" id="change_dialog_submit" value="Change" /></span>
+        <span><input type="button" id="change_dialog_cancel" value="Cancel" /></span>
+    </div>
+    <div id="move-dialog">
+        <input type="hidden" id="t1_id" />
+        <input type="hidden" id="t2_id" />
+        <span>Army</span>
+        <span><input type="range" id="move_army_value" /></span>
+        <span id="move_army_output"></span>
+        <span><input type="button" id="move_dialog_submit" value="Move" /></span>
+        <span><input type="button" id="move_dialog_cancel" value="Cancel" /></span>
     </div>
 {% endblock %}

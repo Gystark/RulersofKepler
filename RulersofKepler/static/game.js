@@ -78,7 +78,7 @@ function mapClick(e) {
     if(move_army_list.length>0)
         $("#territory-information").append('<span class="element">Move army to:</span>');
     for(i=0;i<move_army_list.length;i++)
-        $("#territory-information").append('<span class="button"><a href="javascript:void(0);">'+move_army_list[i]+'</a></span>');
+        $("#territory-information").append('<span class="button"><a href="javascript:moveArmy(\''+name+'\',\''+move_army_list[i]+'\');">'+move_army_list[i]+'</a></span>');
     $("#territory-information")[0].style.left = tx + "px";
     $("#territory-information")[0].style.top = ty + "px";
     $("#territory-information").show();
@@ -271,6 +271,33 @@ $(document).ready(function() {
     $("#change_dialog_cancel")[0].addEventListener("click",function(e) {
         $("#change-dialog").hide();
     },true);
+    $("#move_army_value")[0].addEventListener("input",function(e) {
+        $("#move_army_output").text(e.target.value);
+    },true);
+    $("#move_dialog_submit")[0].addEventListener("click",function(e) {
+        var t1_id=$("#t1_id").val();
+        var t2_id=$("#t2_id").val();
+        var army=$("#move_army_value").val();
+        $.ajax({
+            method: "POST",
+            url: "/game-ajax/army/move/",
+            data: {
+                "lobby_id": lobby_id,
+                "t1_id": t1_id,
+                "t2_id": t2_id,
+                "amount": army,
+                "csrfmiddlewaretoken": csrf_token
+            },
+            success: function(data) {
+                if(data.response=="error")
+                    alert("There was an error while doing the request");
+            }
+        });
+        $("#move-dialog").hide();
+    },true);
+    $("#move_dialog_cancel")[0].addEventListener("click",function(e) {
+        $("#move-dialog").hide();
+    },true);
 });
 function changePopulationArmy(name) {
     if(territory_information[name]==undefined)
@@ -318,4 +345,15 @@ function attack(name) {
                 alert("You lost!");
         }
     });
+}
+function moveArmy(from_name,to_name) {
+    if(territory_information[from_name]==undefined || territory_information[to_name]==undefined)
+        return;
+    $("#t1_id").val(territory_information[from_name]["id"]);
+    $("#t2_id").val(territory_information[to_name]["id"]);
+    $("#move_army_value")[0].setAttribute("min","0");
+    $("#move_army_value")[0].setAttribute("max",territory_information[from_name]["army"]);
+    $("#move_army_value").val(0);
+    $("#move_army_output").text("0");
+    $("#move-dialog").show();
 }

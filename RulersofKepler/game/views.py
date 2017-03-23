@@ -244,8 +244,14 @@ def set_population_army(request):
             try:
                 territory_session = TerritorySession.objects.get(territory__id=territory_id, lobby__id=lobby_id)
 
-                new_population = int(request.POST.get('new_population'))
-                new_army = int(request.POST.get('new_army'))
+                try:
+                    new_population = int(request.POST.get('new_population'))
+                except:
+                    new_population = 0
+                try:
+                    new_army = int(request.POST.get('new_army'))
+                except:
+                    new_army = 0
                 new_total = new_population + new_army
                 old_total = territory_session.population + territory_session.army
                 
@@ -271,35 +277,35 @@ def move_army(request):
     """
     Move the specified amount of army from territory 1 to territory 2..
     """
-    if request.is_ajax() and request.method == 'POST':
+    if request.is_ajax() and request.method == 'POST' and 'lobby_id' in request.POST and 't1_id' in request.POST and 't2_id' in request.POST and 'amount' in request.POST:
         lobby_id = request.POST.get('lobby_id')
         t1_id = request.POST.get('t1_id')
         t2_id = request.POST.get('t2_id')
-        amount = request.POST.get('amount')
+        try:
+            amount = int(request.POST.get('amount'))
+        except:
+            amount = 0
 
-        if any((lobby_id, t1_id, t2_id, amount) is None):
-            response = 'error'
-        else:
-            try:
-                session_1 = TerritorySession.objects.get(lobby__id=lobby_id, territory__id=t1_id)
-                session_2 = TerritorySession.objects.get(lobby__id=lobby_id, territory__id=t2_id)
+        try:
+            session_1 = TerritorySession.objects.get(lobby__id=lobby_id, territory__id=t1_id)
+            session_2 = TerritorySession.objects.get(lobby__id=lobby_id, territory__id=t2_id)
 
-                if session_1.territory.name in session_2.get_borders():
+            if session_1.territory.name in session_2.get_borders():
 
-                    if session_1.army >= amount and session_1.owner == request.user and session_2.owner == request.user:
-                        session_2.army += amount
-                        session_1.army -= amount
-                        session_1.save()
-                        session_2.save()
-                        response = 'success'
-                    else:
-                        response = 'error'
-
+                if session_1.army >= amount and session_1.owner.user == request.user and session_2.owner.user == request.user:
+                    session_2.army += amount
+                    session_1.army -= amount
+                    session_1.save()
+                    session_2.save()
+                    response = 'success'
                 else:
                     response = 'error'
 
-            except ObjectDoesNotExist:
+            else:
                 response = 'error'
+
+        except ObjectDoesNotExist:
+            response = 'error'
 
         return JsonResponse({'response': response})
 

@@ -105,13 +105,25 @@ def leaderboard(request):
     """
     Compute and return the top 10 players.
     """
-    # TODO replace the dummy values when we've decided on scoring
     stats = []
     users = User.objects.all()
     for user in users:
-        magic_value = Session.objects.filter(user=user).count()
+        try:
+            user_profile = UserProfile.objects.get(user=user)
+        except ObjectDoesNotExist:
+            continue
 
-        stats.append({"name": user.username, "wins": magic_value, "losses": magic_value, "ratio": magic_value})
+        losses = user_profile.games_played - user_profile.games_won
+
+        # Avoid zero division errors
+        if losses != 0:
+            ratio = user_profile.games_won / losses
+        elif user_profile.games_played != 0:
+            ratio = 1
+        else:
+            ratio = 0
+
+        stats.append({"name": user.username, "wins": user_profile.games_won, "losses": losses, "ratio": ratio})
     return render(request, "game/leaderboard.html", {"stats": stats})
 
 

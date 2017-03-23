@@ -52,7 +52,7 @@ class Session(models.Model):
     """
     active = models.BooleanField(default=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    lobby = models.ForeignKey(Lobby, on_delete=models.CASCADE, default=None)
+    lobby = models.ForeignKey(Lobby, on_delete=models.CASCADE, default=None, null=True, blank=True)
     colour = models.CharField(max_length=20, default='')
 
     def __str__(self):
@@ -66,9 +66,6 @@ class Session(models.Model):
             b = randrange(0, 255)
             self.colour = '(' + str(r) + ', ' + str(g) + ', ' + str(b) + ')'
             self.save()
-
-    def get_colour(self):
-        return json.loads(self.colour)
 
 
 class Territory(models.Model):

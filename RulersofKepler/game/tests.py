@@ -6,17 +6,12 @@ from django.core.urlresolvers import reverse
 
 
 class LobbyMethodTests(TestCase):
-    def setUp(self):
+    @classmethod
+    def setUpTestData(cls):
         """
         Create needed instances of models.
         """
-        self.lobby_test = Lobby.objects.create(name="RandomName")
-
-    def tearDown(self):
-        """
-        Delete created instances after a test.
-        """
-        self.lobby_test.delete()
+        cls.lobby_test = Lobby.objects.create(name="RandomName")
 
     def test_default_lobby_name_none(self):
         """
@@ -55,17 +50,12 @@ class LobbyMethodTests(TestCase):
 
 
 class TerritoryMethodTests(TestCase):
-    def setUp(self):
+    @classmethod
+    def setUpTestData(cls):
         """
         Create needed instances of models.
         """
-        self.ter1 = Territory.objects.create(name="Territory_name", description="Some description")
-
-    def tearDown(self):
-        """
-        Delete created instances after a test.
-        """
-        self.ter1.delete()
+        cls.ter1 = Territory.objects.create(name="Territory_name", description="Some description")
 
     def test_ensure_food_is_not_negative(self):
         """
@@ -105,27 +95,18 @@ class TerritoryMethodTests(TestCase):
 
 
 class TerritorySessionMethodTests(TestCase):
-    def setUp(self):
+    @classmethod
+    def setUpTestData(cls):
         """
         Create needed instances of models.
         """
-        self.user_test = User.objects.create_user(username="user", email="user@user.user", password="Iamjustauser17")
-        self.lobby_test = Lobby.objects.create(name="RandomName")
-        self.session_test = Session.objects.create(user=self.user_test, lobby=self.lobby_test)
-        self.territory_test = Territory.objects.create(name="Territory_name", description="Some description")
-        self.territory_session_test = TerritorySession.objects.create(territory=self.territory_test,
-                                                                      lobby=self.lobby_test,
-                                                                      owner=self.session_test)
-
-    def tearDown(self):
-        """
-        Delete created instances after a test.
-        """
-        self.user_test.delete()
-        self.lobby_test.delete()
-        self.session_test.delete()
-        self.territory_test.delete()
-        self.territory_session_test.delete()
+        cls.user_test = User.objects.create_user(username="user", email="user@user.user", password="Iamjustauser17")
+        cls.lobby_test = Lobby.objects.create(name="RandomName")
+        cls.session_test = Session.objects.create(user=cls.user_test, lobby=cls.lobby_test)
+        cls.territory_test = Territory.objects.create(name="Territory_name", description="Some description")
+        cls.territory_session_test = TerritorySession.objects.create(territory=cls.territory_test,
+                                                                     lobby=cls.lobby_test,
+                                                                     owner=cls.session_test)
 
     def test_ensure_population_is_not_negative(self):
         """
@@ -180,21 +161,15 @@ class TerritorySessionMethodTests(TestCase):
 
 
 class UserProfileMethodTests(TestCase):
-    def setUp(self):
+    @classmethod
+    def setUpTestData(cls):
         """
         Create needed instances of models.
         """
-        self.user1 = User.objects.create_user(username="user", email="user@user.user", password="Useruser17")
-        self.user1_profile = UserProfile.objects.get_or_create(user=self.user1)[0]
-        self.user2 = User.objects.create_user(username="user1", email="user1@user1.user", password="User1user117")
-        self.user2profile = UserProfile.objects.get_or_create(user=self.user2)[0]
-
-    def tearDown(self):
-        """
-        Delete created instances after a test.
-        """
-        self.user1.delete()
-        self.user2.delete()
+        cls.user1 = User.objects.create_user(username="user", email="user@user.user", password="Useruser17")
+        cls.user1_profile = UserProfile.objects.get_or_create(user=cls.user1)[0]
+        cls.user2 = User.objects.create_user(username="user1", email="user1@user1.user", password="User1user117")
+        cls.user2profile = UserProfile.objects.get_or_create(user=cls.user2)[0]
 
     def test_ensure_games_played_are_not_negative(self):
         """
@@ -215,6 +190,31 @@ class UserProfileMethodTests(TestCase):
         self.user1_profile.games_won = -5
         self.user1_profile.save()
         self.assertEqual(self.user1_profile.games_won >= 0, True)
+
+
+class SessionMethodTests(TestCase):
+    """
+    Test for the custom methods in the Session model.
+    """
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user(username="test", email="test@test.test", password="test")
+        cls.session = Session.objects.create(user=cls.user)
+
+    def test_ensure_colour_is_not_none(self):
+        """
+        Test that the session gets a random colour assigned on saving and that
+        it doesn't stay None.
+        """
+        self.assertNotEqual(self.session.colour, None)
+
+    def test_ensure_colour_is_not_empty_string(self):
+        """
+        Test that the session gets a random colour assigned on saving and that
+        it doesn't stay an empty string.
+        """
+        self.assertNotEqual(self.session.colour, '')
 
 
 class IndexAboutTermsViewsTests(TestCase):

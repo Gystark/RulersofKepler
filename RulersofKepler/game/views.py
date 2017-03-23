@@ -95,7 +95,7 @@ def about(request):
 def game(request, lobby_id):
     try:
         Session.objects.get(user=request.user, active=True)
-        return render(request, "game/game.html", {'lobby': lobby_id, 'request_user': request.user.username})
+        return render(request, "game/game.html", {'lobby': lobby_id})
     except Session.DoesNotExist:
         return redirect('lobbylist')
 
@@ -233,7 +233,8 @@ def set_population_army(request):
     """
     Set the population of the given territory in the given lobby.
     """
-    if request.is_ajax() and request.method == "POST" and 'territory_id' in request.POST and 'lobby_id' in request.POST and 'new_population' in request.POST and 'new_army' in request.POST:
+    if all((request.is_ajax(), request.method == "POST", 'territory_id' in request.POST, 'lobby_id' in request.POST,
+            'new_population' in request.POST, 'new_army' in request.POST)):
         territory_id = request.POST.get('territory_id')
         lobby_id = request.POST.get('lobby_id')
 
@@ -253,7 +254,7 @@ def set_population_army(request):
                     new_army = 0
                 new_total = new_population + new_army
                 old_total = territory_session.population + territory_session.army
-                
+
                 if new_total == old_total and territory_session.owner.user == request.user:
                     territory_session.population = new_population
                     territory_session.army = new_army
@@ -276,7 +277,8 @@ def move_army(request):
     """
     Move the specified amount of army from territory 1 to territory 2..
     """
-    if request.is_ajax() and request.method == 'POST' and 'lobby_id' in request.POST and 't1_id' in request.POST and 't2_id' in request.POST and 'amount' in request.POST:
+    if all((request.is_ajax(), request.method == 'POST', 'lobby_id' in request.POST, 't1_id' in request.POST,
+            't2_id' in request.POST, 'amount' in request.POST)):
         lobby_id = request.POST.get('lobby_id')
         t1_id = request.POST.get('t1_id')
         t2_id = request.POST.get('t2_id')
@@ -291,7 +293,8 @@ def move_army(request):
 
             if session_1.territory.name in session_2.get_borders():
 
-                if session_1.army >= amount and session_1.owner.user == request.user and session_2.owner.user == request.user:
+                if all((session_1.army >= amount, session_1.owner.user == request.user,
+                        session_2.owner.user == request.user)):
                     session_2.army += amount
                     session_1.army -= amount
                     session_1.save()
@@ -318,7 +321,6 @@ def get_battle_winner(defend_terr, attack_terr):
     Get the winner in a battle between two territories
     Also change the territory owner accordingly
     """
-    # TODO decide on battle algorithm
     def_score = (defend_terr.army * 1.0 + 0.1 * defend_terr.population) * uniform(0.8, 1.2)
     att_score = (attack_terr.army * 1.0 + 0.1 * attack_terr.population) * uniform(0.8, 1.2)
     if att_score > def_score:
@@ -339,7 +341,8 @@ def attack(request):
     """
     Attack territory 1 with the army in territory 2.
     """
-    if request.is_ajax() and request.method == 'POST' and "lobby_id" in request.POST and "t1_id" in request.POST and "t2_id" in request.POST:
+    if all((request.is_ajax(), request.method == "POST", "lobby_id" in request.POST, "t1_id" in request.POST,
+            "t2_id" in request.POST)):
         lobby_id = request.POST.get('lobby_id')
         t1_id = request.POST.get('t1_id')
         t2_id = request.POST.get('t2_id')

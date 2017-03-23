@@ -5,9 +5,9 @@
 {% endblock %}
 {% block content %}
     <script type="text/javascript">
-    csrf_token="{{ csrf_token }}";
-    lobby_id="{{ lobby }}";
-    request_user="{{ request_user }}";
+        csrf_token = "{% csrf_token %}";
+        lobby_id = "{{ lobby }}";
+        request_user = "{{ request.user.username }}";
     </script>
     <div id="content-map">
         <div id="map-holder">
@@ -23,24 +23,24 @@
         </div>
     </div>
     <div id="change-dialog">
-        <input type="hidden" id="territory_id" />
-        <input type="hidden" id="total_pop_army" />
+        <input type="hidden" id="territory_id"/>
+        <input type="hidden" id="total_pop_army"/>
         <span>Population</span>
-        <span><input type="range" id="population_value" /></span>
+        <span><input type="range" id="population_value"/></span>
         <span id="population_output"></span>
         <span>Army</span>
-        <span><input type="range" id="army_value" /></span>
+        <span><input type="range" id="army_value"/></span>
         <span id="army_output"></span>
-        <span><input type="button" id="change_dialog_submit" value="Change" /></span>
-        <span><input type="button" id="change_dialog_cancel" value="Cancel" /></span>
+        <span><input type="button" id="change_dialog_submit" value="Change"/></span>
+        <span><input type="button" id="change_dialog_cancel" value="Cancel"/></span>
     </div>
     <div id="move-dialog">
-        <input type="hidden" id="t1_id" />
-        <input type="hidden" id="t2_id" />
+        <input type="hidden" id="t1_id"/>
+        <input type="hidden" id="t2_id"/>
         <span>Army</span>
-        <span><input type="range" id="move_army_value" /></span>
+        <span><input type="range" id="move_army_value"/></span>
         <span id="move_army_output"></span>
-        <span><input type="button" id="move_dialog_submit" value="Move" /></span>
-        <span><input type="button" id="move_dialog_cancel" value="Cancel" /></span>
+        <span><input type="button" id="move_dialog_submit" value="Move"/></span>
+        <span><input type="button" id="move_dialog_cancel" value="Cancel"/></span>
     </div>
 {% endblock %}

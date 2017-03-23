@@ -5,6 +5,7 @@ var total_player_colours=0;
 $(document).ready(function () {
     if ($("#map").length == 0)
         return;
+    $("#map-background").hide();
     $.ajax({
         'url': '/game-ajax/' + lobby_id + '/territory/get-all',
         'method': 'GET',
@@ -359,9 +360,9 @@ function attack(name) {
             if(data.response=="error")
                 alert("There was an error while doing the request");
             else if(data.response=="won")
-                alert("You won!");
+                addNotification("You won!");
             else if(data.response=="lost")
-                alert("You lost!");
+                addNotification("You lost!");
         }
     });
     $("#territory-information").hide();

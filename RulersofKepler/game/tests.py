@@ -321,24 +321,55 @@ class LobbyListViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_lobby_is_empty(self):
+        """
+        Ensure the lobby list is initially empty.
+        """
         # create a user so we can access the page
         self.user_test = User.objects.create_user(username="user", email="user@user.user", password="Iamjustauser17")
         self.client.login(username="user", password="Iamjustauser17")
+
         response = self.client.get(reverse('lobbylist'))
+
         # count the number of lobbies
         lobbies_count = Lobby.objects.all().count()
+
         # ensure the number is 0 and the user is notified
         self.assertEqual(lobbies_count, 0, "Lobby list should be empty!")
         self.assertContains(response, "No lobbies available.")
 
     def test_lobby_is_not_empty(self):
-        # create a user so we can access the page
+        """
+        A registered user creates a lobby. Ensure the lobby is saved in the data base and shown on the page.
+        """
+        # authenticate user so we can access the list lobby page
         self.user_test = User.objects.create_user(username="user", email="user@user.user", password="Iamjustauser17")
         self.client.login(username="user", password="Iamjustauser17")
-        response = self.client.get(reverse('lobbylist'))
-        # create lobby so we test if it's shown
+
+        # create lobby so we test if it's shown and get the number of lobbies in the game
         self.lobby_test = Lobby.objects.create(name="LobbyTest")
+
+        response = self.client.get(reverse('lobbylist'))
+
+        # assert the number of lobbies in the data base is 1
         lobbies_count = Lobby.objects.all().count()
+
         self.assertEqual(lobbies_count, 1, "Lobby list should have length 1!")
-        Lobby.objects.get(name="LobbyTest")
-#         self.assertContains(response, "LobbyTest")
+        self.assertEqual(response.status_code, 200, "Status code not 200!")
+        self.assertContains(response, "LobbyTest")
+
+    def test_ensure_user_redirected_to_game(self):
+        """
+        Ensure the user is redirected to previously joined game.
+        """
+        # authenticate user so we can access the list lobby page
+        self.user_test = User.objects.create_user(username="user", email="user@user.user", password="Iamjustauser17")
+        self.client.login(username="user", password="Iamjustauser17")
+
+        # create a lobby and a session that will be associated with the user
+        lobby_test = Lobby.objects.create(name="LobbyTest")
+        Session.objects.create(active=True, user=self.user_test, lobby=lobby_test)
+
+        # make sure the user is redirected to a game they previously joined.
+        response = self.client.get(reverse('lobbylist'))
+        self.assertRedirects(response, reverse('game', kwargs={"lobby_id": lobby_test.id}), status_code=302,
+                             target_status_code=200)

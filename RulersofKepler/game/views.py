@@ -319,14 +319,15 @@ def move_army(request):
     return redirect('index')
 
 
-<<<<<<< HEAD
 def get_battle_winner(defend_terr, attack_terr):
     """
     Get the winner in a battle between two territories
     Also change the territory owner accordingly
     """
-    def_score = (defend_terr.army * 1.0 + 0.15 * (defend_terr.food + defend_terr.gold) + 0.1 * defend_terr.population) * uniform(0.9, 1.1)
-    att_score = (attack_terr.army * 1.0 + 0.15 * (attack_terr.food + attack_terr.gold) + 0.1 * attack_terr.population) * uniform(0.9, 1.1)
+    def_score = (defend_terr.army * 1.0 + 0.15 * (
+    defend_terr.food + defend_terr.gold) + 0.1 * defend_terr.population) * uniform(0.9, 1.1)
+    att_score = (attack_terr.army * 1.0 + 0.15 * (
+    attack_terr.food + attack_terr.gold) + 0.1 * attack_terr.population) * uniform(0.9, 1.1)
     if att_score > def_score:
         defend_terr.change_owner(attack_terr.owner)
         defend_terr.army /= 2
@@ -357,8 +358,6 @@ def get_endgame(session):
     return False
 
 
-=======
->>>>>>> f246684d80ebd067a232d3b86f44a53cd62894f6
 @login_required
 def attack(request):
     """

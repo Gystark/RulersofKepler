@@ -12,6 +12,8 @@ $(document).ready(function () {
         success: function (data) {
             var response = $.parseJSON(JSON.stringify(data));
             $.each(response, function () {
+                if(this["coordinates"]==undefined)
+                    return;
                 var el = document.createElement("area");
                 el.setAttribute("shape", "poly");
                 el.setAttribute("coords", this["coordinates"]);
@@ -195,9 +197,10 @@ function mapMove(x, y) {
 }
 
 function updateGameInfo(data) {
-    if(data["response"]=="won")
+    console.log(data);
+    if(data["response"]=="winner")
         window.location="/game-won/";
-    if(data["response"]=="lost")
+    if(data["response"]=="loser")
         window.location="/game-over/";
     territory_neighbours = {};
     player_colours = {};

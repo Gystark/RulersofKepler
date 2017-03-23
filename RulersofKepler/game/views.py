@@ -178,8 +178,14 @@ def get_territory_all(request, lobby_id):
     """
     if request.is_ajax() and request.method == 'GET':
         try:
+            sess = Session.objects.get(lobby__id=lobby_id, user=request.user, active=True)
+            
+            result = get_endgame(sess)
             territories = Territory.objects.all()
-            response = {}
+            if result=="winner" or result=="loser":
+                response = {'response': result}
+            else:
+                response = {}
             for territory in territories:
                 territory_session = TerritorySession.objects.get(territory=territory, lobby__id=lobby_id)
                 owner = territory_session.owner.user.username if territory_session.owner is not None else ''
@@ -217,10 +223,14 @@ def get_territory_reduced(request, lobby_id):
     """
     if request.is_ajax() and request.method == 'GET':
         try:
-            Session.objects.get(lobby__id=lobby_id, user=request.user, active=True)
+            sess = Session.objects.get(lobby__id=lobby_id, user=request.user, active=True)
 
+            result = get_endgame(sess)
             territories = Territory.objects.all()
-            response = {}
+            if result=="winner" or result=="loser":
+                response= {'response': result}
+            else:
+                response = {}
             for territory in territories:
                 territory_session = TerritorySession.objects.get(territory=territory, lobby__id=lobby_id)
                 owner = territory_session.owner.user.username if territory_session.owner is not None else ''
@@ -357,9 +367,14 @@ def get_battle_winner(defend_terr, attack_terr):
 
 
 def get_endgame(session):
-    if session.territory_set.all().count()==0:
+    terr = TerritorySession.objects.filter(owner=session).count()
+    if terr==0:
+        session.active=False
+        session.save()
         return 'loser'
-    elif session.territory_set.all().count()==19:
+    elif terr==19:
+        session.active=False
+        session.save()
         return 'winner'
     return False
 

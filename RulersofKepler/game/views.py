@@ -21,12 +21,13 @@ def lobbylist(request):
     """
     List all lobbies which have less than the maximum number of players.
     """
+    # if the user already participates in a game, redirect it there
     try:
-        sess = Session.objects.get(active=True, user=request.user)
+        sess = Session.objects.get(active=True, user=request.user)  # throws exception if does not find one
         return redirect('game', lobby_id=sess.lobby.id)
+    # otherwise display all lobbies the user can join, excluding those with max players
     except Session.DoesNotExist:
         lobbies = Lobby.objects.all().exclude(session=MAX_SESSIONS)
-
         # Add player count to each lobby
         for lobby in lobbies:
             lobby.players = Session.objects.filter(lobby=lobby).count()
@@ -167,6 +168,7 @@ def get_user_win_percentage(userprofile):
 def gamewon(request):
     return render(request, "game/gamewon.html", {})
 
+
 def gameover(request):
     return render(request, "game/gameover.html", {})
 
@@ -179,10 +181,10 @@ def get_territory_all(request, lobby_id):
     if request.is_ajax() and request.method == 'GET':
         try:
             sess = Session.objects.get(lobby__id=lobby_id, user=request.user, active=True)
-            
+
             result = get_endgame(sess)
             territories = Territory.objects.all()
-            if result=="winner" or result=="loser":
+            if result == "winner" or result == "loser":
                 response = {'response': result}
             else:
                 response = {}
@@ -227,8 +229,8 @@ def get_territory_reduced(request, lobby_id):
 
             result = get_endgame(sess)
             territories = Territory.objects.all()
-            if result=="winner" or result=="loser":
-                response= {'response': result}
+            if result == "winner" or result == "loser":
+                response = {'response': result}
             else:
                 response = {}
             for territory in territories:
@@ -368,15 +370,16 @@ def get_battle_winner(defend_terr, attack_terr):
 
 def get_endgame(session):
     terr = TerritorySession.objects.filter(owner=session).count()
-    if terr==0:
-        session.active=False
+    if terr == 0:
+        session.active = False
         session.save()
         return 'loser'
-    elif terr==19:
-        session.active=False
+    elif terr == 19:
+        session.active = False
         session.save()
         return 'winner'
     return False
+
 
 @login_required
 def attack(request):

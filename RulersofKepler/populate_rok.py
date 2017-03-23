@@ -138,8 +138,8 @@ def populate():
 def add_territory(name, desc, food, gold, army, pop, coord):
     t = Territory.objects.get_or_create(name=name)[0]
     t.description = desc
-    t.food = food
-    t.gold = gold
+    t.default_food = food
+    t.default_gold = gold
     t.default_army = army
     t.default_population = pop
     t.coordinates = coord

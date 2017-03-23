@@ -4,3 +4,5 @@ RulersofKepler/.coverage
 RulersofKepler/**/__pycache__
 RulersofKepler/**/*.pyc
 RulersofKepler/game/migrations
+
+presentation/Thumbs.db

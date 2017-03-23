@@ -276,7 +276,7 @@ a:hover {
     position: relative;
     left: 0;
     top: 35px;
-    bottom: 20px;
+    bottom: 40px;
     right: 0;
 }
 
@@ -285,7 +285,7 @@ a:hover {
     top: 35px;
     left: 0;
     right: 0;
-    bottom: 20px;
+    bottom: 40px;
     overflow: hidden;
     background: #44447A;
 }

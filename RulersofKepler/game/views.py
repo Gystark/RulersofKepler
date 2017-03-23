@@ -1,12 +1,13 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from random import uniform, randrange
-from django.core.exceptions import ObjectDoesNotExist
 
-from .models import *
+from utils import get_initial_territory, get_user_games_lost, get_user_win_percentage, get_endgame, get_battle_winner
 from .forms import LobbyCreationForm
+from .models import Session, Lobby, Territory, TerritorySession, UserProfile
 
 # The maximum number of sessions that can join a lobby
 MAX_SESSIONS = 4
@@ -32,17 +33,6 @@ def lobbylist(request):
             lobby.players = Session.objects.filter(lobby=lobby).count()
 
         return render(request, "game/lobbylist.html", {'lobbies': lobbies, "max_sessions": MAX_SESSIONS})
-
-
-def get_initial_territory(lobby):
-    """
-    Get a random territory that doesn't have an owner
-    """
-    while True:
-        terr_id = randrange(1, 19)
-        ts = TerritorySession.objects.get(lobby=lobby, territory__id=terr_id)
-        if not ts.owner:
-            return ts
 
 
 @login_required
@@ -109,20 +99,12 @@ def leaderboard(request):
     stats = []
     users = User.objects.all()
     for user in users:
-        try:
-            user_profile = UserProfile.objects.get(user=user)
-        except ObjectDoesNotExist:
-            continue
+        user_profile = UserProfile.objects.get_or_create(user=user)[0]
 
-        losses = user_profile.games_played - user_profile.games_won
-
-        # Avoid zero division errors
-        if losses != 0:
-            ratio = user_profile.games_won / losses
-        elif user_profile.games_played != 0:
-            ratio = 1
-        else:
-            ratio = 0
+        # calculate lost games
+        losses = get_user_games_lost(user_profile)
+        # calculate winning percentage
+        ratio = get_user_win_percentage(user_profile)
 
         stats.append({"name": user.username, "wins": user_profile.games_won, "losses": losses, "ratio": ratio})
     return render(request, "game/leaderboard.html", {"stats": stats})
@@ -153,19 +135,9 @@ def termsandconditions(request):
     return render(request, "game/terms.html", {})
 
 
-def get_user_games_lost(userprofile):
-    return userprofile.games_played - userprofile.games_won
-
-
-def get_user_win_percentage(userprofile):
-    try:
-        return userprofile.games_won * 1.0 / userprofile.games_played
-    except ZeroDivisionError:
-        return 0
-
-
 def gamewon(request):
     return render(request, "game/gamewon.html", {})
+
 
 def gameover(request):
     return render(request, "game/gameover.html", {})
@@ -179,10 +151,10 @@ def get_territory_all(request, lobby_id):
     if request.is_ajax() and request.method == 'GET':
         try:
             sess = Session.objects.get(lobby__id=lobby_id, user=request.user, active=True)
-            
+
             result = get_endgame(sess)
             territories = Territory.objects.all()
-            if result=="winner" or result=="loser":
+            if result == "winner" or result == "loser":
                 response = {'response': result}
             else:
                 response = {}
@@ -227,8 +199,8 @@ def get_territory_reduced(request, lobby_id):
 
             result = get_endgame(sess)
             territories = Territory.objects.all()
-            if result=="winner" or result=="loser":
-                response= {'response': result}
+            if result == "winner" or result == "loser":
+                response = {'response': result}
             else:
                 response = {}
             for territory in territories:
@@ -336,7 +308,7 @@ def move_army(request):
             else:
                 response = 'error'
 
-        except Session.ObjectDoesNotExist:
+        except ObjectDoesNotExist:
             response = 'error'
 
         return JsonResponse({'response': response})
@@ -345,38 +317,6 @@ def move_army(request):
     messages.error(request, 'System error, please try again.')
     return redirect('index')
 
-
-def get_battle_winner(defend_terr, attack_terr):
-    """
-    Get the winner in a battle between two territories
-    Also change the territory owner accordingly
-    """
-    def_score = (defend_terr.army * 1.0 + 0.1 * defend_terr.population) * uniform(0.8, 1.2)
-    att_score = (attack_terr.army * 1.0 + 0.1 * attack_terr.population) * uniform(0.8, 1.2)
-    if att_score > def_score:
-        defend_terr.change_owner(attack_terr.owner)
-        defend_terr.army /= 2
-        defend_terr.save()
-        return attack_terr.owner.user
-    attack_terr.army /= 2
-    attack_terr.save()
-    if defend_terr.owner != '' and defend_terr.owner is not None:
-        return defend_terr.owner.user
-    else:
-        return ''
-
-
-def get_endgame(session):
-    terr = TerritorySession.objects.filter(owner=session).count()
-    if terr==0:
-        session.active=False
-        session.save()
-        return 'loser'
-    elif terr==19:
-        session.active=False
-        session.save()
-        return 'winner'
-    return False
 
 @login_required
 def attack(request):
@@ -404,17 +344,15 @@ def attack(request):
 
                     if winner == request.user:
                         response = 'won'
-
                     else:
                         response = 'lost'
-
                 else:
                     response = 'error'
 
             else:
                 response = 'error'
 
-        except Session.ObjectDoesNotExist:
+        except ObjectDoesNotExist:
             response = 'error'
 
         return JsonResponse({'response': response})

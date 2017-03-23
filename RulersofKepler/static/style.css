@@ -164,6 +164,7 @@ body {
     border-radius: 15px;
     padding: 15px;
     font-family: "Comic Sans MS";
+    overflow: scroll;
 }
 
 #content-leaderboard .title {

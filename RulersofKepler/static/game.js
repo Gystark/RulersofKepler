@@ -69,11 +69,12 @@ function mapClick(e) {
     if (territory_information[name]["owner"] != request_user && name in territory_neighbours)
         $("#territory-information").append('<span class="button"><a href="javascript:attack(\''+name+'\');">Attack</a></span>');
     move_army_list=[]
-    for(i=0;i<territory_information[name]["neighbours"].length;i++) {
-        terr=territory_information[name]["neighbours"][i];
-        if(territory_information[terr]["owner"]==request_user)
-            move_army_list.push(terr);
-    }
+    if(territory_information[name]["owner"]==request_user)
+        for(i=0;i<territory_information[name]["neighbours"].length;i++) {
+            terr=territory_information[name]["neighbours"][i];
+            if(territory_information[terr]["owner"]==request_user)
+                move_army_list.push(terr);
+        }
     if(move_army_list.length>0)
         $("#territory-information").append('<span class="element">Move army to:</span>');
     for(i=0;i<move_army_list.length;i++)

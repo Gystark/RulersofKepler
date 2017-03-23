@@ -4,6 +4,11 @@
     Rulers of Kepler
 {% endblock %}
 {% block content %}
+    <script type="text/javascript">
+    csrf_token="{{ csrf_token }}";
+    lobby_id="{{ lobby }}";
+    request_user="{{ request_user }}";
+    </script>
     <div id="content-map">
         <div id="map-holder">
             <div id="map">
@@ -19,6 +24,7 @@
     </div>
     <div id="change-dialog">
         <input type="hidden" id="territory_id" />
+        <input type="hidden" id="total_pop_army" />
         <span>Population</span>
         <span><input type="range" id="population_value" /></span>
         <span id="population_output"></span>
@@ -26,5 +32,6 @@
         <span><input type="range" id="army_value" /></span>
         <span id="army_output"></span>
         <input type="button" id="change_dialog_submit" value="Change" />
+        <input type="button" id="change_dialog_cancel" value="Cancel" />
     </div>
 {% endblock %}

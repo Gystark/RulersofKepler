@@ -20,13 +20,13 @@
     <script type="text/javascript" src="{% static 'ie10-viewport-bug-workaround.js' %}"></script>
 
     <script type="text/javascript" src="{% static 'js.cookie.js' %}"></script>
-
+    
     <script type="text/javascript" src="{% static 'game.js' %}"></script>
 </head>
 <body>
 <div id="map-background"></div>
 <ul class="nav nav-pills navbar-fixed-top" role="navigation">
-    <li><a id="logoHolder"><img src="{% static "images/navy2.png" %}"></a></li>
+    <li><a id="logoHolder"><img src="{% static 'images/navy2.png' %}"></a></li>
     <li><a href="{% url 'index' %}">Home</a></li>
     <li><a href="{% url 'about' %}">About</a></li>
     {% if user.is_authenticated %}

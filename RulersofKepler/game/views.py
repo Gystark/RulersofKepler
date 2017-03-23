@@ -96,7 +96,7 @@ def about(request):
 def game(request, lobby_id):
     try:
         Session.objects.get(user=request.user, active=True)
-        return render(request, "game/game.html", {'lobby': lobby_id})
+        return render(request, "game/game.html", {'lobby': lobby_id, 'request_user': request.user.username})
     except Session.DoesNotExist:
         return redirect('lobbylist')
 
@@ -244,18 +244,18 @@ def set_population_army(request):
             try:
                 territory_session = TerritorySession.objects.get(territory__id=territory_id, lobby__id=lobby_id)
 
-                new_population = request.POST.get('new_population')
-                new_army = request.POST.get('new_army')
+                new_population = int(request.POST.get('new_population'))
+                new_army = int(request.POST.get('new_army'))
                 new_total = new_population + new_army
                 old_total = territory_session.population + territory_session.army
-
-                if new_total == old_total and territory_session.owner == request.user:
+                
+                if new_total == old_total and territory_session.owner.user == request.user:
                     territory_session.population = new_population
                     territory_session.army = new_army
                     territory_session.save()
-                    response = "success"
+                    response = 'success'
                 else:
-                    response = "error"
+                    response = 'error'
             except ObjectDoesNotExist:
                 response = 'error'
 
@@ -334,40 +334,37 @@ def attack(request):
     """
     Attack territory 1 with the army in territory 2.
     """
-    if request.is_ajax() and request.method == 'POST':
+    if request.is_ajax() and request.method == 'POST' and "lobby_id" in request.POST and "t1_id" in request.POST and "t2_id" in request.POST:
         lobby_id = request.POST.get('lobby_id')
         t1_id = request.POST.get('t1_id')
         t2_id = request.POST.get('t2_id')
 
-        if any((lobby_id, t1_id, t2_id) is None):
-            response = 'error'
-        else:
-            try:
-                session_1 = TerritorySession.objects.get(lobby__id=lobby_id, territory__id=t1_id)
-                session_2 = TerritorySession.objects.get(lobby__id=lobby_id, territory__id=t2_id)
+        try:
+            session_1 = TerritorySession.objects.get(lobby__id=lobby_id, territory__id=t1_id)
+            session_2 = TerritorySession.objects.get(lobby__id=lobby_id, territory__id=t2_id)
 
-                if session_1.name in session_2.get_borders():
+            if session_1.territory.name in session_2.get_borders():
 
-                    attacker = session_2.owner.user
-                    defender = session_1.owner.user
+                attacker = session_2.owner.user if session_2.owner is not None else ''
+                defender = session_1.owner.user if session_1.owner is not None else ''
 
-                    if attacker == request.user and defender != request.user:
+                if attacker == request.user and defender != request.user:
 
-                        winner = get_battle_winner(session_1, session_2)
+                    winner = get_battle_winner(session_1, session_2)
 
-                        if winner == request.user:
-                            response = 'won'
+                    if winner == request.user:
+                        response = 'won'
 
-                        else:
-                            response = 'lost'
                     else:
-                        response = 'error'
-
+                        response = 'lost'
                 else:
                     response = 'error'
 
-            except ObjectDoesNotExist:
+            else:
                 response = 'error'
+
+        except ObjectDoesNotExist:
+            response = 'error'
 
         return JsonResponse({'response': response})
 

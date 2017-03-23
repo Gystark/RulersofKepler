@@ -1,5 +1,4 @@
 var territory_information = {};
-var request_user = "pe60";
 var territory_neighbours = {};
 $(document).ready(function () {
     if ($("#map").length == 0)
@@ -68,7 +67,7 @@ function mapClick(e) {
     if (territory_information[name]["owner"] == request_user)
         $("#territory-information").append('<span class="button"><a href="javascript:changePopulationArmy(\''+name+'\');">Change population/army<a></span>');
     if (territory_information[name]["owner"] != request_user && name in territory_neighbours)
-        $("#territory-information").append('<span class="button"><a href="javascript:void(0);">Attack</a></span>');
+        $("#territory-information").append('<span class="button"><a href="javascript:attack(\''+name+'\');">Attack</a></span>');
     $("#territory-information")[0].style.left = tx + "px";
     $("#territory-information")[0].style.top = ty + "px";
     $("#territory-information").show();
@@ -224,16 +223,88 @@ $(document).ready(function () {
     }, false);
 });
 $(document).ready(function() {
+    if($("#map").length==0)
+        return;
     $("#population_value")[0].addEventListener("input",function(e) {
         $("#population_output").text(e.target.value);
+        $("#army_value").val($("#total_pop_army").val()-e.target.value);
+        $("#army_output").text($("#army_value").val());
     },true);
     $("#army_value")[0].addEventListener("input",function(e) {
         $("#army_output").text(e.target.value);
+        $("#population_value").val($("#total_pop_army").val()-e.target.value);
+        $("#population_output").text($("#population_value").val());
+    },true);
+    $("#change_dialog_submit")[0].addEventListener("click",function(e) {
+        var territory_id=$("#territory_id").val();
+        var population=$("#population_value").val();
+        var army=$("#army_value").val();
+        $.ajax({
+            method: "POST",
+            url: "/game-ajax/territory/set-population-army/",
+            data: {
+                "lobby_id": lobby_id,
+                "territory_id": territory_id,
+                "new_population": population,
+                "new_army": army,
+                "csrfmiddlewaretoken": csrf_token
+            },
+            success: function(data) {
+                if(data.response=="error")
+                    alert("There was an error while doing the request");
+            }
+        });
+                
+        $("#change-dialog").hide();
+    },true);
+    $("#change_dialog_cancel")[0].addEventListener("click",function(e) {
+        $("#change-dialog").hide();
     },true);
 });
 function changePopulationArmy(name) {
     if(territory_information[name]==undefined)
         return;
+    var totalPopulationArmy=territory_information[name]["population"]+territory_information[name]["army"]
+    $("#territory_id").val(territory_information[name]["id"]);
     $("#population_output").text(territory_information[name]["population"]);
+    $("#army_output").text(territory_information[name]["army"]);
+    $("#population_value")[0].setAttribute("min","0");
+    $("#population_value")[0].setAttribute("max",totalPopulationArmy);
+    $("#population_value").val(territory_information[name]["population"]);
+    $("#army_value")[0].setAttribute("min","0");
+    $("#army_value")[0].setAttribute("max",totalPopulationArmy);
+    $("#army_value").val(territory_information[name]["army"]);
+    $("#total_pop_army").val(totalPopulationArmy);
     $("#change-dialog").show();
+}
+function attack(name) {
+    var attack_from="";
+    var army=-1;
+    for(i=0;i<territory_information[name]["neighbours"].length;i++) {
+        var terr=territory_information[name]["neighbours"][i];
+        if(territory_information[terr]["owner"]==request_user && territory_information[terr]["army"]>army) {
+            attack_from=terr;
+            army=territory_information[terr]["army"];
+        }
+    }
+    var t1_id=territory_information[name]["id"];
+    var t2_id=territory_information[attack_from]["id"];
+    $.ajax({
+        method: "POST",
+        url: "/game-ajax/army/attack/",
+        data: {
+            "lobby_id": lobby_id,
+            "t1_id": t1_id,
+            "t2_id": t2_id,
+            "csrfmiddlewaretoken": csrf_token
+        },
+        success: function(data) {
+            if(data.response=="error")
+                alert("There was an error while doing the request");
+            else if(data.response=="won")
+                alert("You won!");
+            else if(data.response=="lost")
+                alert("You lost!");
+        }
+    });
 }

@@ -18,7 +18,7 @@ $(document).ready(function () {
                 el.setAttribute("name", this["name"]);
                 el.addEventListener("mouseover", mapMouseOver, true);
                 el.addEventListener("mouseout", mapMouseOut, true);
-                $("#map-regions")[0].append(el);
+                $("#map-regions")[0].appendChild(el);
                 var x = 0, xn = 0, y = 0, yn = 0;
                 var c = this["coordinates"].split(",");
                 for (i = 0; i < c.length; i += 2) {
@@ -38,7 +38,7 @@ $(document).ready(function () {
                 el.addEventListener("mouseover", mapMouseOver, true);
                 el.addEventListener("mouseout", mapMouseOut, true);
                 el.addEventListener("click", mapClick, true);
-                $("#map-squares")[0].append(el);
+                $("#map-squares")[0].appendChild(el);
             });
             updateGameInfo(response);
         }

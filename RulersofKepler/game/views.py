@@ -164,6 +164,13 @@ def get_user_win_percentage(userprofile):
         return 0
 
 
+def gamewon(request):
+    return render(request, "game/gamewon.html", {})
+
+def gameover(request):
+    return render(request, "game/gameover.html", {})
+
+
 @login_required
 def get_territory_all(request, lobby_id):
     """

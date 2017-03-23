@@ -62,18 +62,18 @@ class TerritoryMethodTests(TestCase):
         Ensures the food is always non-negative. Checks if the value is normalized
         when a negative one has been set.
         """
-        self.ter1.food = -5
+        self.ter1.default_food = -5
         self.ter1.save()
-        self.assertGreaterEqual(self.ter1.food, 0, "Food cannot be negative!")
+        self.assertGreaterEqual(self.ter1.default_food, 0, "Food cannot be negative!")
 
     def test_ensure_gold_is_not_negative(self):
         """
         Ensures the gold is always non-negative. Checks if the value is normalized
         when a negative one has been set.
         """
-        self.ter1.gold = -5
+        self.ter1.default_gold = -5
         self.ter1.save()
-        self.assertGreaterEqual(self.ter1.gold, 0, "Gold cannot be negative!")
+        self.assertGreaterEqual(self.ter1.default_gold, 0, "Gold cannot be negative!")
 
     def test_ensure_population_is_not_negative(self):
         """
@@ -299,3 +299,77 @@ class CreateLobbyViewTests(TestCase):
         Lobby.objects.get(name="FCBarcelona")
         # if code gets here, the lobby was created and an exception was not thrown
         self.assertTrue(True)
+
+
+class LobbyListViewTests(TestCase):
+    def test_ensure_login_required(self):
+        """
+        Ensure anonymous users cannot access the Lobby list view and get redirected to the login page.
+        """
+        response = self.client.get(reverse('lobbylist'))
+        self.assertRedirects(response, reverse('auth_login') + "?next=/lobby/list/", status_code=302,
+                             target_status_code=200)
+
+    def test_ensure_user_is_logged_in(self):
+        """
+        Ensure registered users can access the Lobby list view.
+        """
+        # create a user so we can access the page
+        self.user_test = User.objects.create_user(username="user", email="user@user.user", password="Iamjustauser17")
+        self.client.login(username="user", password="Iamjustauser17")
+        response = self.client.get(reverse('lobbylist'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_lobby_is_empty(self):
+        """
+        Ensure the lobby list is initially empty.
+        """
+        # create a user so we can access the page
+        self.user_test = User.objects.create_user(username="user", email="user@user.user", password="Iamjustauser17")
+        self.client.login(username="user", password="Iamjustauser17")
+
+        response = self.client.get(reverse('lobbylist'))
+
+        # count the number of lobbies
+        lobbies_count = Lobby.objects.all().count()
+
+        # ensure the number is 0 and the user is notified
+        self.assertEqual(lobbies_count, 0, "Lobby list should be empty!")
+        self.assertContains(response, "No lobbies available.")
+
+    def test_lobby_is_not_empty(self):
+        """
+        A registered user creates a lobby. Ensure the lobby is saved in the data base and shown on the page.
+        """
+        # authenticate user so we can access the list lobby page
+        self.user_test = User.objects.create_user(username="user", email="user@user.user", password="Iamjustauser17")
+        self.client.login(username="user", password="Iamjustauser17")
+
+        # create lobby so we test if it's shown and get the number of lobbies in the game
+        self.lobby_test = Lobby.objects.create(name="LobbyTest")
+
+        response = self.client.get(reverse('lobbylist'))
+
+        # assert the number of lobbies in the data base is 1
+        lobbies_count = Lobby.objects.all().count()
+
+        self.assertEqual(lobbies_count, 1, "Lobby list should have length 1!")
+        self.assertEqual(response.status_code, 200, "Status code not 200!")
+        self.assertContains(response, "LobbyTest")
+
+    def test_ensure_user_redirected_to_game(self):
+        """
+        Ensure the user is redirected to previously joined game.
+        """
+        # authenticate user so we can access the list lobby page
+        self.user_test = User.objects.create_user(username="user", email="user@user.user", password="Iamjustauser17")
+        self.client.login(username="user", password="Iamjustauser17")
+
+        # create a lobby and a session that will be associated with the user
+        lobby_test = Lobby.objects.create(name="LobbyTest")
+        Session.objects.create(active=True, user=self.user_test, lobby=lobby_test)
+
+        # make sure the user is redirected to a game they previously joined.
+        response = self.client.get(reverse('lobbylist'))
+        self.assertRedirects(response, reverse('game', kwargs={"lobby_id": lobby_test.id}), status_code=302,
+                             target_status_code=200)

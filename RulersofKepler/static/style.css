@@ -506,3 +506,13 @@ a:hover {
     background: #5bc0de;
     border: solid 1px ##46b8da;
 }
+#content-terms {
+    width: 270px;
+    height: auto;
+    margin-left: -150px;
+    margin-top: -150px;
+    border: solid 1px #888888;
+    border-radius: 15px;
+    padding: 0 15px 15px;
+    font-family: "Comic Sans MS";
+}

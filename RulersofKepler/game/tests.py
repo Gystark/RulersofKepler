@@ -234,14 +234,14 @@ class IndexAboutTermsGameOverGameWonViewsTests(TestCase):
         """
         Ensure the about page loads - status code 200.
         """
-        response = client.get(reverse('game-over'))
+        response = client.get(reverse('gameover'))
         self.assertEqual(response.status_code, 200)
 
     def test_ensure_game_won_loads(self):
         """
         Ensure the about page loads - status code 200.
         """
-        response = client.get(reverse('game-won'))
+        response = client.get(reverse('gamewon'))
         self.assertEqual(response.status_code, 200)
 
     def test_ensure_about_loads(self):
@@ -445,23 +445,6 @@ class LobbyJoinViewTests(TestCase):
         response = client.get(reverse('lobbyjoin', kwargs={"lobby_id": self.lobby_test_id}))
         self.assertRedirects(response, reverse('game', kwargs={"lobby_id": self.lobby_test_id}), status_code=302,
                              target_status_code=200)
-
-    def test_ensure_session_not_found_throws_exception(self):
-        """
-        Ensure if the user does not have a session, an exception is thrown and the view proceeds to execute
-        the code in the "except" block.
-        """
-        # create a user so we can access the page
-        create_custom_user()
-
-        # try redirect the user to previously joined/created game
-        # but user does not have one(Session), so throw exception and then do whatever
-        try:
-            response = client.get(reverse('lobbyjoin', kwargs={"lobby_id": self.lobby_test_id}))
-        except ObjectDoesNotExist:
-            self.assertTrue(True)
-        else:
-            self.assertFalse(True, "Session already existed, user was redirected to their game!")
 
 
 class GameViewTests(TestCase):

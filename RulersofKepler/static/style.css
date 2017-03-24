@@ -13,7 +13,7 @@ body {
 
 #content-index {
     width: 270px;
-    height: 300px;
+    height: 330px;
     margin-left: -150px;
     margin-top: -150px;
     border: solid 1px #888888;
@@ -220,6 +220,7 @@ nav {
     height: 35px;
     border-bottom: solid 1px #000000;
 }
+
 .nav li a {
     height: 35px;
     padding: 7px 15px;
@@ -338,7 +339,7 @@ a:hover {
     top: 0;
     width: 100%;
     height: 100%;
-    background: url(/static/background.png) repeat 0 500px;
+    background: url(/static/images/background.png) repeat 0 500px;
 }
 
 #territory-information {
@@ -381,6 +382,7 @@ a:hover {
     padding-bottom: 0;
     padding-left: 20%;
 }
+
 #change-dialog {
     position: fixed;
     left: 50%;
@@ -472,29 +474,36 @@ a:hover {
     border: solid 1px #000000;
     border-radius: 15px;
 }
+
 .styled-dialog {
     padding: 15px;
 }
+
 .styled-dialog span {
     float: left;
 }
+
 .styled-dialog .title {
     width: 100%;
     margin-top: 5px;
     font-size: 16px;
 }
+
 .styled-dialog .left {
     width: 80%;
 }
+
 .styled-dialog .right {
     width: 20%;
     text-align: center;
 }
+
 .styled-dialog .submit {
     width: 50%;
     margin-top: 15px;
     text-align: center;
 }
+
 .styled-dialog .submit input {
     border-radius: 7px;
     color: #ffffff;
@@ -502,14 +511,17 @@ a:hover {
     height: 32px;
     font-size: 16px;
 }
+
 .styled-dialog .submit-green input {
     background: #5cb85c;
     border: solid 1px #5cb85c;
 }
+
 .styled-dialog .submit-blue input {
     background: #5bc0de;
-    border: solid 1px ##46b8da;
+    border: solid 1px #46b8da;
 }
+
 #content-terms {
     width: 270px;
     height: auto;

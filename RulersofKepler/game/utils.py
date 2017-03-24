@@ -8,7 +8,7 @@ def get_initial_territory(lobby):
     """
     Get a random territory that doesn't have an owner
     """
-    if TerritorySession.objects.filter(lobby=lobby, owner=None).count()==0:
+    if TerritorySession.objects.filter(lobby=lobby, owner=None).count() == 0:
         return False
     while True:
         terr_id = randrange(1, 19)
@@ -104,3 +104,4 @@ def score_game(session):
 
         loser_profile.games_played += 1
         loser_profile.save()
+

@@ -6,3 +6,4 @@ RulersofKepler/**/*.pyc
 RulersofKepler/game/migrations
 *.db
 presentation/Thumbs.db
+specification/Thumbs.db

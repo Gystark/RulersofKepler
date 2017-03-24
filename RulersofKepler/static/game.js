@@ -1,13 +1,16 @@
 /*
 Global variables - Territories
 */
+
 var territory_information = {};
 var territory_neighbours = {};
 var player_colours={};
 var total_player_colours=0;
+
 /*
 Parsing initial information about territories
 */
+
 $(document).ready(function () {
     if ($("#map").length == 0)
         return;

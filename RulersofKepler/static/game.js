@@ -197,7 +197,6 @@ function mapMove(x, y) {
 }
 
 function updateGameInfo(data) {
-    console.log(data);
     if(data["response"]=="winner")
         window.location="/game-won/";
     if(data["response"]=="loser")
@@ -385,7 +384,7 @@ function moveArmy(from_name,to_name) {
 function updateColours() {
     var keys=Object.keys(player_colours);
     if(keys.length!=total_player_colours) {
-        addNotification("A new player has joined!");
+        addNotification("Someone has joined/left!");
         $("#player-colours").text("");
         total_player_colours=keys.length;
         for(i=0;i<keys.length;i++) {
@@ -423,6 +422,15 @@ function updateEverything() {
         },
         error: function() {
             setTimeout(updateEverything,1000);
+        }
+    });
+}
+function resign() {
+    $.ajax({
+        'url': '/game-ajax/resign/',
+        'method': 'GET',
+        success: function(data) {
+            window.location='/';
         }
     });
 }

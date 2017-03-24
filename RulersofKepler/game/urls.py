@@ -20,5 +20,6 @@ urlpatterns = [
         name="get_territory_reduced"),
     url(r'^game-ajax/territory/set-population-army/$', views.set_population_army, name="set_population_army"),
     url(r'^game-ajax/army/move/$', views.move_army, name='move_army'),
-    url(r'^game-ajax/army/attack/$', views.attack, name="attack")
+    url(r'^game-ajax/army/attack/$', views.attack, name="attack"),
+    url(r'^game-ajax/resign/$', views.resign, name="resign")
 ]

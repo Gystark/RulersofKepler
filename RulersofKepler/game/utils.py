@@ -48,12 +48,15 @@ def get_battle_winner(defend_terr, attack_terr):
         defend_terr.army /= 2
         defend_terr.food *= 0.9
         defend_terr.gold *= 0.85
+        attack_terr.army *= uniform(0.9, 1.0)
+        attack_terr.save()
         defend_terr.save()
         return attack_terr.owner.user
     attack_terr.army /= 2
     defend_terr.food *= 0.85
     defend_terr.gold *= 0.83
     attack_terr.save()
+    defend_terr.save()
     if defend_terr.owner != '' and defend_terr.owner is not None:
         return defend_terr.owner.user
     else:

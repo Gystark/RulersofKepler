@@ -1,8 +1,16 @@
-from django.test import TestCase
+from django.test import TestCase, Client
 
 from .models import *
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+
+client = Client()
+user_test = None
+
+
+def create_custom_user():
+    user_test = User.objects.create_user(username="user", email="user@user.user", password="Iamjustauser17")
+    client.login(username="user", password="Iamjustauser17")
 
 
 class LobbyMethodTests(TestCase):
@@ -146,7 +154,6 @@ class TerritorySessionMethodTests(TestCase):
         from another game/session is created. Throws ObjectDoesNotExist exception if the ownership
         cannot be changed i.e. the "new" owner is not part of the same game.
         """
-
         from django.core.exceptions import ObjectDoesNotExist
 
         # create third user that is not in the same lobby
@@ -227,21 +234,21 @@ class IndexAboutTermsViewsTests(TestCase):
         """
         Ensure the about page loads - status code 200.
         """
-        response = self.client.get(reverse('about'))
+        response = client.get(reverse('about'))
         self.assertEqual(response.status_code, 200)
 
     def test_ensure_index_loads(self):
         """
         Ensure the index page loads - status code 200.
         """
-        response = self.client.get(reverse('index'))
+        response = client.get(reverse('index'))
         self.assertEqual(response.status_code, 200)
 
     def test_ensure_terms_and_conditions_loads(self):
         """
         Ensure the terms and conditions page loads - status code 200.
         """
-        response = self.client.get(reverse('termsandconditions'))
+        response = client.get(reverse('termsandconditions'))
         self.assertEqual(response.status_code, 200)
 
 
@@ -250,21 +257,37 @@ class LeaderBoardViewTests(TestCase):
         """
         Ensure anonymous users cannot access the leader board and get redirected to the login page.
         """
-        response = self.client.get(reverse('leaderboard'))
+        response = client.get(reverse('leaderboard'))
         self.assertRedirects(response, reverse('auth_login') + "?next=/leaderboard/", status_code=302,
                              target_status_code=200)
 
     def test_ensure_user_is_logged_in(self):
-        pass
+        """
+        Ensure authenticated users can access the leader board.
+        """
+        # create a user so we can access the page
+        create_custom_user()
 
-    def test_ensure_leader_board_is_empty(self):
-        pass
+        response = client.get(reverse('leaderboard'))
+        self.assertEqual(response.status_code, 200)
 
-    def test_ensure_leader_board_is_not_empty(self):
-        pass
+    def test_ensure_leader_board_has_initially_only_one_user(self):
+        """
+        Ensure the leader board initially consists of just 1 user - the newly registered one.
+        """
+        # create a user so we can access the page
+        user_test1 = User.objects.create_user(username="user", email="user@user.user", password="Iamjustauser17")
+        client.login(username="user", password="Iamjustauser17")
 
-    def test_ensure_users_are_sorted(self):
-        pass
+        response = client.get(reverse('leaderboard'))
+
+        # count the number of users
+        leader_board_users_size = User.objects.all().count()
+
+        # ensure the number of initial users is just 1
+        self.assertEqual(leader_board_users_size, 1, "Leader board should have only 1 user!")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, user_test1.username)
 
 
 class CreateLobbyViewTests(TestCase):
@@ -272,7 +295,7 @@ class CreateLobbyViewTests(TestCase):
         """
         Ensure anonymous users cannot access the Create Lobby view and get redirected to the login page.
         """
-        response = self.client.get(reverse('lobbycreate'))
+        response = client.get(reverse('lobbycreate'))
         self.assertRedirects(response, reverse('auth_login') + "?next=/lobby/create/", status_code=302,
                              target_status_code=200)
 
@@ -281,9 +304,9 @@ class CreateLobbyViewTests(TestCase):
         Ensure registered users can access the Create Lobby view.
         """
         # create a user so we can access the page
-        self.user_test = User.objects.create_user(username="user", email="user@user.user", password="Iamjustauser17")
-        self.client.login(username="user", password="Iamjustauser17")
-        response = self.client.get(reverse('lobbycreate'))
+        create_custom_user()
+
+        response = client.get(reverse('lobbycreate'))
         self.assertEqual(response.status_code, 200)
 
     def test_ensure_logged_in_user_creates_lobby(self):
@@ -291,12 +314,14 @@ class CreateLobbyViewTests(TestCase):
         Ensure registered users can access the Create Lobby view and create a lobby.
         """
         # create a user so we can create a lobby
-        self.user_test = User.objects.create_user(username="user", email="user@user.user", password="Iamjustauser17")
-        self.client.login(username="user", password="Iamjustauser17")
+        create_custom_user()
+
         # make mock-up post request and create the lobby with the given name
-        self.client.post(reverse('lobbycreate'), {"name": "FCBarcelona"})
+        client.post(reverse('lobbycreate'), {"name": "FCBarcelona"})
+
         # make sure the lobby is created by getting it from the data base, if not it throws an exception
         Lobby.objects.get(name="FCBarcelona")
+
         # if code gets here, the lobby was created and an exception was not thrown
         self.assertTrue(True)
 
@@ -306,7 +331,7 @@ class LobbyListViewTests(TestCase):
         """
         Ensure anonymous users cannot access the Lobby list view and get redirected to the login page.
         """
-        response = self.client.get(reverse('lobbylist'))
+        response = client.get(reverse('lobbylist'))
         self.assertRedirects(response, reverse('auth_login') + "?next=/lobby/list/", status_code=302,
                              target_status_code=200)
 
@@ -315,9 +340,9 @@ class LobbyListViewTests(TestCase):
         Ensure registered users can access the Lobby list view.
         """
         # create a user so we can access the page
-        self.user_test = User.objects.create_user(username="user", email="user@user.user", password="Iamjustauser17")
-        self.client.login(username="user", password="Iamjustauser17")
-        response = self.client.get(reverse('lobbylist'))
+        create_custom_user()
+
+        response = client.get(reverse('lobbylist'))
         self.assertEqual(response.status_code, 200)
 
     def test_lobby_is_empty(self):
@@ -325,10 +350,9 @@ class LobbyListViewTests(TestCase):
         Ensure the lobby list is initially empty.
         """
         # create a user so we can access the page
-        self.user_test = User.objects.create_user(username="user", email="user@user.user", password="Iamjustauser17")
-        self.client.login(username="user", password="Iamjustauser17")
+        create_custom_user()
 
-        response = self.client.get(reverse('lobbylist'))
+        response = client.get(reverse('lobbylist'))
 
         # count the number of lobbies
         lobbies_count = Lobby.objects.all().count()
@@ -342,13 +366,12 @@ class LobbyListViewTests(TestCase):
         A registered user creates a lobby. Ensure the lobby is saved in the data base and shown on the page.
         """
         # authenticate user so we can access the list lobby page
-        self.user_test = User.objects.create_user(username="user", email="user@user.user", password="Iamjustauser17")
-        self.client.login(username="user", password="Iamjustauser17")
+        create_custom_user()
 
         # create lobby so we test if it's shown and get the number of lobbies in the game
-        self.lobby_test = Lobby.objects.create(name="LobbyTest")
+        Lobby.objects.create(name="LobbyTest")
 
-        response = self.client.get(reverse('lobbylist'))
+        response = client.get(reverse('lobbylist'))
 
         # assert the number of lobbies in the data base is 1
         lobbies_count = Lobby.objects.all().count()
@@ -362,14 +385,155 @@ class LobbyListViewTests(TestCase):
         Ensure the user is redirected to previously joined game.
         """
         # authenticate user so we can access the list lobby page
-        self.user_test = User.objects.create_user(username="user", email="user@user.user", password="Iamjustauser17")
-        self.client.login(username="user", password="Iamjustauser17")
+        user_test1 = User.objects.create_user(username="user", email="user@user.user", password="Iamjustauser17")
+        client.login(username="user", password="Iamjustauser17")
 
         # create a lobby and a session that will be associated with the user
         lobby_test = Lobby.objects.create(name="LobbyTest")
-        Session.objects.create(active=True, user=self.user_test, lobby=lobby_test)
+        Session.objects.create(active=True, user=user_test1, lobby=lobby_test)
 
         # make sure the user is redirected to a game they previously joined.
-        response = self.client.get(reverse('lobbylist'))
+        response = client.get(reverse('lobbylist'))
         self.assertRedirects(response, reverse('game', kwargs={"lobby_id": lobby_test.id}), status_code=302,
                              target_status_code=200)
+
+
+class LobbyJoinViewTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        """
+        Create lobby which the user tries to join in.
+        """
+        cls.lobby_test = Lobby.objects.create(name="LobbyTest")
+        cls.lobby_test_id = cls.lobby_test.id
+
+    def test_ensure_login_required(self):
+        """
+        Ensure anonymous users cannot access the Lobby join view and get redirected to the login page.
+        """
+        response = client.get(reverse('lobbyjoin', kwargs={"lobby_id": self.lobby_test_id}))
+        self.assertRedirects(response, reverse('auth_login') + "?next=/lobby/" + str(self.lobby_test_id) + "/join/",
+                             status_code=302,
+                             target_status_code=200)
+
+    def test_ensure_user_logged_in_and_redirected_to_game(self):
+        """
+        Ensure registered users can access the Lobby join view and get redirected to previously joined game.
+        """
+        # create a user so we can access the page
+        user_test1 = User.objects.create_user(username="user", email="user@user.user", password="Iamjustauser17")
+        client.login(username="user", password="Iamjustauser17")
+
+        # ensure the user already has a session in a game
+        Session.objects.create(user=user_test1, lobby=self.lobby_test, active=True)
+
+        # redirect the user to previously joined/created game
+        response = client.get(reverse('lobbyjoin', kwargs={"lobby_id": self.lobby_test_id}))
+        self.assertRedirects(response, reverse('game', kwargs={"lobby_id": self.lobby_test_id}), status_code=302,
+                             target_status_code=200)
+
+    def test_ensure_session_not_found_throws_exception(self):
+        """
+        Ensure if the user does not have a session, an exception is thrown and the view proceeds to execute
+        the code in the "except" block.
+        """
+        # create a user so we can access the page
+        create_custom_user()
+
+        # try redirect the user to previously joined/created game
+        # but user does not have one(Session), so throw exception and then do whatever
+        try:
+            response = client.get(reverse('lobbyjoin', kwargs={"lobby_id": self.lobby_test_id}))
+        except ObjectDoesNotExist:
+            self.assertTrue(True)
+        else:
+            self.assertFalse(True, "Session already existed, user was redirected to their game!")
+
+
+class GameViewTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        """
+        Create lobby which the user tries to join in.
+        """
+        cls.lobby_test = Lobby.objects.create(name="LobbyTest")
+        cls.lobby_test_id = cls.lobby_test.id
+
+    def test_ensure_login_required(self):
+        """
+        Ensure anonymous users cannot access the game view and get redirected to the login page.
+        """
+        response = client.get(reverse('game', kwargs={"lobby_id": self.lobby_test_id}))
+        self.assertRedirects(response, reverse('auth_login') + "?next=/game/" + str(self.lobby_test_id) + "/",
+                             status_code=302,
+                             target_status_code=200)
+
+    def test_ensure_logged_in_user_is_redirected(self):
+        """
+        Ensure an authenticated user is redirected to the game view.
+        """
+        # create a user so we can access the page
+        user_test1 = User.objects.create_user(username="user", email="user@user.user", password="Iamjustauser17")
+        client.login(username="user", password="Iamjustauser17")
+
+        # create a session the user is associated with
+        Session.objects.create(lobby=self.lobby_test, user=user_test1, active=True)
+
+        # ensure the game page loads for an authenticated user with a session
+        response = client.get(reverse('game', kwargs={"lobby_id": self.lobby_test_id}))
+        self.assertEqual(response.status_code, 200)
+
+    def test_ensure_sessionless_user_redirected_to_lobbylist(self):
+        """
+        Ensure a user without a session is redirected to the lobby list page.
+        """
+        # create a user so we can access the page
+        create_custom_user()
+
+        # a user without a session is redirected to the lobby list
+        response = client.get(reverse('game', kwargs={"lobby_id": self.lobby_test_id}))
+        self.assertRedirects(response, reverse('lobbylist'), status_code=302, target_status_code=200)
+
+
+class ProfileViewTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        """
+        Create a user for viewing.
+        """
+        cls.another_user_test = User.objects.create_user(username="user2", email="user2@user2.user2",
+                                                         password="Iamjustanotheruser18")
+
+    def test_ensure_login_required(self):
+        """
+        Ensure anonymous users cannot view registered users' profiles.
+        """
+        # anonymous user should be redirected to the login page
+        response = client.get(reverse('profile', kwargs={"username": self.another_user_test.username}))
+        self.assertRedirects(response,
+                             reverse('auth_login') + "?next=/profile/" + str(self.another_user_test.username) + "/",
+                             status_code=302,
+                             target_status_code=200)
+
+    def test_ensure_user_is_logged_in(self):
+        """
+        Ensure registered users can view other users' profiles.
+        """
+        # create a user so we can access the page
+        create_custom_user()
+
+        # ensure the page loads with success code
+        response = client.get(reverse('profile', kwargs={"username": self.another_user_test.username}))
+        self.assertEqual(response.status_code, 200)
+
+    def test_ensure_exception_is_thrown_when_no_such_user_exists(self):
+        """
+        Ensure the user is redirected to the index page when they try to view the profile of a non-existing user.
+        """
+        # create a user so we can access the page
+        create_custom_user()
+
+        unknown_user_username = "anonymous"
+        
+        response = client.get(reverse('profile', kwargs={"username": unknown_user_username}))
+        self.assertRedirects(response, reverse('index'))

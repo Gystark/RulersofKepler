@@ -287,7 +287,7 @@ function updateGameInfo(data) {
         }
         if (this["owner"] != undefined) {
             if(territory_information[this["name"]]["owner"]==request_user && this["owner"]!=request_user)
-                addNotification(this["name"]+"has been attacked by "+this["owner"]);
+                addNotification(this["name"]+" has been attacked by "+this["owner"]);
             if(this["owner"] == request_user) {
                 for (i = 0; i < territory_information[this["name"]]["neighbours"].length; i++)
                     territory_neighbours[territory_information[this["name"]]["neighbours"][i]] = territory_information[this["name"]]["neighbours"][i];

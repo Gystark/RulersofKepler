@@ -31,7 +31,7 @@ def lobbylist(request):
         lobbies = Lobby.objects.all().exclude(active=False)
         # Add player count to each lobby
         for lobby in lobbies:
-            lobby.players = Session.objects.filter(lobby=lobby).count()
+            lobby.players = Session.objects.filter(lobby=lobby, active=True).count()
 
         return render(request, "game/lobbylist.html", {'lobbies': lobbies, "max_sessions": MAX_SESSIONS})
 
@@ -46,7 +46,11 @@ def lobbyjoin(request, lobby_id):
         return redirect('game', lobby_id=sess.lobby.id)
     except ObjectDoesNotExist:
         try:
-            lobby = Lobby.objects.get(id=lobby_id)
+            lobby = Lobby.objects.get(id=lobby_id, active=True)  
+            number = Session.objects.filter(lobby=lobby, active=True).count()
+            if number>=4:
+                messages.error(request, 'The lobby is full.')
+                return redirect('lobbylist')
             Session.objects.create(user=request.user, lobby=lobby, active=True)
             sess = Session.objects.get(user=request.user, lobby=lobby, active=True)
             initial_terr = get_initial_territory(lobby)

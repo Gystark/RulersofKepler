@@ -1,7 +1,13 @@
+/*
+Global variables - Territories
+*/
 var territory_information = {};
 var territory_neighbours = {};
 var player_colours={};
 var total_player_colours=0;
+/*
+Parsing initial information about territories
+*/
 $(document).ready(function () {
     if ($("#map").length == 0)
         return;
@@ -51,6 +57,10 @@ $(document).ready(function () {
     });
 });
 
+/*
+Event listeners for hovering over the map and changing the selected territory
+*/
+
 function mapMouseOver(e) {
     $("#map-hover-img")[0].src = "/static/map/border-" + e.target.getAttribute("name") + ".png";
 }
@@ -58,6 +68,10 @@ function mapMouseOver(e) {
 function mapMouseOut(e) {
     $("#map-hover-img")[0].src = "/static/map/map.png";
 }
+
+/*
+Event listener for clicking on a territory
+*/
 
 function mapClick(e) {
     var name = e.target.getAttribute("name");
@@ -91,6 +105,10 @@ function mapClick(e) {
     e.stopPropagation();
 }
 
+/*
+Event listener to prevent the body from being able to hide the information box
+*/
+
 $(document).ready(function () {
     if ($("#map").length == 0)
         return;
@@ -98,6 +116,10 @@ $(document).ready(function () {
         e.stopPropagation();
     }, true);
 });
+
+/*
+Global variables - Map Dragging
+*/
 
 var mapX = 0;
 var mapY = 0;
@@ -107,6 +129,11 @@ var mapW = 2048;
 var mapH = 2048;
 var moveByX = 0;
 var moveByY = 0;
+
+/*
+Initialize map
+*/
+
 $(document).ready(function () {
     if ($("#map").length == 0)
         return;
@@ -125,6 +152,11 @@ $(document).ready(function () {
     windowH = parseInt(window.getComputedStyle($("#map-holder")[0], null).getPropertyValue("height"));
     setTimeout("moveMapListener();", 50);
 });
+
+/*
+Timed function for checking for changes
+*/
+
 function moveMapListener() {
     var x, y;
     x = parseInt($("#map")[0].style.marginLeft);
@@ -134,6 +166,11 @@ function moveMapListener() {
     mapMove(x, y);
     setTimeout("moveMapListener();", 50);
 }
+
+/*
+Event listener for drag beginning
+*/
+
 function mapMouseDown(event) {
     var tx, ty;
     tx = event.pageX - parseInt($("#map")[0].style.marginLeft);
@@ -144,6 +181,11 @@ function mapMouseDown(event) {
     mapY = event.clientY;
     return false;
 }
+
+/*
+Event listener for the actual drag event
+*/
+
 function mapMouseMove(event) {
     var x, y, mouseX, mouseY;
     x = parseInt($("#map")[0].style.marginLeft);
@@ -172,6 +214,11 @@ function mapMouseMove(event) {
     event.stopPropagation();
     return false;
 }
+
+/*
+Event listener for handling window size changes
+*/
+
 function windowResize(event) {
     windowW = parseInt(window.getComputedStyle($("#map-holder")[0], null).getPropertyValue("width"));
     windowH = parseInt(window.getComputedStyle($("#map-holder")[0], null).getPropertyValue("height"));
@@ -179,6 +226,11 @@ function windowResize(event) {
     y = parseInt($("#map")[0].style.marginTop);
     mapMove(x, y);
 }
+
+/*
+Helper function for moving the map
+*/
+
 function mapMove(x, y) {
     if (windowW >= mapW)
         x = 0;
@@ -195,6 +247,10 @@ function mapMove(x, y) {
     $("#map")[0].style.marginLeft = x + "px";
     $("#map")[0].style.marginTop = y + "px";
 }
+
+/*
+Helper function for updating the game data into the global variables and in the page itself
+*/
 
 function updateGameInfo(data) {
     if(data["response"]=="winner")
@@ -246,6 +302,11 @@ function updateGameInfo(data) {
     });
     updateColours();
 }
+
+/*
+Event listener for hiding the territory information box
+*/
+
 $(document).ready(function () {
     if ($("#map").length == 0)
         return;
@@ -254,6 +315,11 @@ $(document).ready(function () {
         $("#territory-information").text("");
     }, false);
 });
+
+/*
+Event listeners for "Change Population/Army" and "Move Army"
+*/
+
 $(document).ready(function() {
     if($("#map").length==0)
         return;
@@ -320,6 +386,11 @@ $(document).ready(function() {
         $("#move-dialog").hide();
     },true);
 });
+
+/*
+Event listener for showing "Change Population/Army" dialog
+*/
+
 function changePopulationArmy(name) {
     if(territory_information[name]==undefined)
         return;
@@ -337,6 +408,11 @@ function changePopulationArmy(name) {
     $("#change-dialog").show();
     $("#territory-information").hide();
 }
+
+/*
+Helper function for attacking a territory
+*/
+
 function attack(name) {
     var attack_from="";
     var army=-1;
@@ -369,6 +445,11 @@ function attack(name) {
     });
     $("#territory-information").hide();
 }
+
+/*
+Event listener for showing "Move Army" dialog
+*/
+
 function moveArmy(from_name,to_name) {
     if(territory_information[from_name]==undefined || territory_information[to_name]==undefined)
         return;
@@ -381,6 +462,11 @@ function moveArmy(from_name,to_name) {
     $("#move-dialog").show();
     $("#territory-information").hide();
 }
+
+/*
+Helper function for updating the player colours list and information on the screen
+*/
+
 function updateColours() {
     var keys=Object.keys(player_colours);
     if(keys.length!=total_player_colours) {
@@ -392,6 +478,11 @@ function updateColours() {
         }
     }
 }
+
+/*
+Helper function for adding and handling notifications
+*/
+
 function addNotification(text) {
     var el=document.createElement("div");
     el.innerHTML=text;
@@ -401,6 +492,11 @@ function addNotification(text) {
         fadeAway(el,0.85);
     },2000);
 }
+
+/*
+Helper function for fading objects away
+*/
+
 function fadeAway(element,opacity) {
     if(opacity<=0) {
         element.parentNode.removeChild(element);
@@ -411,6 +507,12 @@ function fadeAway(element,opacity) {
         fadeAway(element,opacity-0.05);
     },50);
 }
+
+/*
+Timed function for updating the information about all territories
+(runs every second)
+*/
+
 function updateEverything() {
     $.ajax({
         'url': '/game-ajax/' + lobby_id + '/territory/get-reduced',
@@ -425,6 +527,11 @@ function updateEverything() {
         }
     });
 }
+
+/*
+Helper function for resigning
+*/
+
 function resign() {
     $.ajax({
         'url': '/game-ajax/resign/',

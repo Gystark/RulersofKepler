@@ -22,26 +22,26 @@
             </div>
         </div>
     </div>
-    <div id="change-dialog">
+    <div id="change-dialog" class="styled-dialog">
         <input type="hidden" id="territory_id"/>
         <input type="hidden" id="total_pop_army"/>
-        <span>Population</span>
-        <span><input type="range" id="population_value"/></span>
-        <span id="population_output"></span>
-        <span>Army</span>
-        <span><input type="range" id="army_value"/></span>
-        <span id="army_output"></span>
-        <span><input type="button" id="change_dialog_submit" value="Change"/></span>
-        <span><input type="button" id="change_dialog_cancel" value="Cancel"/></span>
+        <span class="title">Population</span>
+        <span class="left"><input type="range" id="population_value"/></span>
+        <span class="right" id="population_output"></span>
+        <span class="title">Army</span>
+        <span class="left"><input type="range" id="army_value"/></span>
+        <span class="right" id="army_output"></span>
+        <span class="submit submit-green"><input type="button" id="change_dialog_submit" value="Change"/></span>
+        <span class="submit submit-blue"><input type="button" id="change_dialog_cancel" value="Cancel"/></span>
     </div>
-    <div id="move-dialog">
+    <div id="move-dialog" class="styled-dialog">
         <input type="hidden" id="t1_id"/>
         <input type="hidden" id="t2_id"/>
-        <span>Army</span>
-        <span><input type="range" id="move_army_value"/></span>
-        <span id="move_army_output"></span>
-        <span><input type="button" id="move_dialog_submit" value="Move"/></span>
-        <span><input type="button" id="move_dialog_cancel" value="Cancel"/></span>
+        <span class="title">Army</span>
+        <span class="left"><input type="range" id="move_army_value"/></span>
+        <span class="right" id="move_army_output"></span>
+        <span class="submit submit-green"><input type="button" id="move_dialog_submit" value="Move"/></span>
+        <span class="submit submit-blue"><input type="button" id="move_dialog_cancel" value="Cancel"/></span>
     </div>
     <div id="player-menu">
         <div id="player-colours">

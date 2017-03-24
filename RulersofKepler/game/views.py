@@ -51,9 +51,12 @@ def lobbyjoin(request, lobby_id):
             if number >= 4:
                 messages.error(request, 'The lobby is full.')
                 return redirect('lobbylist')
+            initial_terr = get_initial_territory(lobby)
+            if initial_terr==False:
+                messages.error(request, 'The lobby is full.')
+                return redirect('lobbylist')
             Session.objects.create(user=request.user, lobby=lobby, active=True)
             sess = Session.objects.get(user=request.user, lobby=lobby, active=True)
-            initial_terr = get_initial_territory(lobby)
             initial_terr.owner = sess
             initial_terr.save()
             return redirect('game', lobby_id=lobby.id)

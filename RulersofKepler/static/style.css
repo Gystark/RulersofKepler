@@ -1,6 +1,7 @@
 body {
     margin: 0;
     padding: 0;
+    background: #44447A;
 }
 
 .content-center {
@@ -466,4 +467,42 @@ a:hover {
     color: #ffffff;
     border: solid 1px #000000;
     border-radius: 15px;
+}
+.styled-dialog {
+    padding: 15px;
+}
+.styled-dialog span {
+    float: left;
+}
+.styled-dialog .title {
+    width: 100%;
+    margin-top: 5px;
+    font-size: 16px;
+}
+.styled-dialog .left {
+    width: 80%;
+}
+.styled-dialog .right {
+    width: 20%;
+    text-align: center;
+}
+.styled-dialog .submit {
+    width: 50%;
+    margin-top: 15px;
+    text-align: center;
+}
+.styled-dialog .submit input {
+    border-radius: 7px;
+    color: #ffffff;
+    padding: 0 15px;
+    height: 32px;
+    font-size: 16px;
+}
+.styled-dialog .submit-green input {
+    background: #5cb85c;
+    border: solid 1px #5cb85c;
+}
+.styled-dialog .submit-blue input {
+    background: #5bc0de;
+    border: solid 1px ##46b8da;
 }

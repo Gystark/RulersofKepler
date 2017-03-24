@@ -46,9 +46,9 @@ def lobbyjoin(request, lobby_id):
         return redirect('game', lobby_id=sess.lobby.id)
     except ObjectDoesNotExist:
         try:
-            lobby = Lobby.objects.get(id=lobby_id, active=True)  
+            lobby = Lobby.objects.get(id=lobby_id, active=True)
             number = Session.objects.filter(lobby=lobby, active=True).count()
-            if number>=4:
+            if number >= 4:
                 messages.error(request, 'The lobby is full.')
                 return redirect('lobbylist')
             Session.objects.create(user=request.user, lobby=lobby, active=True)
@@ -126,6 +126,8 @@ def profile(request, username):
     # get additional information about the user
     userprofile = UserProfile.objects.get_or_create(user=user)[0]
 
+    userprofile.games_played = 9
+    userprofile.games_won = 3
     # calculate lost games
     games_lost = get_user_games_lost(userprofile)
     # calculate winning percentage

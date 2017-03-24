@@ -1,4 +1,5 @@
 from random import randrange, uniform
+from math import ceil
 
 from .models import TerritorySession, UserProfile, Session
 
@@ -26,9 +27,11 @@ def get_user_win_percentage(userprofile):
     Return the win/loss ratio of the given user.
     """
     try:
-        return userprofile.games_won * 1.0 / userprofile.games_played
+        percentage = 100.0 * userprofile.games_won / userprofile.games_played
     except ZeroDivisionError:
-        return 0
+        percentage = 0.0
+    # get only 2 digits after the decimal point
+    return ceil(percentage * 100.0) / 100.0
 
 
 def get_battle_winner(defend_terr, attack_terr):
@@ -72,8 +75,8 @@ def get_endgame(session):
         session.save()
 
         score_game(session)
-        
-        session.lobby.active=False
+
+        session.lobby.active = False
         session.lobby.save()
 
         return 'winner'

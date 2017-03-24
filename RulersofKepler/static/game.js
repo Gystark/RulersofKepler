@@ -65,7 +65,7 @@ function mapClick(e) {
     tx = e.pageX - parseInt($("#map")[0].style.marginLeft);
     ty = e.pageY - 35 - parseInt($("#map")[0].style.marginTop);
     $("#territory-information").text("");
-    $("#territory-information").append('<span class="element">' + name + '</span>');
+    $("#territory-information").append('<span class="element" title="'+territory_information[name]["description"]+'">' + name + '</span>');
     $("#territory-information").append('<span class="element">Population: ' + territory_information[name]["population"] + '</span>');
     $("#territory-information").append('<span class="element">Army: ' + territory_information[name]["army"] + '</span>');
     $("#territory-information").append('<span class="element">Food: ' + territory_information[name]["food"] + '</span>');

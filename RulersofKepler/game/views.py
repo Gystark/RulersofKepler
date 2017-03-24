@@ -368,19 +368,20 @@ def attack(request):
     messages.error(request, 'System error, please try again.')
     return redirect('index')
 
+
 def resign(request):
     if all((request.is_ajax(), request.method == "GET")):
         try:
             sess = Session.objects.get(user=request.user, active=True)
             territories = TerritorySession.objects.filter(owner=sess, lobby=sess.lobby)
             for territory in territories:
-                territory.owner=None
+                territory.owner = None
                 territory.save()
-            sess.active=False
+            sess.active = False
             sess.save()
-            response='success'
+            response = 'success'
         except ObjectDoesNotExist:
-            response='error'
+            response = 'error'
         return JsonResponse({'response': response})
     messages.error(request, 'System error, please try again.')
     return redirect('index')

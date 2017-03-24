@@ -28,7 +28,7 @@ def lobbylist(request):
         return redirect('game', lobby_id=sess.lobby.id)
     # otherwise display all lobbies the user can join, excluding those with max players
     except Session.DoesNotExist:
-        lobbies = Lobby.objects.all().exclude(session=MAX_SESSIONS)
+        lobbies = Lobby.objects.all().exclude(active=False)
         # Add player count to each lobby
         for lobby in lobbies:
             lobby.players = Session.objects.filter(lobby=lobby).count()

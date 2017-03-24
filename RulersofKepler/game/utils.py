@@ -72,6 +72,9 @@ def get_endgame(session):
         session.save()
 
         score_game(session)
+        
+        session.lobby.active=False
+        session.lobby.save()
 
         return 'winner'
     return False

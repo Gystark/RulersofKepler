@@ -126,8 +126,6 @@ def profile(request, username):
     # get additional information about the user
     userprofile = UserProfile.objects.get_or_create(user=user)[0]
 
-    userprofile.games_played = 9
-    userprofile.games_won = 3
     # calculate lost games
     games_lost = get_user_games_lost(userprofile)
     # calculate winning percentage

@@ -224,11 +224,25 @@ class SessionMethodTests(TestCase):
         self.assertNotEqual(self.session.colour, '')
 
 
-class IndexAboutTermsViewsTests(TestCase):
+class IndexAboutTermsGameOverGameWonViewsTests(TestCase):
     """
     This class tests the index, the about, and the Terms and conditions views.
     They are basic with not much information to be tested, hence, they are combined.
     """
+
+    def test_ensure_game_over_loads(self):
+        """
+        Ensure the about page loads - status code 200.
+        """
+        response = client.get(reverse('game-over'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_ensure_game_won_loads(self):
+        """
+        Ensure the about page loads - status code 200.
+        """
+        response = client.get(reverse('game-won'))
+        self.assertEqual(response.status_code, 200)
 
     def test_ensure_about_loads(self):
         """

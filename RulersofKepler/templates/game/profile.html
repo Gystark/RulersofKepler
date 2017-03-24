@@ -1,25 +1,61 @@
 {% extends "game/base.html" %}
 
 {% block title %}
-    {{ selecteduser.username }} Profile
+{{ selecteduser.username }} Profile
 {% endblock %}
 
 {% block content %}
-    <div class="content-center" id="content-leaderboard">
-        <span class="title">{{ selecteduser.username }} Profile</span>
-        <div class="profile">
-            <ul>
-                <li> Games played: <span class="badge">{{ userprofile.games_played }}</span></li>
-            </ul>
-            <ul>
-                <li> Games Won: <span class="badge">{{ userprofile.games_won }}</span></li>
-            </ul>
-            <ul>
-                <li> Games Lost: <span class="badge">{{ games_lost }}</span></li>
-            </ul>
-            <ul>
-                <li> Win percentage: <span class="badge">{{ win_percent }}</span></li>
-            </ul>
-        </div>
-    </div>
+<div class="content-center" id="content-leaderboard">
+    <h3 class="title"><strong>Profile</strong></h3>
+    <table class="table table-hover table-bordered text-left">
+        <tbody>
+        <tr>
+            <td>Username:</td>
+            <td>{{ selecteduser.username }}</td>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td>{{ selecteduser.email }}</td>
+        </tr>
+        <tr>
+            <td>Date joined:</td>
+            <td>{{ selecteduser.date_joined }}</td>
+        </tr>
+        <tr>
+            <td>Last login:</td>
+            <td>{{ selecteduser.last_login }}</td>
+        </tr>
+        <tr>
+            <td>Games played:</td>
+            <td>{{ userprofile.games_played }}</td>
+        </tr>
+        <tr>
+            <td>Games Won:</td>
+            <td>{{ userprofile.games_won }}</td>
+        </tr>
+        <tr>
+            <td>Games Lost:</td>
+            <td>{{ games_lost }}</td>
+        </tr>
+        <tr>
+            <td>Win percentage:</td>
+            <td>{{ win_percent }}</td>
+        </tr>
+        <tr>
+            <td colspan="2"><p><strong>Position: </strong>Senior Developer </p></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <ul class="list-group">
+        <li class="list-group-item list-group-item-action">
+            <p><strong>Position: </strong>Senior Developer </p>
+            <p><strong>Games Lost: </strong>{{ games_lost }}</p>
+            <p><strong>Win percentage: </strong>{{ win_percent }}%</p>
+            <p><strong>Email: </strong>{{ selecteduser.email }}</p>
+
+        </li>
+    </ul>
+</div>
+
 {% endblock %}

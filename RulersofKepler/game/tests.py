@@ -534,6 +534,6 @@ class ProfileViewTests(TestCase):
         create_custom_user()
 
         unknown_user_username = "anonymous"
-        
+
         response = client.get(reverse('profile', kwargs={"username": unknown_user_username}))
         self.assertRedirects(response, reverse('index'))

@@ -220,6 +220,10 @@ nav {
     height: 35px;
     border-bottom: solid 1px #000000;
 }
+.nav li a {
+    height: 35px;
+    padding: 7px 15px;
+}
 
 .nav > li > a {
     color: #fff;

@@ -91,7 +91,7 @@ function mapClick(e) {
         $("#territory-information").append('<span class="button"><a href="javascript:changePopulationArmy(\''+name+'\');">Change population/army<a></span>');
     if (territory_information[name]["owner"] != request_user && name in territory_neighbours)
         $("#territory-information").append('<span class="button"><a href="javascript:attack(\''+name+'\');">Attack</a></span>');
-    move_army_list=[]
+    move_army_list=[];
     if(territory_information[name]["owner"]==request_user)
         for(i=0;i<territory_information[name]["neighbours"].length;i++) {
             terr=territory_information[name]["neighbours"][i];
@@ -267,7 +267,7 @@ function updateGameInfo(data) {
             return;
         $("div[name*='" + this["name"] + "']")[0].style.background = this["colour"];
         if (territory_information[this["name"]] == undefined)
-            territory_information[this["name"]] = {}
+            territory_information[this["name"]] = {};
         if (this["id"] != undefined)
             territory_information[this["name"]]["id"] = this["id"];
         if (this["population"] != undefined)
@@ -397,7 +397,7 @@ Event listener for showing "Change Population/Army" dialog
 function changePopulationArmy(name) {
     if(territory_information[name]==undefined)
         return;
-    var totalPopulationArmy=territory_information[name]["population"]+territory_information[name]["army"]
+    var totalPopulationArmy=territory_information[name]["population"]+territory_information[name]["army"];
     $("#territory_id").val(territory_information[name]["id"]);
     $("#population_output").text(territory_information[name]["population"]);
     $("#army_output").text(territory_information[name]["army"]);

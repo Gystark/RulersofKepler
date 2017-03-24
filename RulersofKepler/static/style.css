@@ -175,9 +175,8 @@ body {
 
 .leaderboard {
     width: 50% !important;
-    margin: 0 auto;
     float: none;
-    margin-bottom: 20px;
+    margin: 0 auto 20px;
 }
 
 .content-center .title {

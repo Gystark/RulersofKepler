@@ -52,7 +52,7 @@ def lobbyjoin(request, lobby_id):
                 messages.error(request, 'The lobby is full.')
                 return redirect('lobbylist')
             initial_terr = get_initial_territory(lobby)
-            if initial_terr == False:
+            if not initial_terr:
                 messages.error(request, 'The lobby is full.')
                 return redirect('lobbylist')
             Session.objects.create(user=request.user, lobby=lobby, active=True)
@@ -92,6 +92,9 @@ def about(request):
 
 @login_required
 def game(request, lobby_id):
+    """
+    Join the game if the user session exists or redirect to the lobby list page.
+    """
     try:
         Session.objects.get(user=request.user, active=True)
         return render(request, "game/game.html", {'lobby': lobby_id})
@@ -120,6 +123,9 @@ def leaderboard(request):
 
 @login_required
 def profile(request, username):
+    """
+    View for a simple user profile showing statistics about the user 
+    """
     # get the user object or redirect to index page
     try:
         user = User.objects.get(username=username)
@@ -140,14 +146,23 @@ def profile(request, username):
 
 
 def termsandconditions(request):
+    """
+    Render the static terms and conditions page. 
+    """
     return render(request, "game/terms.html", {})
 
 
 def gamewon(request):
+    """
+    Render the static game won page. 
+    """
     return render(request, "game/gamewon.html", {})
 
 
 def gameover(request):
+    """
+    Render the static game over page. 
+    """
     return render(request, "game/gameover.html", {})
 
 
@@ -254,14 +269,8 @@ def set_population_army(request):
             try:
                 territory_session = TerritorySession.objects.get(territory__id=territory_id, lobby__id=lobby_id)
 
-                try:
-                    new_population = int(request.POST.get('new_population'))
-                except:
-                    new_population = 0
-                try:
-                    new_army = int(request.POST.get('new_army'))
-                except:
-                    new_army = 0
+                new_population = int(request.POST.get('new_population', 0))
+                new_army = int(request.POST.get('new_army', 0))
                 new_total = new_population + new_army
                 old_total = territory_session.population + territory_session.army
 
@@ -292,10 +301,7 @@ def move_army(request):
         lobby_id = request.POST.get('lobby_id')
         t1_id = request.POST.get('t1_id')
         t2_id = request.POST.get('t2_id')
-        try:
-            amount = int(request.POST.get('amount'))
-        except:
-            amount = 0
+        amount = int(request.POST.get('amount', 0))
 
         try:
             session_1 = TerritorySession.objects.get(lobby__id=lobby_id, territory__id=t1_id)
@@ -371,6 +377,9 @@ def attack(request):
 
 
 def resign(request):
+    """
+    Handle a player resigning (giving up the game).
+    """
     if all((request.is_ajax(), request.method == "GET")):
         try:
             sess = Session.objects.get(user=request.user, active=True)
